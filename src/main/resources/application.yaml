@@ -1,0 +1,5 @@
+spring:
+    application:
+        name: UJSU
+server:
+    port: 8080
