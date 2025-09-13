@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UJSU - Карьерный центр МГТУ "Станкин"</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #ebebed;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        a {
+            text-decoration: none;
+            color: #fc733f;
+            transition: color 0.3s;
+        }
+        
+        a:hover {
+            color: #d85a2a;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* Шапка сайта */
+        header {
+            background: linear-gradient(to right, #333, #333);
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo span {
+            background: white;
+            color: #fc733f;
+            padding: 5px 10px;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+        
+        .auth-buttons a {
+            color: white;
+            margin-left: 15px;
+            padding: 8px 15px;
+            border: 1px solid white;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+        
+        .auth-buttons a:first-child {
+            background-color: white;
+            color: #fc733f;
+        }
+        
+        .auth-buttons a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-right: 25px;
+        }
+        
+        nav ul li a {
+            color:  #fc733f;
+            font-weight: 500;
+            padding: 5px 0;
+            position: relative;
+        }
+        
+        nav ul li a:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: white;
+            transition: width 0.3s;
+        }
+        
+        nav ul li a:hover:after {
+            width: 100%;
+        }
+        
+        /* Поисковая строка */
+        .search-section {
+            background-color: white;
+            padding: 40px 0;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+        
+        .search-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .search-title {
+            font-size: 32px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .search-form {
+            display: flex;
+            box-shadow: 0 2px 15px rgba(252, 115, 63, 0.2);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .search-input {
+            flex-grow: 1;
+            padding: 16px;
+            border: 2px solid #fc733f;
+            border-right: none;
+            font-size: 16px;
+            border-radius: 8px 0 0 8px;
+        }
+        
+        .search-button {
+            background-color: #fc733f;
+            color: white;
+            border: none;
+            padding: 0 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        .search-button:hover {
+            background-color: #d85a2a;
+        }
+        
+        /* Основной контент */
+        .main-content {
+            padding: 20px 0 40px;
+        }
+        
+        .section-title {
+            font-size: 24px;
+            margin-bottom: 25px;
+            color: #333;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #fc733f;
+            display: inline-block;
+        }
+        
+        .university-info {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .university-logo {
+            width: 100px;
+            height: 100px;
+            background: #fc733f;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            margin-right: 25px;
+            flex-shrink: 0;
+        }
+        
+        .university-text {
+            flex-grow: 1;
+        }
+        
+        .university-text h2 {
+            color: #fc733f;
+            margin-bottom: 10px;
+        }
+        
+        .vacancies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .vacancy-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-top: 4px solid #fc733f;
+        }
+        
+        .vacancy-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .vacancy-title {
+            font-size: 20px;
+            margin-bottom: 12px;
+            color: #fc733f;
+        }
+        
+        .company-name {
+            font-weight: 500;
+            margin-bottom: 10px;
+            color: #555;
+        }
+        
+        .vacancy-meta {
+            color: #777;
+            font-size: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            flex-wrap: wrap;
+        }
+        
+        .meta-item {
+            margin-right: 15px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .meta-item i {
+            margin-right: 5px;
+            color: #fc733f;
+        }
+        
+        .salary {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 18px;
+            color: #fc733f;
+        }
+        
+        .vacancy-button {
+            display: inline-block;
+            background: #fc733f;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+        
+        .vacancy-button:hover {
+            background: #d85a2a;
+            color: white;
+        }
+        
+        /* Футер */
+        footer {
+            background-color: #333;
+            padding: 50px 0 20px;
+            color: #ddd;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+        
+        .footer-column {
+            flex: 1;
+            min-width: 200px;
+            margin-bottom: 30px;
+        }
+        
+        .footer-column h3 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: white;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 12px;
+        }
+        
+        .footer-column ul li a {
+            color: #ddd;
+        }
+        
+        .footer-column ul li a:hover {
+            color: #fc733f;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .social-links a {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: #fc733f;
+            border-radius: 50%;
+            color: white;
+            text-align: center;
+            line-height: 40px;
+        }
+        
+        .copyright {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 14px;
+            color: #999;
+            padding-top: 20px;
+            border-top: 1px solid #444;
+        }
+        
+        @media (max-width: 768px) {
+            .header-top {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .auth-buttons {
+                margin-top: 15px;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .search-form {
+                flex-direction: column;
+            }
+            
+            .search-input {
+                border-right: 2px solid #fc733f;
+                border-radius: 8px 8px 0 0;
+            }
+            
+            .search-button {
+                padding: 12px;
+                border-radius: 0 0 8px 8px;
+            }
+            
+            .university-info {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .university-logo {
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Шапка сайта -->
+    <header>
+        <div class="container">
+            <div class="header-top">
+                <div class="logo">
+                    <span>UJSU</span>Карьерный центр
+                </div>
+                <div class="auth-buttons">
+                    <a href="#">Разместить резюме</a>
+                    <a href="#">Войти</a>
+                </div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#">Вакансии</a></li>
+                    <li><a href="#">Стажировки</a></li>
+                    <li><a href="#">Партнёры</a></li>
+                    <li><a href="#">Контакты</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Поисковая строка -->
+    <section class="search-section">
+        <div class="container">
+            <div class="search-container">
+                <h1 class="search-title">Найдите работу в вашем университете</h1>
+                <div class="search-form">
+                    <input type="text" class="search-input" placeholder="Должность, ключевые слова">
+                    <button class="search-button">Найти</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Основной контент -->
+    <main class="main-content">
+        <div class="container">
+            <div class="university-info">
+                <div class="university-logo">МГТУ "Станкин"</div>
+                <div class="university-text">
+                    <h2>Ваш ВУЗ - Московский государственный технологический университет "Станкин"</h2>
+                    <p>Ведущий технический университет России, готовящий специалистов в области машиностроения, информационных технологий и управления. Приглашаем талантливых специалистов присоединиться к нашей команде!</p>
+                </div>
+            </div>
+            
+            <h2 class="section-title">Актуальные вакансии</h2>
+            <div class="vacancies-grid">
+                <!-- Карточка вакансии 1 -->
+                <div class="vacancy-card">
+                    <h3 class="vacancy-title">Кассир</h3>
+                    <div class="company-name">МГТУ "Станкин" • Столовая</div>
+                    <div class="vacancy-meta">
+                        <div class="meta-item"><i>📍</i> Москва</div>
+                    </div>
+                    <div class="salary">от 50 000 ₽</div>
+                    <a href="#" class="vacancy-button">Откликнуться</a>
+                </div>
+                
+                <!-- Карточка вакансии 2 -->
+                <div class="vacancy-card">
+                    <h3 class="vacancy-title">Инженер-исследователь</h3>
+                    <div class="company-name">МГТУ "Станкин" • НИИ автоматизации</div>
+                    <div class="vacancy-meta">
+                        <div class="meta-item"><i>📍</i> Москва</div>
+                        <div class="meta-item"><i>⏳</i> Опыт от 2 лет</div>
+                        <div class="meta-item"><i>🎓</i> Магистратура</div>
+                    </div>
+                    <div class="salary">от 75 000 ₽</div>
+                    <a href="#" class="vacancy-button">Откликнуться</a>
+                </div>
+                
+                <!-- Карточка вакансии 3 -->
+                <div class="vacancy-card">
+                    <h3 class="vacancy-title">Разработчик ПО</h3>
+                    <div class="company-name">1C" • IT-отдел</div>
+                    <div class="vacancy-meta">
+                        <div class="meta-item"><i>📍</i> Москва</div>
+                        <div class="meta-item"><i>⏳</i> Опыт от 1 года</div>
+                        <div class="meta-item"><i>🎓</i> Бакалавриат</div>
+                    </div>
+                    <div class="salary">от 90 000 ₽</div>
+                    <a href="#" class="vacancy-button">Откликнуться</a>
+                </div>
+                
+                <!-- Карточка вакансии 4 -->
+                <div class="vacancy-card">
+                    <h3 class="vacancy-title">Научный сотрудник</h3>
+                    <div class="company-name">МГТУ "Станкин" • Лаборатория AI</div>
+                    <div class="vacancy-meta">
+                        <div class="meta-item"><i>📍</i> Москва</div>
+                        <div class="meta-item"><i>⏳</i> Опыт от 4 лет</div>
+                        <div class="meta-item"><i>🎓</i> Кандидат наук</div>
+                    </div>
+                    <div class="salary">от 110 000 ₽</div>
+                    <a href="#" class="vacancy-button">Откликнуться</a>
+                </div>
+                
+                <!-- Карточка вакансии 5 -->
+                <div class="vacancy-card">
+                    <h3 class="vacancy-title">Специалист по работе со студентами</h3>
+                    <div class="company-name">МГТУ "Станкин" • Отдел по внеучебной работе</div>
+                    <div class="vacancy-meta">
+                        <div class="meta-item"><i>📍</i> Москва</div>
+                        <div class="meta-item"><i>⏳</i> Без опыта</div>
+                        <div class="meta-item"><i>🎓</i> Высшее образование</div>
+                    </div>
+                    <div class="salary">от 55 000 ₽</div>
+                    <a href="#" class="vacancy-button">Откликнуться</a>
+                </div>
+                
+                <!-- Карточка вакансии 6 -->
+                <div class="vacancy-card">
+                    <h3 class="vacancy-title">Администратор образовательных программ</h3>
+                    <div class="company-name">МГТУ "Станкин" • Учебный отдел</div>
+                    <div class="vacancy-meta">
+                        <div class="meta-item"><i>📍</i> Москва</div>
+                        <div class="meta-item"><i>⏳</i> Опыт от 2 лет</div>
+                        <div class="meta-item"><i>🎓</i> Высшее образование</div>
+                    </div>
+                    <div class="salary">от 65 000 ₽</div>
+                    <a href="#" class="vacancy-button">Откликнуться</a>
+                </div>
+            </div>
+            
+            <h2 class="section-title">Стажировки для студентов</h2>
+            <div style="text-align: center; margin-bottom: 40px; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 3px 10px rgba(0,0,0,0.08);">
+                <p>МГТУ "Станкин" предлагает программы стажировок для студентов старших курсов. Получите реальный опыт работы по специальности прямо во время обучения!</p>
+                <a href="#" class="vacancy-button" style="margin-top: 20px;">Узнать больше о стажировках</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Футер -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Соискателям</h3>
+                    <ul>
+                        <li><a href="#">Вакансии</a></li>
+                        <li><a href="#">Стажировки</a></li>
+                        <li><a href="#">Как составить резюме</a></li>
+                        <li><a href="#">Подготовка к собеседованию</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Работодателям</h3>
+                    <ul>
+                        <li><a href="#">Размещение вакансий</a></li>
+                        <li><a href="#">Ярмарки вакансий</a></li>
+                        <li><a href="#">Сотрудничество с вузом</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>О проекте</h3>
+                    <ul>
+                        <li><a href="#">О UJSU</a></li>
+                        <li><a href="#">Контакты</a></li>
+                        <li><a href="#">Помощь</a></li>
+                        <li><a href="#">Вопросы и ответы</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Мы в соцсетях</h3>
+                    <div class="social-links">
+                        <a href="#">VK</a>
+                        <a href="#">TG</a>
+                        <a href="#">YT</a>
+                    </div>
+                    <p style="margin-top: 20px;">МГТУ "Станкин"<br>Вадковский пер., 3А, Москва</p>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                © 2023 UJSU - Карьерный центр". Все права защищены.
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
