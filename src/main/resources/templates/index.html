@@ -1,1 +1,107 @@
-hello world
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>СтудВорк - Карьерный центр МГТУ "Станкин"</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap">
+    <link rel="stylesheet" th:href="@{/css/indexstyle.css}">
+</head>
+<body>
+    <!-- Шапка сайта -->
+    <header>
+        <div class="container" style="width: 440px"> 
+            <div class="header-top">
+                <div class="logo">
+                    <span>СтудВорк</span>Карьерный центр
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- вот тут я поменял -->
+    <main class="main-content">
+        <div class="auth-container">
+            <h2 class="auth-title">Вход в личный кабинет</h2>
+            
+            <form class="auth-form" th:action="@{/login}" th:object="${Student}" method="post">
+        <div class="form-group">
+        <label for="email">Электронная почта</label>
+        <input type="email" th:field="*{email}" placeholder="Введите ваш email" required>
+         </div>
+    
+
+        <div class="form-group">
+        <label for="password">Пароль</label>
+        <input type="password" th:field="*{password}" placeholder="Введите ваш пароль" required>
+        </div>
+                
+                <button type="submit" class="auth-button">Войти</button>
+                
+                <div class="auth-links">
+                    <a href="#">Забыли пароль?</a>
+                    <a href="#">Помощь</a>
+                </div>
+            </form>
+            
+            <div class="divider">
+                <span>или</span>
+            </div>
+            
+            <p style="margin-bottom: 20px;">Еще нет аккаунта?</p>
+            <button class="register-button">Зарегистрироваться</button>
+        </div>
+    </main>
+
+    <!-- Футер -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Соискателям</h3>
+                    <ul>
+                        <li><a href="#">Вакансии</a></li>
+                        <li><a href="#">Стажировки</a></li>
+                        <li><a href="#">Как составить резюме</a></li>
+                        <li><a href="#">Подготовка к собеседованию</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Работодателям</h3>
+                    <ul>
+                        <li><a href="#">Размещение вакансий</a></li>
+                        <li><a href="#">Ярмарки вакансий</a></li>
+                        <li><a href="#">Сотрудничество с вузом</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>О проекте</h3>
+                    <ul>
+                        <li><a href="#">О СтудВорк</a></li>
+                        <li><a href="#">Контакты</a></li>
+                        <li><a href="#">Помощь</a></li>
+                        <li><a href="#">Вопросы и ответы</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Мы в соцсетях</h3>
+                    <div class="social-links">
+                        <a href="#">VK</a>
+                        <a href="#">TG</a>
+                        <a href="#">YT</a>
+                    </div>
+                    <p style="margin-top: 20px;">МГТУ "Станкин"<br>Вадковский пер., 3А, Москва</p>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                © 2025 СтудВорк - Карьерный центр. Все права защищены.
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
+
