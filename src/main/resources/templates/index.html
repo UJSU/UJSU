@@ -24,7 +24,7 @@
         <div class="auth-container">
             <h2 class="auth-title">Вход в личный кабинет</h2>
             
-            <form class="auth-form" th:action="@{/login}" th:object="${Student}" method="post">
+            <form class="auth-form" th:action="@{/login}" th:object="${student}" method="post">
         <div class="form-group">
         <label for="email">Электронная почта</label>
         <input type="email" th:field="*{email}" placeholder="Введите ваш email" required>
