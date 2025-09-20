@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>СтудВорк - Карьерный центр МГТУ "Станкин"</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap">
-    <link rel="stylesheet" th:href="@{/css/indexstyle.css}">
+    <link rel="stylesheet" th:href="@{css/indexstyle.css}" href="../static/css/indexstyle.css">
 </head>
 <body>
-    <!-- Шапка сайта -->
+
     <header>
         <div class="container" style="width: 440px"> 
             <div class="header-top">
@@ -18,13 +18,11 @@
             </div>
         </div>
     </header>
-
-    <!-- вот тут я поменял -->
     <main class="main-content">
         <div class="auth-container">
             <h2 class="auth-title">Вход в личный кабинет</h2>
             
-            <form class="auth-form" th:action="@{/login}" th:object="${Student}" method="post">
+            <form class="auth-form" th:action="@{/login}" th:object="${student}" method="post">
         <div class="form-group">
         <label for="email">Электронная почта</label>
         <input type="email" th:field="*{email}" placeholder="Введите ваш email" required>
@@ -53,7 +51,7 @@
         </div>
     </main>
 
-    <!-- Футер -->
+
     <footer>
         <div class="container">
             <div class="footer-content">
