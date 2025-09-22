@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Студворк - Регистрация</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{css/style.css}" href="../static/css/style.css">
+</head>
+<body>
+    <header>
+    <div class="container">
+        <div class="header-top">
+            <div class="logo">
+                <a th:href="@{/enter}" href="enter.html" class="logo-link">
+                    <div class="logo-wrapper">
+                        <img th:src="@{/images/studwork.png}" src="../images/studwork.png" alt="СтудВорк" class="logo-image">
+                    </div>
+                    <span>Студворк</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</header>
+    <main class="main-content">
+        <div class="auth-container">
+            <h2 class="auth-title">Регистрация студента</h2>
+            <form class="auth-form" th:action="@{/register}" th:object="${registrationDto}" method="post">
+    <div class="form-group">
+        <label for="email">Электронная почта</label>
+        <input type="email" th:field="*{email}" id="email" placeholder="Введите ваш email" required>
+        <i class="fas fa-envelope"></i>
+    </div>
+    
+    <div class="form-group">
+        <label for="password">Пароль</label>
+        <input type="password" th:field="*{password}" id="password" placeholder="Введите пароль" required>
+        <i class="fas fa-lock"></i>
+    </div>
+    
+    <div class="form-group">
+        <label for="password">Повторите пароль</label>
+        <input type="password" th:field="*{password}" id="password" placeholder="Повторите пароль" required>
+        <i class="fas fa-lock"></i>
+    </div>
+    
+    <div class="form-group">
+        <label for="name">Имя</label>
+        <input type="text" th:field="*{name}" id="name" placeholder="Введите ваше имя" required>
+        <i class="fas fa-user"></i>
+    </div>
+    
+    <div class="form-group">
+        <label for="surname">Фамилия</label>
+        <input type="text" th:field="*{surname}" id="surname" placeholder="Введите вашу фамилию" required>
+        <i class="fas fa-user"></i>
+    </div>
+    
+    <div class="form-group">
+        <label for="lastName">Отчество</label>
+        <input type="text" th:field="*{lastName}" id="lastName" placeholder="Введите ваше отчество">
+        <i class="fas fa-user"></i>
+    </div>
+    
+    <div class="form-group">
+    <label for="birth_date">Дата рождения</label>
+    <input type="date" th:field="*{birth_date}" id="birth_date" required>
+    <i class="fas fa-calendar"></i>
+</div>
+
+<div class="form-group">
+    <label for="sex">Пол</label>
+    <select th:field="*{sex}" id="sex" required>
+        <option value="NULL">Не указан</option>
+        <option value="MALE">Мужской</option>
+        <option value="FEMALE">Женский</option>
+    </select>
+    <i class="fas fa-venus-mars"></i>
+</div>
+
+<div class="form-group">
+    <label for="role">Роль</label>
+    <select th:field="*{role}" id="role" required>
+        <option value="">Выберите роль</option>
+        <option value="STUDENT">Студент</option>
+        <option value="ADMIN">Администратор</option>
+    </select>
+    <i class="fas fa-user-tag"></i>
+</div>
+<div id="student-profile-form-container"></div>
+<div id="admin-profile-form-container"></div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const roleSelect = document.getElementById('role');
+    const studentFormContainer = document.getElementById('student-profile-form-container');
+    const adminFormContainer = document.getElementById('admin-profile-form-container');
+    
+    const studentFormHTML = `
+        <div id="student-profile-form">
+            <div class="form-group">
+                <label for="universityName">Учебное заведение</label>
+                <input type="text" 
+                       name="universityId" 
+                       id="universityId" 
+                       placeholder="Введите название учебного заведения" 
+                       required>
+                <i class="fas fa-university"></i>
+            </div>
+
+            <div class="form-group">
+                <label for="specialityId">Код специальности</label>
+                <input type="text" 
+                       name="specialityCode" 
+                       id="specialityCode" 
+                       placeholder="Например: 09.03.01" 
+                       required>
+                <i class="fas fa-code"></i>
+            </div>
+
+            <div class="form-group">
+                <label for="courseNum">Курс</label>
+                <select name="courseNum" id="courseNum" required>
+                    <option value="">Выберите курс</option>
+                    <option value="1">1 курс</option>
+                    <option value="2">2 курс</option>
+                    <option value="3">3 курс</option>
+                    <option value="4">4 курс</option>
+                    <option value="5">5 курс</option>
+                    <option value="6">6 курс</option>
+                </select>
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+
+            <div class="form-group">
+                <label for="studyType">Форма обучения</label>
+                <select name="studyType" id="studyType" required>
+                    <option value="">Выберите форму обучения</option>
+                    <option value="BACHELOUR">Бакалавриат</option>
+                    <option value="SPECIALIST">Специалитет</option>
+                    <option value="MASTER">Магистратура</option>
+                    <option value="GRADUATE">Аспиратнтура</option>
+                </select>
+                <i class="fas fa-book-open"></i>
+            </div>
+        </div>
+    `;
+    
+    const adminFormHTML = `
+        <div id="admin-profile-form">
+            <div class="form-group">
+                <label for="universityName">Организация</label>
+                <input type="text" 
+                       name="universityId" 
+                       id="universityId" 
+                       placeholder="Введите название организации" 
+                       required>
+                <i class="fas fa-university"></i>
+            </div>
+        </div>
+    `;
+    
+    function toggleProfileForms() {
+        console.log('Role changed to:', roleSelect.value);
+        studentFormContainer.innerHTML = '';
+        studentFormContainer.style.display = 'none';
+        adminFormContainer.innerHTML = '';
+        adminFormContainer.style.display = 'none';
+        if (roleSelect.value === 'STUDENT') {
+            studentFormContainer.innerHTML = studentFormHTML;
+            studentFormContainer.style.display = 'block';
+        } else if (roleSelect.value === 'ADMIN') {
+            adminFormContainer.innerHTML = adminFormHTML;
+            adminFormContainer.style.display = 'block';
+        }
+    }
+    
+    roleSelect.addEventListener('change', toggleProfileForms);
+    toggleProfileForms();
+});
+</script>
+    <div th:if="${successMessage}" class="alert alert-success">
+        <i class="fas fa-check-circle"></i>
+        <span th:text="${successMessage}"></span>
+    </div>
+    
+    <div th:if="${errorMessage}" class="alert alert-error">
+        <i class="fas fa-exclamation-circle"></i>
+        <span th:text="${errorMessage}"></span>
+    </div>
+    
+    <button type="submit" class="auth-button">Зарегистрироваться</button>
+                
+                <div class="auth-links">
+                    <a href="#"><i class="fas fa-shield-alt"></i> Политика конфиденциальности</a>
+                    <a href="#"><i class="fas fa-question-circle"></i> Помощь</a>
+                </div>
+            </form>
+            
+            <div class="divider">
+                <span>или</span>
+            </div>
+            
+            <p style="margin-bottom: 20px; text-align: center;">Уже есть аккаунт?</p>
+            <button class="register-button" 
+            th:onclick="'location.href=\'' + @{/enter} + '\''" 
+            onclick="window.location.href='enter.html'">
+            Войти
+        </button>
+        </div>
+    </main>
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Соискателям</h3>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-briefcase"></i> Вакансии</a></li>
+                        <li><a href="#"><i class="fas fa-graduation-cap"></i> Стажировки</a></li>
+                        <li><a href="#"><i class="fas fa-file-alt"></i> Как составить резюме</a></li>
+                        <li><a href="#"><i class="fas fa-comments"></i> Подготовка к собеседованию</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Работодателям</h3>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-plus-circle"></i> Размещение вакансий</a></li>
+                        <li><a href="#"><i class="fas fa-calendar-alt"></i> Ярмарки вакансий</a></li>
+                        <li><a href="#"><i class="fas fa-handshake"></i> Сотрудничество с вузом</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>О проекте</h3>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-info-circle"></i> О Студворк</a></li>
+                        <li><a href="#"><i class="fas fa-phone"></i> Контакты</a></li>
+                        <li><a href="#"><i class="fas fa-life-ring"></i> Помощь</a></li>
+                        <li><a href="#"><i class="fas fa-question-circle"></i> Вопросы и ответы</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Мы в соцсетях</h3>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-vk"></i></a>
+                        <a href="#"><i class="fab fa-telegram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                © 2025 СтудВорк - Карьерный центр. Все права защищены.
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
