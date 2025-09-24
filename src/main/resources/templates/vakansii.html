@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>СтудВорк - Карьерный центр</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap">
+    <link rel="stylesheet" th:href="@{css/indexstyle.css}" href="../static/css/vakansiistyle.css">
+</head>
+<body>
+    <!-- Шапка сайта -->
+    <header>
+        <div class="container">
+            <div class="header-top">
+                <div class="logo">
+                    <span>СтудВорк</span>Карьерный центр
+                </div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#">Вакансии</a></li>
+                    <li><a href="#">Стажировки</a></li>
+                    <li><a href="#">Партнёры</a></li>
+                    <li><a href="#">Контакты</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Поисковая строка -->
+    <section class="search-section">
+        <div class="container">
+            <div class="search-container">
+                <h1 class="search-title">Найдите работу в вашем университете</h1>
+                <div class="search-form">
+                    <input type="text" class="search-input" placeholder="Должность, ключевые слова">
+                    <button class="search-button">Найти</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Основной контент -->
+    <main class="main-content">
+        <div class="container">
+            <div class="university-info">
+                <img src="../images/itmo-logo.png" width="150">
+                <div class="university-text">
+                    <h2 th:text="${'Ваш ВУЗ - ' + university.name}"> </h2>
+                    <p th:text="${university.promo}"></p>
+                </div>
+            </div>
+            
+            <h2 class="section-title">Актуальные вакансии</h2>
+            <div class="vacancies-grid">
+                <!-- Карточка вакансии -->
+                 <template>
+                     <div class="vacancy-card">
+                      <h3 class="vacancy-title" th:text="${vacancy.position}"></h3>
+                      <div class="company-name" th:text="${university.name + '•' + organisation.name}"></div>
+                      <div class="salary" th:text="${'от ' + min_salary + ' ₽ ' + ' до ' + 'max_salary'}"></div>
+                      <a href="#" class="vacancy-button">Откликнуться</a>
+                     </div>
+                </template>
+            </div>
+            
+            <h2 class="section-title">Стажировки для студентов</h2>
+            <div class="vacancies-grid">
+                <!-- Карточка стажировки -->
+                <template>
+                     <div class="vacancy-card">
+                      <h3 class="vacancy-title" th:text="${internship.name}"></h3>
+                      <div class="company-name" th:text="${university.name + '•' + organisation.name}"></div>
+                      <div class="salary" th:text="$'от ' + {min_salary} + ' ₽ ' + ' до ' + 'max_salary'"></div>
+                      <a href="#" class="vacancy-button">Откликнуться</a>
+                     </div>
+                </template>
+                <a href="#" class="vacancy-button" style="margin-top: 20px;">Узнать больше о стажировках</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Футер -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Соискателям</h3>
+                    <ul>
+                        <li><a href="#">Вакансии</a></li>
+                        <li><a href="#">Стажировки</a></li>
+                        <li><a href="#">Как составить резюме</a></li>
+                        <li><a href="#">Подготовка к собеседованию</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Работодателям</h3>
+                    <ul>
+                        <li><a href="#">Размещение вакансий</a></li>
+                        <li><a href="#">Ярмарки вакансий</a></li>
+                        <li><a href="#">Сотрудничество с вузом</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>О проекте</h3>
+                    <ul>
+                        <li><a href="#">О СтудВорк</a></li>
+                        <li><a href="#">Контакты</a></li>
+                        <li><a href="#">Помощь</a></li>
+                        <li><a href="#">Вопросы и ответы</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Мы в соцсетях</h3>
+                    <div>
+                        <a href="https://vk.com/feed"><img src="../images/vk-logo.png" width="40" /></a>
+                        <a href="https://web.telegram.org/k"><img src="../images/telegram-logo.png" width="40" /></a>
+                    </div>
+                    <p style="margin-top: 20px;">МГТУ "Станкин"<br>Вадковский пер., 3А, Москва</p>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                © 2025 СтудВорк - Карьерный центр". Все права защищены.
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
