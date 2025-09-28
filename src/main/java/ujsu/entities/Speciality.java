@@ -1,5 +1,7 @@
 package ujsu.entities;
 
+import org.springframework.data.annotation.Id;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,7 +9,8 @@ import lombok.Setter;
 @Setter
 public class Speciality {
 
-	private int id;
+	@Id
+	private Integer id;
 	
 	private String code;
 	private String name;	

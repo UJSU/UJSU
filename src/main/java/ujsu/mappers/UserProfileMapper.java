@@ -10,5 +10,5 @@ import ujsu.entities.StudentProfile;
 @Mapper(componentModel = "spring")
 public interface UserProfileMapper {
 	StudentProfile createStudentProfile(StudentProfileDto dto);
-	AdminProfile createAdminProfile(AdminProfileDto dto);
+	AdminProfile createAdminProfile(AdminProfileDto dto);	
 }

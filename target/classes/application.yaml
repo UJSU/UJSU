@@ -1,5 +1,28 @@
 spring:
-    application:
-        name: UJSU
+  application:
+      name: UJSU
+  datasource:
+      generate-unique-name: false
+      name: ujsu
+      url: ${UJSU_MYSQL_URL:jdbc:mysql://localhost:3306/ujsu}
+      username: ${UJSU_MYSQL_USERNAME:ujsu}
+      password: ${UJSU_MYSQL_PASSWORD:ujsupass}
+      driver-class-name: com.mysql.cj.jdbc.Driver
+  sql:
+    init:
+      schema-locations: classpath:schema.sql
+      mode: always
 server:
-    port: 8080
+  port: 8080
+logging:
+  level:
+    org:
+      springframework:
+        data:
+          convert: DEBUG
+          jdbc:
+            core:
+              convert:
+                JdbcConverter: DEBUG
+        jdbc:
+          core: DEBUG

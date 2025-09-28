@@ -1,24 +1,37 @@
 package ujsu.dto;
 
-import java.util.Date;
-
-import ujsu.enums.Role;
-import ujsu.enums.Sex;
 import lombok.Getter;
 import lombok.Setter;
+import ujsu.enums.Role;
+import ujsu.enums.Sex;
+import ujsu.exceptions.UnspecifiedRoleException;
 
 @Getter
 @Setter
 public class SignUpDto {
 	
-	private String email;
-	private String password;
-	private String name;
-	private String surname;
-	private String lastName;
-
-	private Date birthDate;
-
-	private Sex sex;
-	private Role role;
+	private UserDto userDto;
+	private UserProfileDto profileDto;
+	
+	public SignUpDto(Role role) {
+		userDto = new UserDto();
+		
+		switch (role) {
+		case null:
+			userDto.setSex(Sex.NULL);
+			userDto.setRole(Role.STUDENT);
+			profileDto = new StudentProfileDto();
+			break;
+		case Role.STUDENT:
+			userDto.setRole(Role.STUDENT);
+			profileDto = new StudentProfileDto();
+			break;
+		case Role.ADMIN:
+			userDto.setRole(Role.ADMIN);
+			profileDto = new AdminProfileDto();
+			break;
+		default:
+			throw new UnspecifiedRoleException("Необработанная роль пользователя.");
+		}
+	}
 }

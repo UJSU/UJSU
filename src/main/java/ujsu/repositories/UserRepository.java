@@ -13,4 +13,6 @@ public interface UserRepository extends CrudRepository<User, Integer> {
 	public Optional<User> findByEmail(String email);
 
 	public <S extends User> S save(S user);
+
+	public boolean existsByEmail(String email);
 }

@@ -3,13 +3,13 @@ package ujsu.mappers;
 import org.mapstruct.Mapper;
 
 import ujsu.dto.SignInDto;
-import ujsu.dto.SignUpDto;
+import ujsu.dto.UserDto;
 import ujsu.entities.User;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 
-	User fromSignUpDto(SignUpDto dto);
+	User fromDto(UserDto dto);
 
-	User fromSignInDto(SignInDto dto);
+	User fromDto(SignInDto dto);
 }

@@ -7,8 +7,8 @@ CREATE TABLE IF NOT EXISTS `user` (
     last_name       VARCHAR(100) NOT NULL,
     birth_date      DATE         NOT NULL,
     sign_up_date    DATE         NOT NULL,
-    role            TINYINT      NOT NULL,  -- 1 - STUDENT, 2 - ADMIN
-    sex             TINYINT      NOT NULL   -- 0 - NOT_STATED, 1 - MALE, 2 - FEMALE
+    role_code       INT	    	 NOT NULL,  -- 1 - STUDENT, 2 - ADMIN
+    sex_code        INT      	 NOT NULL   -- 0 - NOT_STATED, 1 - MALE, 2 - FEMALE
 );
 
 CREATE TABLE IF NOT EXISTS student_profile (

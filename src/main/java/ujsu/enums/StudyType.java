@@ -14,7 +14,7 @@ public enum StudyType implements CodedEnum {
 	BACHELOUR(1, "Бакалавриат"), SPECIALIST(2, "Специалитет"), MASTER(3, "Магистратура"), GRADUATE(4, "Аспирантура");
 
 	private final int code;
-	private final String displayName;
+	private final String displayValue;
 
 	private static final Map<Integer, StudyType> BY_CODE = Arrays.stream(values())
 			.collect(Collectors.toUnmodifiableMap(StudyType::getCode, Function.identity()));

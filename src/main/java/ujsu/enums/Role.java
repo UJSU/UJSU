@@ -14,7 +14,7 @@ public enum Role implements CodedEnum {
 	STUDENT(1, "Студент"), ADMIN(2, "Администратор");
 
 	private final int code;
-	private final String displayName;
+	private final String displayValue;
 
 	private static final Map<Integer, Role> BY_CODE = Arrays.stream(values())
 			.collect(Collectors.toUnmodifiableMap(Role::getCode, Function.identity()));

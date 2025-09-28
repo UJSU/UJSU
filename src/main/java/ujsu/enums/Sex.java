@@ -14,7 +14,7 @@ public enum Sex implements CodedEnum{
 	NULL(0, "Не указан"), MALE(1, "Мужской"), FEMALE(2, "Женский");
 
 	private final int code;
-	private final String displayName;
+	private final String displayValue;
 
 	private static final Map<Integer, Sex> BY_CODE = Arrays.stream(values())
 			.collect(Collectors.toUnmodifiableMap(Sex::getCode, Function.identity()));
@@ -25,5 +25,4 @@ public enum Sex implements CodedEnum{
 			throw new IllegalArgumentException("Unknown code: " + code + " for enum: " + Sex.class.getSimpleName());
 		return sex;
 	}
-
 }

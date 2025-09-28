@@ -1,20 +1,31 @@
 package ujsu.entities;
 
-import ujsu.enums.StudyType;
+import org.springframework.data.annotation.Id;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import ujsu.enums.StudyType;
 
 @Getter
 @Setter
 @RequiredArgsConstructor
 public class StudentProfile implements UserProfile {
 
-	private int id;
-	private int userId;
-	private int universityId;
-	private int specialityId;
+	@Id
+	private Integer id;
+	private Integer userId;
+	private Integer universityId;
+	private Integer specialityId;
 
-	private byte courseNum;
-	private StudyType studyType;
+	private Byte courseNum;
+	private Integer studyType;
+    
+    public StudyType getStudyType() {
+        return StudyType.fromCode(studyType);
+    }
+
+    public void setStudyType(StudyType studyType) {
+        this.studyType = studyType.getCode();
+    }
 }
