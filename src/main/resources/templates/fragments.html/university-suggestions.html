@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <div th:fragment="suggestions" class="suggestions-list" th:if="${not #lists.isEmpty(universities)}">
+        <button 
+            th:each="university : ${universities}"
+            th:text="${university.name}"
+            class="suggestion-item"
+            onclick="selectSuggestion(this, 'universityInput')"
+            type="button"
+        ></button>
+    </div>
+</body>
+</html>

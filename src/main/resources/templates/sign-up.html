@@ -8,6 +8,7 @@
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 	<link rel="stylesheet" th:href="@{css/style.css}" href="../static/css/style.css">
+	<script src="https://unpkg.com/htmx.org@1.9.10"></script>
 </head>
 
 <body>
@@ -93,11 +94,55 @@
 				<div id="student-profile-form-container"></div>
 				<div th:case="${'STUDENT'}" id="student-profile-form">
 					<div class="form-group">
-						<label for="universityName">Учебное заведение</label>
-						<input type="text" th:field="*{profileDto.universityName}" name="universityName"
-							id="universityName" placeholder="Введите название учебного заведения" required>
-						<i class="fas fa-university"></i>
-					</div>
+    <!-- <label for="universityInput">Университет</label>
+    <input 
+        type="text" 
+        id="universityInput"
+        name="university"
+        class="form-control"
+        hx-get="/fragments/get-universities-by-input"
+        hx-trigger="keyup changed delay:300ms"
+        hx-target="#university-suggestions"
+        hx-params="*"
+        autocomplete="off"
+    />
+    <div id="university-suggestions" class="suggestions-container"></div>
+</div> -->
+<!-- <div class="form-group">
+    <label for="universityInput">Университет</label>
+    <input 
+        type="text" 
+        id="universityInput"
+        name="university"
+        class="form-control"
+        hx-get="/fragments/get-universities-by-input"
+        hx-trigger="keyup changed delay:300ms"
+        hx-target="#university-suggestions"
+        hx-params="*"
+        autocomplete="off"
+        placeholder="Название вашего университета"
+    />
+    <i class="fas fa-university"></i>
+    <div id="university-suggestions" class="suggestions-container"></div>
+</div> -->
+<div class="form-group" style="position: relative;">
+    <label for="universityInput">Университет</label>
+    <input 
+        type="text" 
+        id="universityInput"
+        name="university"
+        class="form-control"
+        hx-get="/fragments/get-universities-by-input"
+        hx-trigger="keyup changed delay:300ms"
+        hx-target="#university-suggestions"
+        hx-params="*"
+        autocomplete="off"
+        placeholder="Название вашего университета"
+    />
+    <i class="fas fa-university"></i>
+    <div id="university-suggestions" style="position: relative;"></div>
+</div>
+					
 
 					<div class="form-group">
 						<label for="specialityCode">Код специальности</label>
@@ -239,6 +284,93 @@
 			</div>
 		</div>
 	</footer>
+	<script>
+function selectSuggestion(buttonElement, inputId) {
+    const input = document.getElementById(inputId);
+    input.value = buttonElement.textContent;
+    
+    // Скрываем выпадающий список
+    const suggestionsContainer = buttonElement.closest('.suggestions-list');
+    if (suggestionsContainer) {
+        suggestionsContainer.remove();
+    }
+}
+
+// Закрытие выпадающего списка при клике вне его
+document.addEventListener('click', function(event) {
+    if (!event.target.matches('.suggestion-item') && 
+        !event.target.matches('input[type="text"]')) {
+        const suggestions = document.querySelectorAll('.suggestions-list');
+        suggestions.forEach(suggestion => suggestion.remove());
+    }
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Стили для выпадающего списка университетов
+    const style = document.createElement('style');
+    style.textContent = `
+        .suggestions-list {
+            position: absolute !important;
+            top: 100% !important;
+            left: 0 !important;
+            right: 0 !important;
+            background: white !important;
+            border: 1px solid #ddd !important;
+            border-radius: 4px !important;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+            max-height: 200px !important;
+            overflow-y: auto !important;
+            z-index: 1000 !important;
+            margin-top: 2px !important;
+        }
+        .suggestion-item {
+            padding: 10px 15px !important;
+            border: none !important;
+            background: white !important;
+            width: 100% !important;
+            text-align: left !important;
+            cursor: pointer !important;
+            border-bottom: 1px solid #f0f0f0 !important;
+            display: block !important;
+            color: #333 !important;
+            text-decoration: none !important;
+        }
+        .suggestion-item:hover {
+            background-color: #f5f5f5 !important;
+        }
+        .suggestion-item:last-child {
+            border-bottom: none !important;
+        }
+    `;
+    document.head.appendChild(style);
+});
+</script>
+
+	<!-- <script>
+        function selectSuggestion(buttonElement, inputId) {
+            const input = document.getElementById(inputId);
+            input.value = buttonElement.textContent;
+            
+            // Скрываем выпадающий список
+            const suggestionsContainer = buttonElement.closest('.suggestions-list');
+            if (suggestionsContainer) {
+                suggestionsContainer.remove();
+            }
+            
+            // Дополнительно: можно отправить событие об изменении
+            input.dispatchEvent(new Event('change'));
+        }
+
+        // Закрытие выпадающего списка при клике вне его
+        document.addEventListener('click', function(event) {
+            if (!event.target.matches('.suggestion-item') && 
+                !event.target.matches('input[type="text"]')) {
+                const suggestions = document.querySelectorAll('.suggestions-list');
+                suggestions.forEach(suggestion => suggestion.remove());
+            }
+        });
+    </script> -->
 </body>
 
 </html>
