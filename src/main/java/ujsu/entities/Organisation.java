@@ -1,15 +1,26 @@
 package ujsu.entities;
 
+import java.util.Set;
+
 import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.MappedCollection;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
-@Getter
-@Setter
+@Data
 public class Organisation {
 
 	@Id
 	private Integer id;
-	private Integer name;
+	
+	private Boolean isUniversitySubdivision;
+	private Integer universityId;
+	private String name;
+	
+	@ToString.Exclude
+	@EqualsAndHashCode.Exclude
+	@MappedCollection(idColumn="organisation_id")
+	private Set<Vacancy> vacancies;
 }

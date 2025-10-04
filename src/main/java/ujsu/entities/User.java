@@ -6,12 +6,10 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import ujsu.enums.Role;
 import ujsu.enums.Sex;
 
 @Data
-@RequiredArgsConstructor
 public class User {
 
 	@Id

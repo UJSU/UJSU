@@ -14,6 +14,7 @@ import ujsu.dto.UserDto;
 import ujsu.dto.UserProfileDto;
 import ujsu.entities.AdminProfile;
 import ujsu.entities.StudentProfile;
+import ujsu.entities.University;
 import ujsu.entities.User;
 import ujsu.entities.UserProfile;
 import ujsu.enums.Role;
@@ -25,6 +26,7 @@ import ujsu.mappers.UserMapper;
 import ujsu.mappers.UserProfileMapper;
 import ujsu.repositories.AdminProfileRepository;
 import ujsu.repositories.StudentProfileRepository;
+import ujsu.repositories.UniversityRepository;
 import ujsu.repositories.UserRepository;
 
 @Service
@@ -34,6 +36,7 @@ public class UserService {
 	private final UserRepository userRepo;
 	private final StudentProfileRepository studentProfileRepo;
 	private final AdminProfileRepository adminProfileRepo;
+	private final UniversityRepository universityRepo;
 
 	private final UserMapper userMapper;
 	private final UserProfileMapper profileMapper;
@@ -85,10 +88,10 @@ public class UserService {
 
 	public User signIn(SignInDto dto) {
 		User user = userRepo.findByEmail(dto.getEmail())
-				.orElseThrow(() -> new UserNotFoundException("Пользователь не найден."));
+				.orElseThrow(() -> new UserNotFoundException());
 		
 		if (!BCrypt.checkpw(dto.getPassword(), user.getHashedPassword()))
-			throw new InvalidPasswordException("Неверный пароль.");
+			throw new InvalidPasswordException();
 		switch (user.getRole()) {
 		case Role.STUDENT:
 			user.setProfile(studentProfileRepo.findUserProfileByUserId(user.getId()));
@@ -98,5 +101,11 @@ public class UserService {
 			break;
 		}
 		return user;
+	}
+	
+	public University getStudentUniversity(User user) {
+		if (user.getRole() != Role.STUDENT)
+			throw new IllegalArgumentException("Передан пользователь с неверной ролью");
+		return universityRepo.findById(((StudentProfile)user.getProfile()).getUniversityId()).get();
 	}
 }

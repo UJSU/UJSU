@@ -22,7 +22,7 @@ public enum Role implements CodedEnum {
 	public static Role fromCode(int code) {
 		Role role = BY_CODE.get(code);
 		if (role == null)
-			throw new IllegalArgumentException("Unknown code: " + code + " for enum: " + Sex.class.getSimpleName());
+			throw new IllegalArgumentException("Unknown code: " + code + " for enum: " + Role.class.getSimpleName());
 		return role;
 	}
 }

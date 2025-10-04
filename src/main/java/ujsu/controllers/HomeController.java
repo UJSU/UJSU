@@ -10,16 +10,18 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import lombok.RequiredArgsConstructor;
 import ujsu.dto.SignInDto;
 import ujsu.dto.SignUpDto;
-import ujsu.dto.StudentProfileDto;
+import ujsu.entities.User;
 import ujsu.enums.Role;
+import ujsu.exceptions.InvalidPasswordException;
+import ujsu.exceptions.UserNotFoundException;
 import ujsu.services.UserService;
 
 @Controller
 @RequiredArgsConstructor
-@SessionAttributes("user")
+@SessionAttributes({"user", "university"})
 public class HomeController {
 
-	public final UserService userService;
+	private final UserService userService;
 
 	@GetMapping("/")
 	public String showMainPage() {
@@ -34,9 +36,14 @@ public class HomeController {
 	@PostMapping("/sign-in")
 	public String signIn(Model model, SignInDto signInDto) {
 		try {
-			model.addAttribute(userService.signIn(signInDto));
-		} catch (RuntimeException e) {
-			model.addAttribute("errorMessage", e.getMessage()); // TODO bind to fields
+			User user = userService.signIn(signInDto);
+			model.addAttribute(user);
+			model.addAttribute(userService.getStudentUniversity(user));
+		} catch (UserNotFoundException e) {
+			model.addAttribute("errorMessage", "Неверный адрес электронной почты или пароль."); // TODO bind to fields
+			return "sign-in";
+		} catch (InvalidPasswordException e) {
+			model.addAttribute("errorMessage", "Неверный адрес электронной почты или пароль."); // TODO bind to fields
 			return "sign-in";
 		}
 		return "redirect:/vacancy";

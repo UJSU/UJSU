@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>СтудВорк - Карьерный центр</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap">
-    <link rel="stylesheet" href="../static/css/vakansiistyle.css">
+    <link rel="stylesheet" href="../static/css/vakansiistyle.css" th:href="@{css/style.css}">
 </head>
 <body>
     <!-- Шапка сайта -->
@@ -54,27 +54,27 @@
             <h2 class="section-title">Актуальные вакансии</h2>
             <div class="vacancies-grid">
                 <!-- Карточка вакансии -->
-                 <template>
+                 <div th:each="vacancy: ${vacancies}">
                      <div class="vacancy-card">
                       <h3 class="vacancy-title" th:text="${vacancy.position}"></h3>
-                      <div class="company-name" th:text="${university.name + '•' + organisation.name}"></div>
-                      <div class="salary" th:text="${'от ' + min_salary + ' ₽ ' + ' до ' + 'max_salary'}"></div>
+                      <div class="company-name" th:text="|${university.name}  • ${vacancy.organisation.name}|"></div>
+                      <div class="salary" th:text="|${vacancy.minSalary}₽ до ${vacancy.maxSalary}|"></div>
                       <a href="#" class="vacancy-button">Откликнуться</a>
                      </div>
-                </template>
+                </div>
             </div>
             
             <h2 class="section-title">Стажировки для студентов</h2>
             <div class="vacancies-grid">
                 <!-- Карточка стажировки -->
-                <template>
+                <div th:each="intership: ${interships}">
                      <div class="vacancy-card">
                       <h3 class="vacancy-title" th:text="${internship.name}"></h3>
-                      <div class="company-name" th:text="${university.name + '•' + organisation.name}"></div>
-                      <div class="salary" th:text="$'от ' + {min_salary} + ' ₽ ' + ' до ' + 'max_salary'"></div>
+                      <div class="company-name" th:text="|${university.name}  • ${intership.organisation.name}|"></div>
+                      <div class="salary" th:text="|${intership.minSalary}₽ до ${intership.maxSalary}|"></div>
                       <a href="#" class="vacancy-button">Откликнуться</a>
                      </div>
-                </template>
+                </div>
                 <a href="#" class="vacancy-button" style="margin-top: 20px;">Узнать больше о стажировках</a>
             </div>
         </div>

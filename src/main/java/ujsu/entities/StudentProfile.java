@@ -2,14 +2,10 @@ package ujsu.entities;
 
 import org.springframework.data.annotation.Id;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 import ujsu.enums.StudyType;
 
-@Getter
-@Setter
-@RequiredArgsConstructor
+@Data
 public class StudentProfile implements UserProfile {
 
 	@Id
