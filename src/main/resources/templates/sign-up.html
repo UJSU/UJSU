@@ -94,37 +94,7 @@
 				<div id="student-profile-form-container"></div>
 				<div th:case="${'STUDENT'}" id="student-profile-form">
 					<div class="form-group">
-    <!-- <label for="universityInput">Университет</label>
-    <input 
-        type="text" 
-        id="universityInput"
-        name="university"
-        class="form-control"
-        hx-get="/fragments/get-universities-by-input"
-        hx-trigger="keyup changed delay:300ms"
-        hx-target="#university-suggestions"
-        hx-params="*"
-        autocomplete="off"
-    />
-    <div id="university-suggestions" class="suggestions-container"></div>
-</div> -->
-<!-- <div class="form-group">
-    <label for="universityInput">Университет</label>
-    <input 
-        type="text" 
-        id="universityInput"
-        name="university"
-        class="form-control"
-        hx-get="/fragments/get-universities-by-input"
-        hx-trigger="keyup changed delay:300ms"
-        hx-target="#university-suggestions"
-        hx-params="*"
-        autocomplete="off"
-        placeholder="Название вашего университета"
-    />
-    <i class="fas fa-university"></i>
-    <div id="university-suggestions" class="suggestions-container"></div>
-</div> -->
+
 <div class="form-group" style="position: relative;">
     <label for="universityInput">Университет</label>
     <input 
@@ -140,16 +110,33 @@
         placeholder="Название вашего университета"
     />
     <i class="fas fa-university"></i>
-    <div id="university-suggestions" style="position: relative;"></div>
 </div>
+<div id="university-suggestions" style="position: relative;"></div>
+
+<div class="form-group" style="position: relative;">
+    <label for="specialityInput">Специальность</label>
+    <input 
+        type="text" 
+        id="specialityInput"
+        name="speciality"
+        class="form-control"
+        hx-get="/fragments/get-specialities-by-input"
+        hx-trigger="keyup changed delay:300ms"
+        hx-target="#speciality-suggestions"
+        hx-params="*"
+        autocomplete="off"
+        placeholder="Код (09.03.04) или название (Программная инженерия)"
+    />
+    <i class="fas fa-code"></i>
+</div>
+<div id="speciality-suggestions" style="position: relative;"></div>
+
+<!-- Опционально: скрытые поля для хранения данных -->
+<input type="hidden" id="specialityCode" name="specialityCode">
+<input type="hidden" id="specialityName" name="specialityName">
 					
 
-					<div class="form-group">
-						<label for="specialityCode">Код специальности</label>
-						<input type="text" th:field="*{profileDto.specialityCode}" name="specialityCode"
-							id="specialityCode" placeholder="Например: 09.03.01" required>
-						<i class="fas fa-code"></i>
-					</div>
+					
 					
 					<div class="form-group">
 						<label for="courseNum">Курс</label>
@@ -284,10 +271,21 @@
 			</div>
 		</div>
 	</footer>
-	<script>
+<script>
 function selectSuggestion(buttonElement, inputId) {
     const input = document.getElementById(inputId);
-    input.value = buttonElement.textContent;
+    
+    // ИЗМЕНЕНИЕ 1: Проверяем data-атрибуты для специальностей
+    const code = buttonElement.getAttribute('data-code');
+    const name = buttonElement.getAttribute('data-name');
+    
+    // ИЗМЕНЕНИЕ 2: Если есть data-атрибуты - используем формат "Код - Название"
+    if (code && name) {
+        input.value = `${code} - ${name}`;
+    } else {
+        // Иначе используем обычный текст (для университетов)
+        input.value = buttonElement.textContent;
+    }
     
     // Скрываем выпадающий список
     const suggestionsContainer = buttonElement.closest('.suggestions-list');
@@ -302,6 +300,23 @@ document.addEventListener('click', function(event) {
         !event.target.matches('input[type="text"]')) {
         const suggestions = document.querySelectorAll('.suggestions-list');
         suggestions.forEach(suggestion => suggestion.remove());
+    }
+});
+
+// ИЗМЕНЕНИЕ 3: Делегирование событий для динамически загруженных элементов
+document.addEventListener('click', function(event) {
+    if (event.target.matches('.suggestion-item')) {
+        // ИЗМЕНЕНИЕ 4: Автоматически определяем inputId по контейнеру
+        const container = event.target.closest('[id$="-suggestions"]');
+        let inputId;
+        if (container && container.id === 'speciality-suggestions') {
+            inputId = 'specialityInput';
+        } else if (container && container.id === 'university-suggestions') {
+            inputId = 'universityInput';
+        } else {
+            inputId = 'universityInput'; // fallback
+        }
+        selectSuggestion(event.target, inputId);
     }
 });
 </script>
@@ -319,9 +334,12 @@ document.addEventListener('DOMContentLoaded', function() {
             border: 1px solid #ddd !important;
             border-radius: 4px !important;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
-            max-height: 200px !important;
+            /* ИЗМЕНЕНИЕ 1: Ограничиваем высоту для 3 элементов */
+            max-height: 132px !important; /* 3 элемента × 44px */
+            min-height: 44px !important; /* Минимум 1 элемент */
             overflow-y: auto !important;
-            z-index: 1000 !important;
+            /* ИЗМЕНЕНИЕ 2: Увеличиваем z-index чтобы был поверх кнопки */
+            z-index: 9999 !important;
             margin-top: 2px !important;
         }
         .suggestion-item {
@@ -335,6 +353,13 @@ document.addEventListener('DOMContentLoaded', function() {
             display: block !important;
             color: #333 !important;
             text-decoration: none !important;
+            /* ИЗМЕНЕНИЕ 3: Фиксируем высоту элементов */
+            height: 44px !important;
+            box-sizing: border-box !important;
+            line-height: 24px !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            white-space: nowrap !important;
         }
         .suggestion-item:hover {
             background-color: #f5f5f5 !important;
@@ -342,35 +367,12 @@ document.addEventListener('DOMContentLoaded', function() {
         .suggestion-item:last-child {
             border-bottom: none !important;
         }
+         
     `;
     document.head.appendChild(style);
 });
 </script>
 
-	<!-- <script>
-        function selectSuggestion(buttonElement, inputId) {
-            const input = document.getElementById(inputId);
-            input.value = buttonElement.textContent;
-            
-            // Скрываем выпадающий список
-            const suggestionsContainer = buttonElement.closest('.suggestions-list');
-            if (suggestionsContainer) {
-                suggestionsContainer.remove();
-            }
-            
-            // Дополнительно: можно отправить событие об изменении
-            input.dispatchEvent(new Event('change'));
-        }
-
-        // Закрытие выпадающего списка при клике вне его
-        document.addEventListener('click', function(event) {
-            if (!event.target.matches('.suggestion-item') && 
-                !event.target.matches('input[type="text"]')) {
-                const suggestions = document.querySelectorAll('.suggestions-list');
-                suggestions.forEach(suggestion => suggestion.remove());
-            }
-        });
-    </script> -->
 </body>
 
 </html>

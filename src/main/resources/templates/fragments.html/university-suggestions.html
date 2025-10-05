@@ -1,3 +1,21 @@
+<!-- <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <div th:fragment="suggestions" class="suggestions-list" th:if="${not #lists.isEmpty(universities)}">
+        <button 
+            th:each="university : ${universities}"
+            th:text="${university.name}"
+            class="suggestion-item"
+            onclick="selectSuggestion(this, 'universityInput')"
+            type="button"
+        ></button>
+    </div>
+
+    <div th:if="${#lists.isEmpty(universities)}" class="suggestions-list">
+            <div class="no-suggestions">Ваш университет не найден</div>
+        </div>
+</body>
+</html> -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
@@ -9,6 +27,11 @@
             onclick="selectSuggestion(this, 'universityInput')"
             type="button"
         ></button>
+    </div>
+
+    <!-- ДОБАВЬТЕ КЛАСС suggestions-list -->
+    <div th:fragment="no-universities" class="suggestions-list" th:unless="${not #lists.isEmpty(universities)}">
+        <div class="no-suggestions">Ваш университет не найден</div>
     </div>
 </body>
 </html>

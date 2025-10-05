@@ -532,107 +532,278 @@ footer::before {
     top: 100%;
     left: 0;
     right: 0;
-    background: white;
-    border: 1px solid #ddd;
-    border-top: none;
-    max-height: 200px;
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 
+        0 10px 25px -3px rgba(99, 102, 241, 0.1),
+        0 4px 6px -2px rgba(99, 102, 241, 0.05);
+    max-height: 250px;
     overflow-y: auto;
     z-index: 1000;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-top: 8px;
+    padding: 6px;
+    backdrop-filter: blur(10px);
+    animation: slideInUp 0.3s ease-out;
+}
+
+/* Анимация появления */
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(-10px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Красивый скроллбар */
+.suggestions-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.suggestions-list::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 10px;
+}
+
+.suggestions-list::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    border-radius: 10px;
+}
+
+.suggestions-list::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
 }
 
 .suggestion-item {
-    padding: 8px 12px;
-    border-bottom: 1px solid #eee;
-    cursor: pointer;
-    background: none;
+    padding: 14px 16px;
     border: none;
+    background: transparent;
     width: 100%;
     text-align: left;
+    cursor: pointer;
+    border-radius: 8px;
+    margin-bottom: 4px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 14px;
-}
-
-.suggestion-item:hover {
-    background-color: #f5f5f5;
-}
-
-.suggestion-item:last-child {
-    border-bottom: none;
-}
-/* Стили для поиска университетов */
-.suggestions-container {
+    font-weight: 500;
+    color: #1f2937 !important;
     position: relative;
+    overflow: hidden;
+    border: 1px solid transparent;
 }
 
-.suggestions-list {
+/* Основной эффект при наведении - синий градиент */
+.suggestion-item:hover {
+    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%) !important;
+    color: #ffffff !important;
+    transform: translateY(-2px);
+    box-shadow: 
+        0 8px 20px rgba(99, 102, 241, 0.3),
+        0 2px 4px rgba(99, 102, 241, 0.2);
+    border-color: #6366f1;
+}
+
+/* Эффект "пульсации" при наведении */
+.suggestion-item:hover::before {
+    content: '';
     position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: white; /* Добавляем белый фон */
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    max-height: 200px;
-    overflow-y: auto;
-    z-index: 1000;
-    margin-top: 2px;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.2), 
+        transparent);
+    animation: shimmer 1.5s infinite;
 }
 
+@keyframes shimmer {
+    0% {
+        left: -100%;
+    }
+    100% {
+        left: 100%;
+    }
+}
+
+/* Эффект при активном нажатии */
+.suggestion-item:active {
+    transform: translateY(0) scale(0.98);
+    transition: transform 0.1s;
+}
+
+/* Разделители между элементами */
+.suggestion-item:not(:last-child) {
+    border-bottom: 1px solid #f1f5f9;
+}
+
+/* Стиль для последнего элемента */
+.suggestion-item:last-child {
+    margin-bottom: 0;
+}
+
+/* Альтернативный вариант с другим цветом */
+.suggestion-item.alternative:hover {
+    background: linear-gradient(135deg, #06b6d4 0%, #0ea5e9 100%) !important;
+    box-shadow: 0 8px 20px rgba(6, 182, 212, 0.3);
+}
+
+/* Вариант с зеленым */
+.suggestion-item.success:hover {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+    box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+}
+
+/* Индикатор выбора */
+.suggestion-item::after {
+    content: '';
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%) scale(0);
+    width: 6px;
+    height: 6px;
+    background: currentColor;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+}
+
+.suggestion-item:hover::after {
+    transform: translateY(-50%) scale(1);
+}
+
+/* Стиль для элементов с иконками */
+.suggestion-item.with-icon {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.suggestion-item.with-icon::before {
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    font-size: 14px;
+    opacity: 0.7;
+}
+
+.suggestion-item.university::before {
+    content: '🏛️';
+}
+
+.suggestion-item.speciality::before {
+    content: '📚';
+}
+
+/* Эффект "магнитного" притяжения */
 .suggestion-item {
-    padding: 10px 15px;
-    border: none;
-    background: white; /* Фон для каждого элемента */
-    width: 100%;
-    text-align: left;
-    cursor: pointer;
-    border-bottom: 1px solid #f0f0f0;
-    transition: background-color 0.2s;
+    background-position: center;
+    transition: background 0.8s;
 }
 
 .suggestion-item:hover {
-    background-color: #f8f9fa; /* Светлый фон при наведении */
+    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%) 
+                radial-gradient(circle, transparent 1%, #6366f1 1%) 
+                center/15000% !important;
+    color: #ffffff !important;
 }
 
-.suggestion-item:last-child {
-    border-bottom: none;
+.suggestion-item:active {
+    background-color: #4f46e5;
+    background-size: 100%;
+    transition: background 0s;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .suggestions-list {
+        border-radius: 10px;
+        margin-top: 6px;
+        max-height: 220px;
+    }
+    
+    .suggestion-item {
+        padding: 16px 18px;
+        font-size: 16px;
+    }
+}
+
+/* Темная тема */
+@media (prefers-color-scheme: dark) {
+    .suggestions-list {
+        background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+        border-color: #374151;
+        box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.5);
+    }
+    
+    .suggestion-item {
+        color: #f3f4f6 !important;
+        border-bottom-color: #374151;
+    }
+    
+    .suggestion-item:hover {
+        background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%) !important;
+        color: #ffffff !important;
+    }
+}
+
+/* Эффект "неонового свечения" для премиум вида */
+.suggestion-item.premium {
+    border: 1px solid transparent;
+    background: linear-gradient(#0c0c0c, #0c0c0c) padding-box,
+                linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899) border-box;
+}
+
+.suggestion-item.premium:hover {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%) !important;
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
+    animation: glow 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+    from {
+        box-shadow: 0 0 20px rgba(99, 102, 241, 0.5);
+    }
+    to {
+        box-shadow: 0 0 30px rgba(99, 102, 241, 0.8);
+    }
 }
 
 .form-group {
     position: relative;
 }
-.suggestions-list {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
+.more-results-message {
+    padding: 8px 12px;
+    font-size: 12px;
+    color: #666;
+    border-top: 1px solid #f0f0f0;
+    background: #f9f9f9;
+    text-align: center;
+}
+
+.no-suggestions {
+    padding: 12px 15px !important;
+    color: #666 !important;
+    font-style: italic !important;
+    text-align: center !important;
+    border: 1px solid transparent !important; 
     background: white !important;
-    border: 1px solid #ddd !important;
-    border-radius: 4px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
-    max-height: 200px;
-    overflow-y: auto;
-    z-index: 1000;
-    margin-top: 2px;
+    border-radius: 4px !important;
 }
 
-.suggestion-item {
-    padding: 10px 15px !important;
-    border: none !important;
-    background: white !important;
-    width: 100%;
-    text-align: left;
-    cursor: pointer;
-    border-bottom: 1px solid #f0f0f0 !important;
-    display: block;
-    color: #333 !important;
-    text-decoration: none;
+.speciality-code {
+    font-weight: bold;
+    color: #6366f1;
 }
-
-.suggestion-item:hover {
-    background-color: #f5f5f5 !important;
+.suggestion-item:hover .speciality-code {
+    color: #ffffff !important; 
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); 
 }
-
-.suggestion-item:last-child {
-    border-bottom: none !important;
+.suggestion-item:hover .speciality-code {
+    filter: brightness(1.2); 
 }

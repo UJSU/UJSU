@@ -1,0 +1,19 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <div th:fragment="specialty-suggestions" class="suggestions-list" th:if="${not #lists.isEmpty(specialties)}">
+        <button
+            th:each="specialty : ${specialties}"
+            class="suggestion-item"
+            onclick="selectSpecialtySuggestion(this)"
+            type="button"
+            th:text="${profileDto.specialityCode}"
+        ></button>
+    </div>
+    
+    <div th:fragment="no-specialties" th:unless="${not #lists.isEmpty(specialties)}">
+        <div class="no-suggestions">Специальности не найдены</div>
+    </div>
+</body>
+</html>
