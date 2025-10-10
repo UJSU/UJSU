@@ -82,21 +82,10 @@ public class SearchFragmentController {
         new Speciality("09.04.04", "Программная инженерия (магистратура)"),
         new Speciality("09.04.01", "Информатика и вычислительная техника (магистратура)")
     );
-// Объявление пакета - определяет расположение класса в структуре проекта
-
-
-
-
-    // =========================================================================
-    // ПОИСК СПЕЦИАЛЬНОСТЕЙ
-    // =========================================================================
-
     @GetMapping("/get-specialities-by-input")
     @ResponseBody
     public String getSpecialitiesByInput(@RequestParam("speciality") String input) {
         System.out.println("=== SPECIALITY SEARCH REQUEST: '" + input + "' ===");
-        
-        // Проверяем входящие данные
         System.out.println("Input length: " + input.length());
         System.out.println("All specialities count: " + allSpecialities.size());
         

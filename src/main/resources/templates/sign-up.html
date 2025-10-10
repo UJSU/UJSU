@@ -29,7 +29,7 @@
 	</header>
 	<main class="main-content">
 		<div class="auth-container">
-			<h2 class="auth-title">Регистрация студента</h2>
+			<h2 class="auth-title">Регистрация</h2>
 			<form class="auth-form" th:action="@{/sign-up}" th:object="${signUpDto}" method="post">
 				<div class="form-group">
 					<label for="email">Электронная почта</label>
@@ -39,15 +39,25 @@
 
 				<div class="form-group">
 					<label for="password">Пароль</label>
-					<input type="password" th:field="*{userDto.password}" id="password" placeholder="Введите пароль" required>
-					<i class="fas fa-lock"></i>
+					<div class="password-wrapper">
+						<input type="password" th:field="*{userDto.password}" id="password" placeholder="Введите пароль" required>
+						<i class="fas fa-lock"></i>
+						<button type="button" class="password-toggle" data-target="password">
+							<i class="fas fa-eye-slash"></i>
+						</button>
+					</div>
 				</div>
 
 				<div class="form-group">
 					<label for="password2">Повторите пароль</label>
-					<input type="password" th:field="*{userDto.password2}" id="password2" placeholder="Повторите пароль"
-						required>
-					<i class="fas fa-lock"></i>
+					<div class="password-wrapper">
+						<input type="password" th:field="*{userDto.password2}" id="password2" placeholder="Повторите пароль"
+							required>
+						<i class="fas fa-lock"></i>
+						<button type="button" class="password-toggle" data-target="password2">
+							<i class="fas fa-eye-slash"></i>
+						</button>
+					</div>
 				</div>
 
 				<div class="form-group">
@@ -84,116 +94,15 @@
 
 				<div class="form-group">
 					<label for="role">Роль</label>
-					<select th:field="*{userDto.role}" id="role" required>
-						<option th:each="r: ${roles}" th:value="${r}" th:text="${r.displayValue}"></option>
+					<select id="role" name="userDto.role" required onchange="loadProfileFields(this.value)">
+						<option value="">Выберите роль</option>
+						<option value="STUDENT">Студент</option>
+						<option value="ADMIN">Работодатель</option>
 					</select>
 					<i class="fas fa-user-tag"></i>
 				</div>
-				
-				<div th:switch="*{userDto.role.toString()}">
-				<div id="student-profile-form-container"></div>
-				<div th:case="${'STUDENT'}" id="student-profile-form">
-					<div class="form-group">
 
-<div class="form-group" style="position: relative;">
-    <label for="universityInput">Университет</label>
-    <input 
-        type="text" 
-        id="universityInput"
-        name="university"
-        class="form-control"
-        hx-get="/fragments/get-universities-by-input"
-        hx-trigger="keyup changed delay:300ms"
-        hx-target="#university-suggestions"
-        hx-params="*"
-        autocomplete="off"
-        placeholder="Название вашего университета"
-    />
-    <i class="fas fa-university"></i>
-</div>
-<div id="university-suggestions" style="position: relative;"></div>
-
-<div class="form-group" style="position: relative;">
-    <label for="specialityInput">Специальность</label>
-    <input 
-        type="text" 
-        id="specialityInput"
-        name="speciality"
-        class="form-control"
-        hx-get="/fragments/get-specialities-by-input"
-        hx-trigger="keyup changed delay:300ms"
-        hx-target="#speciality-suggestions"
-        hx-params="*"
-        autocomplete="off"
-        placeholder="Код (09.03.04) или название (Программная инженерия)"
-    />
-    <i class="fas fa-code"></i>
-</div>
-<div id="speciality-suggestions" style="position: relative;"></div>
-
-<!-- Опционально: скрытые поля для хранения данных -->
-<input type="hidden" id="specialityCode" name="specialityCode">
-<input type="hidden" id="specialityName" name="specialityName">
-					
-
-					
-					
-					<div class="form-group">
-						<label for="courseNum">Курс</label>
-						<select th:field="*{profileDto.courseNum}" name="courseNum" id="courseNum" required>
-							<option value="">Выберите курс</option>
-							<option value="1">1 курс</option>
-							<option value="2">2 курс</option>
-							<option value="3">3 курс</option>
-							<option value="4">4 курс</option>
-							<option value="5">5 курс</option>
-							<option value="6">6 курс</option>
-						</select>
-						<i class="fas fa-graduation-cap"></i>
-					</div>
-
-					<div class="form-group">
-						<label for="studyType">Форма обучения</label>
-						<select th:field="*{profileDto.studyType}" id="studyType" required>
-							<option th:each="t : ${studyTypes}" th:value="${t}" th:text="${t.displayValue}"></option>
-						</select>
-						<i class="fas fa-book-open"></i>
-					</div>
-				</div>
-
-				<div id="admin-profile-form-container"></div>
-				<div th:case="${'ADMIN'}" id="admin-profile-form">
-					<div class="form-group">
-						<label for="organisationName">Организация</label>
-						<input type="text" th:field="*{profileDto.organisationName}" name="organisationName"
-							id="organisationName" placeholder="Введите название организации" required>
-						<i class="fas fa-university"></i>
-					</div>
-				</div>
-				</div>
-
-				<script>
-					document.addEventListener('DOMContentLoaded', function () {
-						const roleSelect = document.getElementById('role');
-						const studentFormContainer = document.getElementById('student-profile-form-container');
-						const adminFormContainer = document.getElementById('admin-profile-form-container');
-						const studentForm = document.getElementById('student-profile-form');
-						const adminForm = document.getElementById('admin-profile-form');
-
-						function toggleProfileForms() {
-							console.log('Role changed to:', roleSelect.value);
-							if (studentForm) studentForm.style.display = 'none';
-							if (adminForm) adminForm.style.display = 'none';
-							if (roleSelect.value === 'STUDENT' && studentForm)
-								studentForm.style.display = 'block';
-							else if (roleSelect.value === 'ADMIN' && adminForm)
-								adminForm.style.display = 'block';
-						}
-
-						roleSelect.addEventListener('change', toggleProfileForms);
-						toggleProfileForms();
-					});
-				</script>
+				<div id="profile-fields-container"></div>
 
 				<div th:if="${successMessage}" class="alert alert-success">
 					<i class="fas fa-check-circle"></i>
@@ -224,6 +133,7 @@
 			</button>
 		</div>
 	</main>
+	
 	<footer>
 		<div class="container">
 			<div class="footer-content">
@@ -271,108 +181,146 @@
 			</div>
 		</div>
 	</footer>
-<script>
-function selectSuggestion(buttonElement, inputId) {
-    const input = document.getElementById(inputId);
-    
-    // ИЗМЕНЕНИЕ 1: Проверяем data-атрибуты для специальностей
-    const code = buttonElement.getAttribute('data-code');
-    const name = buttonElement.getAttribute('data-name');
-    
-    // ИЗМЕНЕНИЕ 2: Если есть data-атрибуты - используем формат "Код - Название"
-    if (code && name) {
-        input.value = `${code} - ${name}`;
-    } else {
-        // Иначе используем обычный текст (для университетов)
-        input.value = buttonElement.textContent;
-    }
-    
-    // Скрываем выпадающий список
-    const suggestionsContainer = buttonElement.closest('.suggestions-list');
-    if (suggestionsContainer) {
-        suggestionsContainer.remove();
-    }
-}
 
-// Закрытие выпадающего списка при клике вне его
-document.addEventListener('click', function(event) {
-    if (!event.target.matches('.suggestion-item') && 
-        !event.target.matches('input[type="text"]')) {
-        const suggestions = document.querySelectorAll('.suggestions-list');
-        suggestions.forEach(suggestion => suggestion.remove());
-    }
-});
+	<script>
+	// Функция для переключения видимости пароля
+	function togglePasswordVisibility(button) {
+		const targetId = button.getAttribute('data-target');
+		const passwordField = document.getElementById(targetId);
+		const icon = button.querySelector('i');
+		
+		if (passwordField) {
+			if (passwordField.type === 'password') {
+				passwordField.type = 'text';
+				icon.classList.add('fa-eye');
+				icon.classList.remove('fa-eye-slash');
+			} else {
+				passwordField.type = 'password';
+				
+				icon.classList.add('fa-eye-slash');
+				icon.classList.remove('fa-eye');
+			}
+		}
+	}
 
-// ИЗМЕНЕНИЕ 3: Делегирование событий для динамически загруженных элементов
-document.addEventListener('click', function(event) {
-    if (event.target.matches('.suggestion-item')) {
-        // ИЗМЕНЕНИЕ 4: Автоматически определяем inputId по контейнеру
-        const container = event.target.closest('[id$="-suggestions"]');
-        let inputId;
-        if (container && container.id === 'speciality-suggestions') {
-            inputId = 'specialityInput';
-        } else if (container && container.id === 'university-suggestions') {
-            inputId = 'universityInput';
-        } else {
-            inputId = 'universityInput'; // fallback
-        }
-        selectSuggestion(event.target, inputId);
-    }
-});
-</script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Стили для выпадающего списка университетов
-    const style = document.createElement('style');
-    style.textContent = `
-        .suggestions-list {
-            position: absolute !important;
-            top: 100% !important;
-            left: 0 !important;
-            right: 0 !important;
-            background: white !important;
-            border: 1px solid #ddd !important;
-            border-radius: 4px !important;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
-            /* ИЗМЕНЕНИЕ 1: Ограничиваем высоту для 3 элементов */
-            max-height: 132px !important; /* 3 элемента × 44px */
-            min-height: 44px !important; /* Минимум 1 элемент */
-            overflow-y: auto !important;
-            /* ИЗМЕНЕНИЕ 2: Увеличиваем z-index чтобы был поверх кнопки */
-            z-index: 9999 !important;
-            margin-top: 2px !important;
-        }
-        .suggestion-item {
-            padding: 10px 15px !important;
-            border: none !important;
-            background: white !important;
-            width: 100% !important;
-            text-align: left !important;
-            cursor: pointer !important;
-            border-bottom: 1px solid #f0f0f0 !important;
-            display: block !important;
-            color: #333 !important;
-            text-decoration: none !important;
-            /* ИЗМЕНЕНИЕ 3: Фиксируем высоту элементов */
-            height: 44px !important;
-            box-sizing: border-box !important;
-            line-height: 24px !important;
-            overflow: hidden !important;
-            text-overflow: ellipsis !important;
-            white-space: nowrap !important;
-        }
-        .suggestion-item:hover {
-            background-color: #f5f5f5 !important;
-        }
-        .suggestion-item:last-child {
-            border-bottom: none !important;
-        }
-         
-    `;
-    document.head.appendChild(style);
-});
-</script>
+	// Инициализация кнопок переключения пароля
+	function initPasswordToggles() {
+		const toggleButtons = document.querySelectorAll('.password-toggle');
+		toggleButtons.forEach(button => {
+			button.addEventListener('click', function() {
+				togglePasswordVisibility(this);
+			});
+		});
+	}
 
+	// Инициализация при загрузке страницы
+	document.addEventListener('DOMContentLoaded', function() {
+		initPasswordToggles();
+		
+		// Стили для выпадающих списков
+		const style = document.createElement('style');
+		style.textContent = `
+			.suggestions-list {
+				position: absolute !important;
+				top: 100% !important;
+				left: 0 !important;
+				right: 0 !important;
+				background: white !important;
+				border: 1px solid #ddd !important;
+				border-radius: 4px !important;
+				box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+				max-height: 132px !important;
+				min-height: 44px !important;
+				overflow-y: auto !important;
+				z-index: 9999 !important;
+				margin-top: 2px !important;
+			}
+			.suggestion-item {
+				padding: 10px 15px !important;
+				border: none !important;
+				background: white !important;
+				width: 100% !important;
+				text-align: left !important;
+				cursor: pointer !important;
+				border-bottom: 1px solid #f0f0f0 !important;
+				display: block !important;
+				color: #333 !important;
+				text-decoration: none !important;
+				height: 44px !important;
+				box-sizing: border-box !important;
+				line-height: 24px !important;
+				overflow: hidden !important;
+				text-overflow: ellipsis !important;
+				white-space: nowrap !important;
+			}
+			.suggestion-item:hover {
+				background-color: #f5f5f5 !important;
+			}
+			.suggestion-item:last-child {
+				border-bottom: none !important;
+			}
+		`;
+		document.head.appendChild(style);
+	});
+
+	function selectSuggestion(buttonElement, inputId) {
+		const input = document.getElementById(inputId);
+		const code = buttonElement.getAttribute('data-code');
+		const name = buttonElement.getAttribute('data-name');
+		
+		if (code && name) {
+			input.value = `${code} - ${name}`;
+		} else {
+			input.value = buttonElement.textContent;
+		}
+		
+		const suggestionsContainer = buttonElement.closest('.suggestions-list');
+		if (suggestionsContainer) {
+			suggestionsContainer.remove();
+		}
+	}
+
+	document.addEventListener('click', function(event) {
+		if (event.target.matches('.suggestion-item')) {
+			const container = event.target.closest('[id$="-suggestions"]');
+			let inputId;
+			if (container && container.id === 'speciality-suggestions') {
+				inputId = 'specialityInput';
+			} else if (container && container.id === 'university-suggestions') {
+				inputId = 'universityInput';
+			} else {
+				inputId = 'universityInput';
+			}
+			selectSuggestion(event.target, inputId);
+		}
+		
+		if (!event.target.matches('.suggestion-item') && 
+			!event.target.matches('input[type="text"]')) {
+			const suggestions = document.querySelectorAll('.suggestions-list');
+			suggestions.forEach(suggestion => suggestion.remove());
+		}
+	});
+	</script>
+
+	<script>
+	function loadProfileFields(role) {
+		console.log('Loading fields for role:', role);
+		
+		fetch('/fragments/profile-fields?role=' + role)
+			.then(response => response.text())
+			.then(html => {
+				document.getElementById('profile-fields-container').innerHTML = html;
+				htmx.process(document.getElementById('profile-fields-container'));
+				
+				// Инициализируем кнопки переключения пароля для динамически загруженных полей
+				setTimeout(() => {
+					initPasswordToggles();
+				}, 100);
+			})
+			.catch(error => {
+				console.error('Error:', error);
+			});
+	}
+	</script>
 </body>
-
 </html>

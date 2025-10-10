@@ -45,6 +45,9 @@
 					<input type="password" th:field="*{password}" id="password" placeholder="Введите ваш пароль"
 						required>
 					<i class="fas fa-lock"></i>
+					<button type="button" class="password-toggle" data-target="password">
+							<i class="fas fa-eye-slash"></i>
+						</button>
 				</div>
 
 				<div th:if="${successMessage}" class="alert alert-success">
@@ -125,6 +128,37 @@
 			</div>
 		</div>
 	</footer>
+	<script>
+function togglePasswordVisibility(button) {
+    const targetId = button.getAttribute('data-target');
+    const passwordField = document.getElementById(targetId);
+    const icon = button.querySelector('i');
+    
+    if (passwordField) {
+        if (passwordField.type === 'password') {
+            passwordField.type = 'text';
+            icon.classList.add('fa-eye');
+            icon.classList.remove('fa-eye-slash');
+        } else {
+            passwordField.type = 'password';
+            icon.classList.add('fa-eye-slash');
+            icon.classList.remove('fa-eye');
+        }
+    }
+}
+function initPasswordToggles() {
+    const toggleButtons = document.querySelectorAll('.password-toggle');
+    toggleButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            togglePasswordVisibility(this);
+        });
+    });
+}
+document.addEventListener('DOMContentLoaded', function() {
+    initPasswordToggles();
+});
+</script>
+
 </body>
 
 </html>
