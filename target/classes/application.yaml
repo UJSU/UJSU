@@ -1,19 +1,54 @@
+# spring:
+#   application:
+#       name: UJSU
+#   datasource:
+#       generate-unique-name: false
+#       name: ujsu
+#       url: ${UJSU_MYSQL_URL:jdbc:mysql://localhost:3306/ujsu}
+#       username: ${UJSU_MYSQL_USERNAME:ujsu}
+#       password: ${UJSU_MYSQL_PASSWORD:ujsupass}
+#       driver-class-name: com.mysql.cj.jdbc.Driver
+#   sql:
+#     init:
+#       schema-locations: classpath:schema.sql
+#       mode: always
+# server:
+#   port: 8080
+# logging:
+#   level:
+#     org:
+#       springframework:
+#         data:
+#           convert: DEBUG
+#           jdbc:
+#             core:
+#               convert:
+#                 JdbcConverter: DEBUG
+#         jdbc:
+#           core: DEBUG
 spring:
   application:
-      name: UJSU
+    name: UJSU
   datasource:
-      generate-unique-name: false
-      name: ujsu
-      url: ${UJSU_MYSQL_URL:jdbc:mysql://localhost:3306/ujsu}
-      username: ${UJSU_MYSQL_USERNAME:ujsu}
-      password: ${UJSU_MYSQL_PASSWORD:ujsupass}
-      driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password: 
+    driver-class-name: org.h2.Driver
+  h2:
+    console:
+      enabled: true
   sql:
     init:
       schema-locations: classpath:schema.sql
-      mode: always
+      data-locations: classpath:university.sql  # ← ДОБАВЬТЕ ЭТУ СТРОКУ
+      mode: never
+      
+  thymeleaf:
+    cache: false
+
 server:
   port: 8080
+
 logging:
   level:
     org:
