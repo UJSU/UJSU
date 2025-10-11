@@ -2,110 +2,64 @@ package ujsu.services;
 
 import java.time.LocalDate;
 
-import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
-import ujsu.dto.AdminProfileDto;
-import ujsu.dto.SignInDto;
 import ujsu.dto.SignUpDto;
-import ujsu.dto.StudentProfileDto;
 import ujsu.dto.UserDto;
-import ujsu.dto.UserProfileDto;
-import ujsu.entities.AdminProfile;
-import ujsu.entities.StudentProfile;
-import ujsu.entities.University;
 import ujsu.entities.User;
-import ujsu.entities.UserProfile;
-import ujsu.enums.Role;
-import ujsu.exceptions.InvalidPasswordException;
-import ujsu.exceptions.UnspecifiedRoleException;
-import ujsu.exceptions.UserNotFoundException;
-import ujsu.exceptions.UserSignedUpException;
+import ujsu.exceptions.AuthException;
 import ujsu.mappers.UserMapper;
-import ujsu.mappers.UserProfileMapper;
-import ujsu.repositories.AdminProfileRepository;
-import ujsu.repositories.StudentProfileRepository;
-import ujsu.repositories.UniversityRepository;
 import ujsu.repositories.UserRepository;
 
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class UserService implements UserDetailsService {
+
+	private final ProfileService profileService;
 
 	private final UserRepository userRepo;
-	private final StudentProfileRepository studentProfileRepo;
-	private final AdminProfileRepository adminProfileRepo;
-	private final UniversityRepository universityRepo;
 
 	private final UserMapper userMapper;
-	private final UserProfileMapper profileMapper;
 
-	public User signUp(SignUpDto signUpDto) {
-		
+	private final PasswordEncoder passwordEncoder;
+
+	@Transactional
+	public User signUp(SignUpDto signUpDto) throws AuthException {
 		UserDto userDto = signUpDto.getUserDto();
-		UserProfileDto profileDto = signUpDto.getProfileDto();
-		
 		if (userRepo.existsByEmail(userDto.getEmail()))
-			throw new UserSignedUpException("Пользователь с этой почтой уже зарегистрирован.");
+			throw new AuthException("Пользователь с указанной почтой уже зарегистрирован.");
 		User user = userMapper.fromDto(userDto);
-		user.setHashedPassword(BCrypt.hashpw(userDto.getPassword(), BCrypt.gensalt()));
+		user.setHashedPassword(passwordEncoder.encode(userDto.getPassword()));
 		user.setSignUpDate(LocalDate.now());
 		user = userRepo.save(user);
-		UserProfile profile;
-		switch (user.getRole()) {
-		case Role.STUDENT:
-			StudentProfile studentProfile = profileMapper.createStudentProfile((StudentProfileDto)profileDto);
-			studentProfile.setUserId(user.getId());
-			
-			
-			// ВРЕМЕННО - ТОЛЬКО ДЛЯ ОТЛАДКИ
-			// TODO: заменить на рабочий код
-			studentProfile.setUniversityId(0);
-			studentProfile.setSpecialityId(0);
-			
-			
-			profile = studentProfileRepo.save((StudentProfile)studentProfile);
-			break;
-		case Role.ADMIN:
-			AdminProfile adminProfile = profileMapper.createAdminProfile((AdminProfileDto)profileDto);
-			adminProfile.setUserId(user.getId());
-			
-			
-			// ВРЕМЕННО - ТОЛЬКО ДЛЯ ОТЛАДКИ
-			// TODO: заменить на рабочий код
-			adminProfile.setOrganisationId(0);
-			
-			
-			profile = adminProfileRepo.save((AdminProfile)adminProfile);
-			break;
-		default:
-			throw new UnspecifiedRoleException("Необработанная роль пользователя.");
-		}
-		profile.setUserId(user.getId());
+		user.setProfile(profileService.createProfileFromDto(user.getId(), user.getRole(), signUpDto.getProfileDto()));
 		return user;
 	}
 
-	public User signIn(SignInDto dto) {
-		User user = userRepo.findByEmail(dto.getEmail())
-				.orElseThrow(() -> new UserNotFoundException());
-		
-		if (!BCrypt.checkpw(dto.getPassword(), user.getHashedPassword()))
-			throw new InvalidPasswordException();
-		switch (user.getRole()) {
-		case Role.STUDENT:
-			user.setProfile(studentProfileRepo.findUserProfileByUserId(user.getId()));
-			break;
-		case Role.ADMIN:
-			user.setProfile(adminProfileRepo.findUserProfileByUserId(user.getId()));
-			break;
-		}
+	@Override
+	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+		User user = userRepo.findByEmail(email)
+				.orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден: " + email));
+		user.setProfile(profileService.findProfile(user.getId(), user.getRole()));
 		return user;
 	}
-	
-	public University getStudentUniversity(User user) {
-		if (user.getRole() != Role.STUDENT)
-			throw new IllegalArgumentException("Передан пользователь с неверной ролью");
-		return universityRepo.findById(((StudentProfile)user.getProfile()).getUniversityId()).get();
+
+	public void authorizeUser(String username) {
+		UserDetails userDetails = loadUserByUsername(username);
+		Authentication auth = new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(),
+				userDetails.getAuthorities());
+		SecurityContext context = SecurityContextHolder.createEmptyContext();
+        context.setAuthentication(auth);
+        SecurityContextHolder.setContext(context);
 	}
 }

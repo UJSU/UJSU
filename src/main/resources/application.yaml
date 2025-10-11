@@ -19,10 +19,7 @@ logging:
     org:
       springframework:
         data:
-          convert: DEBUG
-          jdbc:
-            core:
-              convert:
-                JdbcConverter: DEBUG
+          jdbc: DEBUG
         jdbc:
           core: DEBUG
+        security: DEBUG

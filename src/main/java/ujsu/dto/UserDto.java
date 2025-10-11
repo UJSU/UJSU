@@ -18,7 +18,7 @@ import ujsu.enums.Sex;
 @NotBlank(message = "Заполните это поле.")
 @EqualPasswordEntries
 public class UserDto {
-
+	
 	@Email(message = "Некорректный адрес электронной почты.")
 	@Size(max = 255, message = "Адрес электронной почты не должен быть длиннее 255 символов.")
 	private String email;
@@ -36,4 +36,10 @@ public class UserDto {
 
 	private Sex sex;
 	private Role role;
+	
+	
+	UserDto() {
+		sex = Sex.NULL;
+		role = Role.STUDENT;
+	}
 }

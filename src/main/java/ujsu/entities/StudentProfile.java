@@ -1,6 +1,7 @@
 package ujsu.entities;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 
 import lombok.Data;
 import ujsu.enums.StudyType;
@@ -17,6 +18,12 @@ public class StudentProfile implements UserProfile {
 	private Byte courseNum;
 	private Integer studyType;
     
+	@Transient
+	private University university;
+	
+	@Transient
+	private Speciality speciality;
+	
     public StudyType getStudyType() {
         return StudyType.fromCode(studyType);
     }

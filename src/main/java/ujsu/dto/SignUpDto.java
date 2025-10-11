@@ -3,7 +3,6 @@ package ujsu.dto;
 import lombok.Getter;
 import lombok.Setter;
 import ujsu.enums.Role;
-import ujsu.enums.Sex;
 import ujsu.exceptions.UnspecifiedRoleException;
 
 @Getter
@@ -16,22 +15,13 @@ public class SignUpDto {
 	public SignUpDto(Role role) {
 		userDto = new UserDto();
 		
-		switch (role) {
-		case null:
-			userDto.setSex(Sex.NULL);
-			userDto.setRole(Role.STUDENT);
-			profileDto = new StudentProfileDto();
-			break;
-		case Role.STUDENT:
-			userDto.setRole(Role.STUDENT);
-			profileDto = new StudentProfileDto();
-			break;
-		case Role.ADMIN:
-			userDto.setRole(Role.ADMIN);
-			profileDto = new AdminProfileDto();
-			break;
-		default:
-			throw new UnspecifiedRoleException("Необработанная роль пользователя.");
-		}
+		if (role != null)
+			userDto.setRole(role == null ? Role.STUDENT : role);
+	
+		profileDto = switch (userDto.getRole()) {
+		case STUDENT -> new StudentProfileDto();
+		case ADMIN -> new AdminProfileDto();
+		default -> throw new UnspecifiedRoleException();
+		};
 	}
 }

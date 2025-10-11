@@ -1,6 +1,7 @@
 package ujsu.entities;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.relational.core.mapping.Table;
 
 import lombok.Data;
@@ -14,4 +15,7 @@ public class AdminProfile implements UserProfile {
 	
 	private Integer userId;
 	private Integer organisationId;
+	
+	@Transient
+	private Organisation organisation;
 }

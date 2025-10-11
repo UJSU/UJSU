@@ -5,20 +5,18 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.SessionAttributes;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import ujsu.dto.SignInDto;
 import ujsu.dto.SignUpDto;
 import ujsu.entities.User;
 import ujsu.enums.Role;
-import ujsu.exceptions.InvalidPasswordException;
-import ujsu.exceptions.UserNotFoundException;
+import ujsu.exceptions.AuthException;
 import ujsu.services.UserService;
 
 @Controller
 @RequiredArgsConstructor
-@SessionAttributes({"user", "university"})
 public class HomeController {
 
 	private final UserService userService;
@@ -29,24 +27,10 @@ public class HomeController {
 	}
 
 	@GetMapping("/sign-in")
-	public String showSignInPage(SignInDto signInDto) {
+	public String showSignInPage(HttpSession session, Model model, SignInDto signInDto) {
+		model.addAttribute("errorMessage", session.getAttribute("errorMessage"));
+		session.removeAttribute("errorMessage");
 		return "sign-in";
-	}
-
-	@PostMapping("/sign-in")
-	public String signIn(Model model, SignInDto signInDto) {
-		try {
-			User user = userService.signIn(signInDto);
-			model.addAttribute(user);
-			model.addAttribute(userService.getStudentUniversity(user));
-		} catch (UserNotFoundException e) {
-			model.addAttribute("errorMessage", "Неверный адрес электронной почты или пароль."); // TODO bind to fields
-			return "sign-in";
-		} catch (InvalidPasswordException e) {
-			model.addAttribute("errorMessage", "Неверный адрес электронной почты или пароль."); // TODO bind to fields
-			return "sign-in";
-		}
-		return "redirect:/vacancy";
 	}
 
 	@GetMapping("/sign-up")
@@ -54,10 +38,17 @@ public class HomeController {
 		model.addAttribute(new SignUpDto(Role.STUDENT));
 		return "sign-up";
 	}
-	
+
 	@PostMapping("/sign-up")
-	public String SignUpUser(SignUpDto signUpDto) {
-		userService.signUp(signUpDto);
+	public String SignUpUser(Model model, SignUpDto signUpDto) {
+		try {
+			User user = userService.signUp(signUpDto);
+			userService.authorizeUser(user.getEmail());
+			model.addAttribute(user);
+		} catch (AuthException e) {
+			model.addAttribute("errorMessage", e.getMessage());
+			return "sign-up";
+		}
 		return "redirect:/vacancy";
 	}
 

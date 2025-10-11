@@ -30,24 +30,19 @@
 	<main class="main-content">
 		<div class="auth-container">
 			<h2 class="auth-title">Вход в личный кабинет</h2>
-
-
-
-			<form class="auth-form" th:action="@{/sign-in}" th:object="${signInDto}" method="post">
+			<form class="auth-form" th:action="@{/perform-sign-in}" method="post">
 				<div class="form-group">
 					<label for="email">Электронная почта</label>
-					<input type="email" th:field="*{email}" id="email" placeholder="Введите ваш email" required>
+					<input type="email" name="username" id="email" placeholder="Введите ваш email" required>
 					<i class="fas fa-envelope"></i>
 				</div>
 
 				<div class="form-group">
 					<label for="password">Пароль</label>
-					<input type="password" th:field="*{password}" id="password" placeholder="Введите ваш пароль"
-						required>
+					<input type="password" name="password" id="password" placeholder="Введите ваш пароль" required>
 					<i class="fas fa-lock"></i>
 				</div>
-
-				<div th:if="${successMessage}" class="alert alert-success">
+				<div th:if="${successMessage}" class="alert alert-error">
 					<i class="fas fa-check-circle"></i>
 					<span th:text="${successMessage}"></span>
 				</div>
@@ -56,7 +51,6 @@
 					<i class="fas fa-exclamation-circle"></i>
 					<span th:text="${errorMessage}"></span>
 				</div>
-
 
 				<button type="submit" class="auth-button">Войти</button>
 

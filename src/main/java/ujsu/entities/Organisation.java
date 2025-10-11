@@ -3,6 +3,7 @@ package ujsu.entities;
 import java.util.Set;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.relational.core.mapping.MappedCollection;
 
 import lombok.Data;
@@ -18,6 +19,9 @@ public class Organisation {
 	private Boolean isUniversitySubdivision;
 	private Integer universityId;
 	private String name;
+	
+	@Transient
+	private University university;
 	
 	@ToString.Exclude
 	@EqualsAndHashCode.Exclude
