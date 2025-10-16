@@ -7,6 +7,7 @@ import ujsu.dto.AdminProfileDto;
 import ujsu.dto.StudentProfileDto;
 import ujsu.dto.UserProfileDto;
 import ujsu.entities.AdminProfile;
+import ujsu.entities.Speciality;
 import ujsu.entities.StudentProfile;
 import ujsu.entities.UserProfile;
 import ujsu.enums.Role;
@@ -47,32 +48,23 @@ public class ProfileService {
 		};
 	}
 	
-	public UserProfile createProfileFromDto(int userId, Role role, UserProfileDto profileDto) {
+	public UserProfile saveProfileFromDto(int userId, Role role, UserProfileDto userProfileDto) {
 		return switch (role) {
 		case STUDENT -> {
-			StudentProfile studentProfile = profileMapper.createStudentProfile((StudentProfileDto)profileDto);
-			studentProfile.setUserId(userId);
-			
-			
-			// ВРЕМЕННО - ТОЛЬКО ДЛЯ ОТЛАДКИ
-			// TODO: заменить на рабочий код
-			studentProfile.setUniversityId(0);
-			studentProfile.setSpecialityId(0);
-			
-			
-			yield studentProfileRepo.save(studentProfile);
+			StudentProfileDto profileDto = (StudentProfileDto) userProfileDto;
+			StudentProfile profile = profileMapper.createStudentProfile((StudentProfileDto)userProfileDto);
+			profile.setUserId(userId);
+			profile.setUniversity(universityRepo.findByName(profileDto.getUniversityName()).get());
+			profile.setSpeciality(specialityRepo.findByCode(
+					profileDto.getSpecialityCodeAndName().split(" ")[0].substring(0, Speciality.CODE_LENGTH)).get());
+			yield studentProfileRepo.save(profile);
 		}
 		case ADMIN -> {
-			AdminProfile adminProfile = profileMapper.createAdminProfile((AdminProfileDto)profileDto);
-			adminProfile.setUserId(userId);
-			
-			
-			// ВРЕМЕННО - ТОЛЬКО ДЛЯ ОТЛАДКИ
-			// TODO: заменить на рабочий код
-			adminProfile.setOrganisationId(0);
-			
-			
-			yield adminProfileRepo.save(adminProfile);
+			AdminProfileDto profileDto = (AdminProfileDto) userProfileDto;
+			AdminProfile profile = profileMapper.createAdminProfile((AdminProfileDto)userProfileDto);
+			profile.setUserId(userId);
+			profile.setOrganisation(organisationRepo.findByName(profileDto.getOrganisationName()).get());
+			yield adminProfileRepo.save(profile);
 		}
 		default -> throw new UnspecifiedRoleException();
 		};

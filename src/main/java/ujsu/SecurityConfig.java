@@ -24,7 +24,7 @@ public class SecurityConfig {
 
 	@Bean
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		http.authorizeHttpRequests(authz -> authz.requestMatchers("/sign-up", "/css/**", "/js/**", "/images/**")
+		http.authorizeHttpRequests(authz -> authz.requestMatchers("/sign-up", "/fragments/*", "/error", "/css/**", "/js/**", "/images/**")
 				.permitAll().anyRequest().authenticated())
 				.formLogin(form -> form.loginPage("/sign-in").loginProcessingUrl("/perform-sign-in")
 						.defaultSuccessUrl("/vacancy", true).failureHandler(customAuthenticationFailureHandler).permitAll())

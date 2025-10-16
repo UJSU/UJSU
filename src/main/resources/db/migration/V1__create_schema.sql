@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS university (
 	name		VARCHAR(255) NOT NULL,
 	short_name	VARCHAR(255),
 	promo		TEXT,
-	is_state	BOOLEAN
+	is_state	BOOLEAN		 NOT NULL DEFAULT 1;
 );
 
 CREATE TABLE IF NOT EXISTS speciality (
@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS speciality (
 );
 
 CREATE TABLE IF NOT EXISTS speciality_university (
-	id			  INT NOT NULL,
+	id			  INT AUTO_INCREMENT PRIMARY KEY,
 	speciality_id INT NOT NULL,
 	university_id INT NOT NULL
 );

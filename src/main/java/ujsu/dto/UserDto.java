@@ -23,9 +23,9 @@ public class UserDto {
 	@Size(max = 255, message = "Адрес электронной почты не должен быть длиннее 255 символов.")
 	private String email;
 
-	@Size(min=8, message="Пароль не должен быть короче 8 символов.")
+	@Size(min = 8, message = "Пароль не должен быть короче 8 символов.")
 	private String password;
-	
+
 	private String password2;
 	private String name;
 	private String surname;
@@ -36,10 +36,9 @@ public class UserDto {
 
 	private Sex sex;
 	private Role role;
-	
-	
+
 	UserDto() {
 		sex = Sex.NULL;
-		role = Role.STUDENT;
+		role = null;
 	}
 }

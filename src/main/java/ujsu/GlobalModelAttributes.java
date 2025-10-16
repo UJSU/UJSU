@@ -24,4 +24,19 @@ public class GlobalModelAttributes {
     public StudyType[] getStudyTypes() {
         return StudyType.values();
     }
+    
+    @ModelAttribute("Sex")
+    public Class<Sex> getSexClass() {
+        return Sex.class;
+    }
+	
+    @ModelAttribute("Role")
+    public Class<Role> getRoleClass() {
+        return Role.class;
+    }
+    
+    @ModelAttribute("StudyTypes")
+    public Class<StudyType> getStudyTypeClass() {
+        return StudyType.class;
+    }
 }

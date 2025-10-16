@@ -1,5 +1,6 @@
 package ujsu.entities;
 
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.relational.core.mapping.Table;
@@ -18,4 +19,9 @@ public class AdminProfile implements UserProfile {
 	
 	@Transient
 	private Organisation organisation;
+	
+	public void setOrganisation(Organisation organisation) {
+		this.organisation = organisation;
+		this.organisationId = organisation != null ? organisation.getId() : null;
+	}
 }

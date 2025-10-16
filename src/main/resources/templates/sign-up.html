@@ -8,6 +8,10 @@
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 	<link rel="stylesheet" th:href="@{css/style.css}" href="../static/css/style.css">
+	<script src="https://unpkg.com/htmx.org@1.9.10"></script>
+	<script>
+	  htmx.config.historyEnabled = false;
+	</script>
 </head>
 
 <body>
@@ -30,6 +34,7 @@
 		<div class="auth-container">
 			<h2 class="auth-title">Регистрация студента</h2>
 			<form class="auth-form" th:action="@{/sign-up}" th:object="${signUpDto}" method="post">
+				<input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
 				<div class="form-group">
 					<label for="email">Электронная почта</label>
 					<input type="email" name="username" th:field="*{userDto.email}" id="email"
@@ -86,63 +91,20 @@
 
 				<div class="form-group">
 					<label for="role">Роль</label>
-					<select th:field="*{userDto.role}" id="role" required>
+					<select id="role" 
+					        th:field="*{userDto.role}" 
+					        required
+					        hx-get="/fragments/profile-fields"
+					        hx-trigger="change"
+					        hx-target="#profile-fields-container"
+					        hx-vals="js:{role: document.getElementById('role').value}">
+					    <option value="">Выберите роль</option>
 						<option th:each="r: ${roles}" th:value="${r}" th:text="${r.displayValue}"></option>
 					</select>
 					<i class="fas fa-user-tag"></i>
 				</div>
+				<div id="profile-fields-container"></div>
 
-				<div th:switch="*{userDto.role.toString()}">
-					<div id="student-profile-form-container"></div>
-					<div th:case="${'STUDENT'}" id="student-profile-form">
-						<div class="form-group">
-							<label for="universityName">Учебное заведение</label>
-							<input type="text" th:field="*{profileDto.universityName}" name="universityName"
-								id="universityName" placeholder="Введите название учебного заведения" required>
-							<i class="fas fa-university"></i>
-						</div>
-
-						<div class="form-group">
-							<label for="specialityCode">Код специальности</label>
-							<input type="text" th:field="*{profileDto.specialityCode}" name="specialityCode"
-								id="specialityCode" placeholder="Например: 09.03.01" required>
-							<i class="fas fa-code"></i>
-						</div>
-
-						<div class="form-group">
-							<label for="courseNum">Курс</label>
-							<select th:field="*{profileDto.courseNum}" name="courseNum" id="courseNum" required>
-								<option value="">Выберите курс</option>
-								<option value="1">1 курс</option>
-								<option value="2">2 курс</option>
-								<option value="3">3 курс</option>
-								<option value="4">4 курс</option>
-								<option value="5">5 курс</option>
-								<option value="6">6 курс</option>
-							</select>
-							<i class="fas fa-graduation-cap"></i>
-						</div>
-
-						<div class="form-group">
-							<label for="studyType">Форма обучения</label>
-							<select th:field="*{profileDto.studyType}" id="studyType" required>
-								<option th:each="t : ${studyTypes}" th:value="${t}" th:text="${t.displayValue}">
-								</option>
-							</select>
-							<i class="fas fa-book-open"></i>
-						</div>
-					</div>
-
-					<div id="admin-profile-form-container"></div>
-					<div th:case="${'ADMIN'}" id="admin-profile-form">
-						<div class="form-group">
-							<label for="organisationName">Организация</label>
-							<input type="text" th:field="*{profileDto.organisationName}" name="organisationName"
-								id="organisationName" placeholder="Введите название организации" required>
-							<i class="fas fa-university"></i>
-						</div>
-					</div>
-				</div>
 
 				<script>
 					document.addEventListener('DOMContentLoaded', function () {
@@ -166,7 +128,7 @@
 						toggleProfileForms();
 					});
 				</script>
-
+				
 				<div th:if="${successMessage}" class="alert alert-success">
 					<i class="fas fa-check-circle"></i>
 					<span th:text="${successMessage}"></span>

@@ -11,7 +11,7 @@ import ujsu.enums.StudyType;
 public class StudentProfileDto implements UserProfileDto {
 
 	private String universityName;
-	private String specialityCode;
+	private String specialityCodeAndName;
 	private StudyType studyType;
 	private Byte courseNum;
 }

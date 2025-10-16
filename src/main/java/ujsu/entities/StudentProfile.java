@@ -31,4 +31,14 @@ public class StudentProfile implements UserProfile {
     public void setStudyType(StudyType studyType) {
         this.studyType = studyType.getCode();
     }
+    
+    public void setUniversity(University university) {
+    	this.university = university;
+    	this.universityId = university != null ? university.getId() : null;
+    }
+    
+    public void setSpeciality(Speciality speciality) {
+    	this.speciality = speciality;
+    	this.specialityId = speciality != null ? speciality.getId() : null;
+    }
 }

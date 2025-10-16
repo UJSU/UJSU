@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <div th:fragment="profile-fields">
+	<script>
+	    htmx.config.historyEnabled = false;
+	</script>
+    <div th:if="${role==Role.STUDENT}" class="student-profile-section">
+        <div class="form-group" style="position: relative;">
+            <label for="universityInput">Университет</label>
+            <input 
+                type="text" 
+                id="universityInput"
+                name="profileDto.universityName"
+                class="form-control"
+                hx-get="/fragments/get-universities-by-input"
+                hx-trigger="keyup changed delay:100ms"
+                hx-target="#university-suggestions"
+                hx-vals="js:{input: document.getElementById('universityInput').value}"
+                autocomplete="off"
+                placeholder="Название вашего университета"
+            />
+            <i class="fas fa-university"></i>
+        </div>
+        <div id="university-suggestions" style="position: relative;"></div>
+
+        <div class="form-group" style="position: relative;">
+            <label for="specialityInput">Специальность</label>
+            <input 
+                type="text" 
+                id="specialityInput"
+				name="profileDto.specialityCodeAndName"
+                class="form-control"
+                hx-get="/fragments/get-specialities-by-input"
+                hx-trigger="keyup changed delay:100ms"
+                hx-target="#speciality-suggestions"
+				hx-vals="js:{input: document.getElementById('specialityInput').value,
+					universityName: document.getElementById('universityInput').value}"
+                autocomplete="off"
+                placeholder="Код (09.03.04) или название (Программная инженерия)"
+            />
+            <i class="fas fa-code"></i>
+        </div>
+        <div id="speciality-suggestions" style="position: relative;"></div>
+
+        <div class="form-group">
+            <label for="courseNum">Курс</label>
+            <select name="profileDto.courseNum" id="courseNum" required>
+                <option value="">Выберите курс</option>
+                <option value="1">1 курс</option>
+                <option value="2">2 курс</option>
+                <option value="3">3 курс</option>
+                <option value="4">4 курс</option>
+                <option value="5">5 курс</option>
+                <option value="6">6 курс</option>
+            </select>
+            <i class="fas fa-graduation-cap"></i>
+        </div>
+
+        <div class="form-group">
+            <label for="studyType">Форма обучения</label>
+            <select name="profileDto.studyType" id="studyType" required>
+                <option th:each="t : ${studyTypes}" th:value="${t}" th:text="${t.displayValue}"></option>
+            </select>
+            <i class="fas fa-book-open"></i>
+        </div>
+    </div>
+    <div th:if="${role==Role.ADMIN}" class="admin-profile-section">
+        <div class="form-group">
+            <label for="profileDto.organisationName">Организация</label>
+            <input type="text" name="organisationName" id="organisationName" 
+                   placeholder="Введите название организации" required>
+            <i class="fas fa-university"></i>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

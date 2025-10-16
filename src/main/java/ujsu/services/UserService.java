@@ -2,10 +2,6 @@ package ujsu.services;
 
 import java.time.LocalDate;
 
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -42,7 +38,7 @@ public class UserService implements UserDetailsService {
 		user.setHashedPassword(passwordEncoder.encode(userDto.getPassword()));
 		user.setSignUpDate(LocalDate.now());
 		user = userRepo.save(user);
-		user.setProfile(profileService.createProfileFromDto(user.getId(), user.getRole(), signUpDto.getProfileDto()));
+		user.setProfile(profileService.saveProfileFromDto(user.getId(), user.getRole(), signUpDto.getProfileDto()));
 		return user;
 	}
 
@@ -52,14 +48,5 @@ public class UserService implements UserDetailsService {
 				.orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден: " + email));
 		user.setProfile(profileService.findProfile(user.getId(), user.getRole()));
 		return user;
-	}
-
-	public void authorizeUser(String username) {
-		UserDetails userDetails = loadUserByUsername(username);
-		Authentication auth = new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(),
-				userDetails.getAuthorities());
-		SecurityContext context = SecurityContextHolder.createEmptyContext();
-        context.setAuthentication(auth);
-        SecurityContextHolder.setContext(context);
 	}
 }
