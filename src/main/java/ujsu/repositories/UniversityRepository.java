@@ -10,7 +10,6 @@ import ujsu.entities.Speciality;
 import ujsu.entities.University;
 
 public interface UniversityRepository extends CrudRepository<University, Integer> {
-
 	Optional<University> findByName(String name);
 
 	@Query("SELECT u.* FROM University u WHERE "

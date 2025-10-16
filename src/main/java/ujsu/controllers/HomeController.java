@@ -44,7 +44,7 @@ public class HomeController {
 	}
 
 	@GetMapping("/sign-up")
-	public String showSignUpPage(Model model, SignUpDto signUpDto) {
+	public String showSignUpPage(Model model) {
 		return "sign-up";
 	}
 

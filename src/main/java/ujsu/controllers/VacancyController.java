@@ -15,21 +15,17 @@ import ujsu.entities.University;
 import ujsu.entities.User;
 import ujsu.entities.Vacancy;
 import ujsu.enums.Role;
-import ujsu.repositories.UniversityRepository;
 
 @Controller
 @RequiredArgsConstructor
 public class VacancyController {
 
-	private final UniversityRepository universityRepo;
-
 	@GetMapping("/vacancy")
 	public String showVacancyPage(Model model, Authentication auth) {
 		User user = (User) auth.getPrincipal();
-		System.out.println(user);
 		Role role = user.getRole();
 		if (role == Role.STUDENT) {
-			University university = universityRepo.findById(((StudentProfile) user.getProfile()).getUniversityId()).get();
+			University university = ((StudentProfile) user.getProfile()).getUniversity();
 			model.addAttribute("organisations", university.getOrganisations());
 			Set<Vacancy> vacancies = new HashSet<>();
 			for (Organisation o : university.getOrganisations()) {

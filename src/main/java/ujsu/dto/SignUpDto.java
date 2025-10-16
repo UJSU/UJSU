@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 import ujsu.enums.Role;
 
-
 @Getter
 @Setter
 public class SignUpDto {
