@@ -5,12 +5,14 @@
 	<script>
 	    htmx.config.historyEnabled = false;
 	</script>
+    <div th:fragment="profile-fields(role)">
     <div th:if="${role==Role.STUDENT}" class="student-profile-section">
         <div class="form-group" style="position: relative;">
             <label for="universityInput">Университет</label>
             <input 
                 type="text" 
                 id="universityInput"
+
                 name="profileDto.universityName"
                 class="form-control"
                 hx-get="/fragments/get-universities-by-input"
@@ -42,6 +44,8 @@
             <i class="fas fa-code"></i>
         </div>
         <div id="speciality-suggestions" style="position: relative;"></div>
+        <input type="hidden" id="specialityCode" name="specialityCode">
+        <input type="hidden" id="specialityName" name="specialityName">
 
         <div class="form-group">
             <label for="courseNum">Курс</label>

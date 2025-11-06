@@ -836,4 +836,476 @@ footer::before {
     color: #1a17d1;
     background-color: #d6d6ff;
     transform: translateY(-50%) scale(0.95);
+<<<<<<< HEAD
+=======
+}
+/* выаыфвыфвфы */
+/* Стили для индикатора сложности пароля */
+.password-strength-container {
+    margin-top: 8px;
+}
+
+.password-strength-indicator {
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.strength-bar {
+    border-radius: 4px;
+    padding: 10px;
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    margin-bottom: 5px;
+}
+
+.strength-weak {
+    border-left: 4px solid #dc3545;
+    background: linear-gradient(90deg, rgba(220,53,69,0.1) 0%, rgba(248,249,250,1) 30%);
+}
+
+.strength-medium {
+    border-left: 4px solid #ffc107;
+    background: linear-gradient(90deg, rgba(255,193,7,0.1) 0%, rgba(248,249,250,1) 30%);
+}
+
+.strength-strong {
+    border-left: 4px solid #28a745;
+    background: linear-gradient(90deg, rgba(40,167,69,0.1) 0%, rgba(248,249,250,1) 30%);
+}
+
+.strength-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.strength-text {
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.strength-confidence {
+    font-size: 11px;
+    color: #666;
+    background: rgba(0,0,0,0.05);
+    padding: 2px 6px;
+    border-radius: 10px;
+}
+
+.strength-visual {
+    height: 6px;
+    background: #e9ecef;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 6px;
+}
+
+.strength-fill {
+    height: 100%;
+    transition: all 0.5s ease;
+    border-radius: 3px;
+}
+
+.strength-details {
+    font-size: 11px;
+    color: #666;
+    display: flex;
+    justify-content: space-between;
+}
+
+.strength-probability {
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-weight: 500;
+}
+
+.prob-weak { background: rgba(220,53,69,0.1); color: #dc3545; }
+.prob-medium { background: rgba(255,193,7,0.1); color: #856404; }
+.prob-strong { background: rgba(40,167,69,0.1); color: #155724; }
+
+.password-match-indicator {
+    margin-top: 5px;
+    font-size: 13px;
+}
+
+.match-success {
+    color: #28a745;
+    font-weight: 500;
+}
+
+.match-error {
+    color: #dc3545;
+    font-weight: 500;
+}
+
+.strength-unknown {
+    color: #6c757d;
+    font-style: italic;
+    text-align: center;
+    padding: 10px;
+}
+/* ээээээээээээ */
+ 
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--primary);
+            font-size: 32px;
+            font-weight: 700;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .page-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+
+        .vacancies-container {
+            display: flex;
+            gap: 30px;
+        }
+
+        .filters-section {
+            flex: 0 0 300px;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 25px;
+            height: fit-content;
+        }
+
+        .filters-title {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: var(--primary);
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--light-gray);
+        }
+
+        .filter-group {
+            margin-bottom: 25px;
+        }
+
+        .filter-group h3 {
+            font-size: 16px;
+            margin-bottom: 12px;
+            color: var(--dark);
+        }
+
+        .filter-option {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .filter-option input {
+            margin-right: 10px;
+        }
+
+        .filter-option label {
+            cursor: pointer;
+        }
+
+        .salary-input {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .salary-input input {
+            width: 100px;
+            padding: 8px 10px;
+            border: 1px solid var(--light-gray);
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+
+        .vacancies-section {
+            flex: 1;
+        }
+
+        .vacancies-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .vacancies-count {
+            font-size: 18px;
+            color: var(--gray);
+        }
+
+        .sort-options select {
+            padding: 10px 15px;
+            border: 2px solid var(--light-gray);
+            border-radius: var(--border-radius);
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+        }
+
+        .vacancies-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .vacancy-card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 25px;
+            transition: var(--transition);
+            border-left: 4px solid var(--primary);
+        }
+
+        .vacancy-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .vacancy-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .vacancy-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .vacancy-company {
+            font-size: 16px;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+
+        .vacancy-salary {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--success);
+            background: rgba(76, 201, 240, 0.1);
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+
+        .vacancy-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .vacancy-meta {
+            display: flex;
+            align-items: center;
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        .vacancy-meta i {
+            margin-right: 5px;
+        }
+
+        .vacancy-description {
+            color: var(--secondary);
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .vacancy-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tag {
+            background: var(--light-gray);
+            color: var(--dark);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        .vacancy-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .vacancy-date {
+            font-size: 14px;
+            color: var(--gray);
+        }
+
+        .apply-button {
+            padding: 10px 20px;
+            background: linear-gradient(to right, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .apply-button:hover {
+            background: linear-gradient(to right, var(--primary-dark), var(--primary));
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(44, 62, 80, 0.2);
+        }
+        /* University Banner with Search */
+.university-banner {
+    background: white;
+    padding: 25px 0;
+    border-bottom: 1px solid var(--light-gray);
+    margin-bottom: 30px;
+}
+
+.university-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+}
+
+.university-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex: 1;
+}
+
+.university-logo {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--light-gray);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.university-logo img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+}
+
+.university-text-content {
+    flex: 1;
+}
+
+.university-main-text {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 5px;
+}
+
+.university-subtext {
+    font-size: 18px;
+    color: var(--primary);
+    font-weight: 500;
+}
+
+.university-search {
+    flex: 0 0 800px;
+    display: flex;
+    gap: 15px;
+}
+
+.search-input {
+    flex: 1;
+    position: relative;
+}
+
+.search-input input {
+    width: 100%;
+    padding: 14px 16px 14px 45px;
+    border: 2px solid var(--light-gray);
+    border-radius: var(--border-radius);
+    font-size: 16px;
+    transition: var(--transition);
+}
+
+.search-input input:focus {
+    border-color: var(--primary);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(34, 31, 245, 0.1);
+}
+
+.search-input i {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gray);
+    font-size: 18px;
+}
+
+.search-button {
+    padding: 0 25px;
+    background: linear-gradient(to right, var(--primary), var(--primary-dark));
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    white-space: nowrap;
+}
+
+.search-button:hover {
+    background: linear-gradient(to right, var(--primary-dark), var(--primary));
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(44, 62, 80, 0.3);
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .university-content {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .university-left {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+    }
+    
+    .university-search {
+        flex: 1;
+        width: 100%;
+    }
+    
+    .university-main-text {
+        font-size: 20px;
+    }
+    
+    .university-subtext {
+        font-size: 16px;
+    }
+>>>>>>> 431dab60b2341583fd61cfde7dbb0132213cf995
 }
