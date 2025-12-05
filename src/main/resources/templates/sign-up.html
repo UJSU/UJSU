@@ -36,30 +36,30 @@
 					<input type="email" th:field="*{userDto.email}" id="email" placeholder="Введите ваш email" required>
 					<i class="fas fa-envelope"></i>
 				</div>
+<div class="form-group">
+    <label for="password">Пароль</label>
+    <div class="password-wrapper">
+        <input type="password" th:field="*{userDto.password}" id="password" placeholder="Введите пароль" required>
+        <i class="fas fa-lock"></i>
+        <button type="button" class="password-toggle" data-target="password">
+            <i class="fas fa-eye"></i>
+        </button>
+    </div>
+    <!-- Индикатор сложности появится здесь автоматически -->
+</div>
 
-				<div class="form-group">
-					<label for="password">Пароль</label>
-					<div class="password-wrapper">
-						<input type="password" th:field="*{userDto.password}" id="password" placeholder="Введите пароль" required>
-						<i class="fas fa-lock"></i>
-						<button type="button" class="password-toggle" data-target="password">
-							<i class="fas fa-eye"></i>
-						</button>
-					</div>
-				</div>
-
-				<div class="form-group">
-					<label for="password2">Повторите пароль</label>
-					<div class="password-wrapper">
-						<input type="password" th:field="*{userDto.password2}" id="password2" placeholder="Повторите пароль"
-							required>
-						<i class="fas fa-lock"></i>
-						<button type="button" class="password-toggle" data-target="password2">
-							<i class="fas fa-eye"></i>
-						</button>
-					</div>
-				</div>
-
+<div class="form-group">
+    <label for="password2">Повторите пароль</label>
+    <div class="password-wrapper">
+        <input type="password" th:field="*{userDto.password2}" id="password2" placeholder="Повторите пароль" required>
+        <i class="fas fa-lock"></i>
+        <button type="button" class="password-toggle" data-target="password2">
+            <i class="fas fa-eye"></i>
+        </button>
+    </div>
+    <!-- Добавьте эту строку -->
+    <div id="password-match-container"></div>
+</div>
 				<div class="form-group">
 					<label for="name">Имя</label>
 					<input type="text" th:field="*{userDto.name}" id="name" placeholder="Введите ваше имя" required>
@@ -181,147 +181,230 @@
 			</div>
 		</div>
 	</footer>
-
 	<script>
-	// Функция для переключения видимости пароля
-	function togglePasswordVisibility(button) {
-		const targetId = button.getAttribute('data-target');
-		const passwordField = document.getElementById(targetId);
-		const icon = button.querySelector('i');
-		
-		if (passwordField) {
-			if (passwordField.type === 'password') {
-				passwordField.type = 'text';
-				icon.classList.add('fa-eye-slash');
-				icon.classList.remove('fa-eye');
-			} else {
-				passwordField.type = 'password';
-				
-				
-				icon.classList.add('fa-eye-slash');
-				icon.classList.remove('fa-eye');
-			}
-		}
-	}
+// Функция для переключения видимости пароля
+function togglePasswordVisibility(button) {
+    const targetId = button.getAttribute('data-target');
+    const passwordField = document.getElementById(targetId);
+    const icon = button.querySelector('i');
+    
+    if (passwordField) {
+        if (passwordField.type === 'password') {
+            passwordField.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            passwordField.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    }
+}
 
-	// Инициализация кнопок переключения пароля
-	function initPasswordToggles() {
-		const toggleButtons = document.querySelectorAll('.password-toggle');
-		toggleButtons.forEach(button => {
-			button.addEventListener('click', function() {
-				togglePasswordVisibility(this);
-			});
-		});
-	}
+// Инициализация кнопок переключения пароля
+function initPasswordToggles() {
+    const toggleButtons = document.querySelectorAll('.password-toggle');
+    toggleButtons.forEach(button => {
+        // Удаляем старые обработчики чтобы избежать дублирования
+        button.replaceWith(button.cloneNode(true));
+    });
+    
+    // Добавляем обработчики заново
+    document.querySelectorAll('.password-toggle').forEach(button => {
+        button.addEventListener('click', function() {
+            togglePasswordVisibility(this);
+        });
+    });
+}
 
-	// Инициализация при загрузке страницы
-	document.addEventListener('DOMContentLoaded', function() {
-		initPasswordToggles();
-		
-		// Стили для выпадающих списков
-		const style = document.createElement('style');
-		style.textContent = `
-			.suggestions-list {
-				position: absolute !important;
-				top: 100% !important;
-				left: 0 !important;
-				right: 0 !important;
-				background: white !important;
-				border: 1px solid #ddd !important;
-				border-radius: 4px !important;
-				box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
-				max-height: 132px !important;
-				min-height: 44px !important;
-				overflow-y: auto !important;
-				z-index: 9999 !important;
-				margin-top: 2px !important;
-			}
-			.suggestion-item {
-				padding: 10px 15px !important;
-				border: none !important;
-				background: white !important;
-				width: 100% !important;
-				text-align: left !important;
-				cursor: pointer !important;
-				border-bottom: 1px solid #f0f0f0 !important;
-				display: block !important;
-				color: #333 !important;
-				text-decoration: none !important;
-				height: 44px !important;
-				box-sizing: border-box !important;
-				line-height: 24px !important;
-				overflow: hidden !important;
-				text-overflow: ellipsis !important;
-				white-space: nowrap !important;
-			}
-			.suggestion-item:hover {
-				background-color: #f5f5f5 !important;
-			}
-			.suggestion-item:last-child {
-				border-bottom: none !important;
-			}
-		`;
-		document.head.appendChild(style);
-	});
+// ОСТАЛЬНОЙ КОД БЕЗ ИЗМЕНЕНИЙ...
+// Функция для проверки сложности пароля через ML модель
+async function checkPasswordStrength(password) {
+    if (!password) return null;
+    
+    try {
+        const response = await fetch('/api/password/check?password=' + encodeURIComponent(password));
+        if (response.ok) {
+            return await response.json();
+        }
+        return null;
+    } catch (error) {
+        console.error('Ошибка проверки пароля:', error);
+        return null;
+    }
+}
 
-	function selectSuggestion(buttonElement, inputId) {
-		const input = document.getElementById(inputId);
-		const code = buttonElement.getAttribute('data-code');
-		const name = buttonElement.getAttribute('data-name');
-		
-		if (code && name) {
-			input.value = `${code} - ${name}`;
-		} else {
-			input.value = buttonElement.textContent;
-		}
-		
-		const suggestionsContainer = buttonElement.closest('.suggestions-list');
-		if (suggestionsContainer) {
-			suggestionsContainer.remove();
-		}
-	}
+// Функция для отображения индикатора сложности
+function updatePasswordStrengthIndicator(strengthData) {
+    let container = document.getElementById('password-strength-container');
+    
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'password-strength-container';
+        container.className = 'password-strength-container';
+        
+        const passwordGroup = document.getElementById('password').closest('.form-group');
+        passwordGroup.appendChild(container);
+    }
+    
+    let indicator = document.getElementById('password-strength-indicator');
+    
+    if (!indicator) {
+        indicator = document.createElement('div');
+        indicator.id = 'password-strength-indicator';
+        indicator.className = 'password-strength-indicator';
+        container.appendChild(indicator);
+    }
+    
+    if (!strengthData || strengthData.strength === 'error') {
+        indicator.innerHTML = '<div class="strength-unknown">Проверка сложности...</div>';
+        return;
+    }
+    
+    const strength = strengthData.strength;
+    const confidence = Math.round(strengthData.confidence * 100);
+    const weakProb = Math.round(strengthData.weakProbability * 100);
+    const mediumProb = Math.round(strengthData.mediumProbability * 100);
+    const strongProb = Math.round(strengthData.strongProbability * 100);
+    
+    let strengthText, strengthClass, strengthColor;
+    
+    switch (strength) {
+        case 'weak':
+            strengthText = '🔴 Слабый пароль';
+            strengthClass = 'strength-weak';
+            strengthColor = '#dc3545';
+            break;
+        case 'medium':
+            strengthText = '🟡 Средний пароль';
+            strengthClass = 'strength-medium';
+            strengthColor = '#ffc107';
+            break;
+        case 'strong':
+            strengthText = '🟢 Сильный пароль';
+            strengthClass = 'strength-strong';
+            strengthColor = '#28a745';
+            break;
+        default:
+            strengthText = '⚪ Неизвестно';
+            strengthClass = 'strength-unknown';
+            strengthColor = '#6c757d';
+    }
+    
+    indicator.innerHTML = `
+        <div class="strength-bar ${strengthClass}">
+            <div class="strength-label">
+                <span class="strength-text">${strengthText}</span>
+                <span class="strength-confidence">${confidence}% уверенность</span>
+            </div>
+            <div class="strength-visual">
+                <div class="strength-fill" style="width: ${confidence}%; background-color: ${strengthColor};"></div>
+            </div>
+            <div class="strength-details">
+                <span class="strength-probability prob-weak">Слабый: ${weakProb}%</span>
+                <span class="strength-probability prob-medium">Средний: ${mediumProb}%</span>
+                <span class="strength-probability prob-strong">Сильный: ${strongProb}%</span>
+            </div>
+        </div>
+    `;
+}
 
-	document.addEventListener('click', function(event) {
-		if (event.target.matches('.suggestion-item')) {
-			const container = event.target.closest('[id$="-suggestions"]');
-			let inputId;
-			if (container && container.id === 'speciality-suggestions') {
-				inputId = 'specialityInput';
-			} else if (container && container.id === 'university-suggestions') {
-				inputId = 'universityInput';
-			} else {
-				inputId = 'universityInput';
-			}
-			selectSuggestion(event.target, inputId);
-		}
-		
-		if (!event.target.matches('.suggestion-item') && 
-			!event.target.matches('input[type="text"]')) {
-			const suggestions = document.querySelectorAll('.suggestions-list');
-			suggestions.forEach(suggestion => suggestion.remove());
-		}
-	});
-	</script>
+// Функция для проверки совпадения паролей
+function validatePasswordMatch() {
+    const password = document.getElementById('password')?.value;
+    const password2 = document.getElementById('password2')?.value;
+    const container = document.getElementById('password-strength-container');
+    
+    let matchIndicator = document.getElementById('password-match-indicator');
+    
+    if (!matchIndicator && container) {
+        matchIndicator = document.createElement('div');
+        matchIndicator.id = 'password-match-indicator';
+        matchIndicator.className = 'password-match-indicator';
+        container.appendChild(matchIndicator);
+    }
+    
+    if (!matchIndicator) return true;
+    
+    if (!password2) {
+        matchIndicator.innerHTML = '';
+        return true;
+    }
+    
+    if (password === password2) {
+        matchIndicator.innerHTML = '<div class="match-success"><i class="fas fa-check-circle"></i> Пароли совпадают</div>';
+        return true;
+    } else {
+        matchIndicator.innerHTML = '<div class="match-error"><i class="fas fa-exclamation-circle"></i> Пароли не совпадают</div>';
+        return false;
+    }
+}
 
-	<script>
-	function loadProfileFields(role) {
-		console.log('Loading fields for role:', role);
-		
-		fetch('/fragments/profile-fields?role=' + role)
-			.then(response => response.text())
-			.then(html => {
-				document.getElementById('profile-fields-container').innerHTML = html;
-				htmx.process(document.getElementById('profile-fields-container'));
-				
-				// Инициализируем кнопки переключения пароля для динамически загруженных полей
-				setTimeout(() => {
-					initPasswordToggles();
-				}, 100);
-			})
-			.catch(error => {
-				console.error('Error:', error);
-			});
-	}
-	</script>
+// Обработчик ввода пароля
+function initPasswordValidation() {
+    const passwordInput = document.getElementById('password');
+    const password2Input = document.getElementById('password2');
+    
+    if (!passwordInput) return;
+    
+    // Дебаунс для избежания частых запросов
+    let passwordTimeout;
+    passwordInput.addEventListener('input', function() {
+        clearTimeout(passwordTimeout);
+        passwordTimeout = setTimeout(async () => {
+            const strengthData = await checkPasswordStrength(this.value);
+            updatePasswordStrengthIndicator(strengthData);
+        }, 500);
+        
+        setTimeout(validatePasswordMatch, 100);
+    });
+    
+    if (password2Input) {
+        password2Input.addEventListener('input', function() {
+            setTimeout(validatePasswordMatch, 100);
+        });
+    }
+}
+
+// Инициализация при загрузке страницы
+document.addEventListener('DOMContentLoaded', function() {
+    initPasswordToggles();
+    initPasswordValidation();
+});
+
+// Валидация формы перед отправкой
+document.querySelector('.auth-form')?.addEventListener('submit', async function(event) {
+    const password = document.getElementById('password')?.value;
+    const password2 = document.getElementById('password2')?.value;
+    
+    if (password && password2) {
+        // Проверяем совпадение паролей
+        if (!validatePasswordMatch()) {
+            event.preventDefault();
+            alert('Пароли не совпадают!');
+            return;
+        }
+        
+        // Опционально: проверяем сложность пароля
+        const strengthData = await checkPasswordStrength(password);
+        if (strengthData && strengthData.strength === 'weak') {
+            const proceed = confirm('Ваш пароль оценивается как слабый. Рекомендуем использовать более сложный пароль. Продолжить регистрацию?');
+            if (!proceed) {
+                event.preventDefault();
+                return;
+            }
+        }
+    }
+});
+
+// УДАЛИТЕ ЭТУ ЧАСТЬ КОДА - ОНА ДУБЛИРУЕТСЯ
+// Функция для переключения видимости пароля
+// Инициализация при загрузке страницы
+// document.addEventListener('DOMContentLoaded', function() {
+//     initPasswordToggles();
+//     ...
+// });
+</script>
+
 </body>
 </html>
