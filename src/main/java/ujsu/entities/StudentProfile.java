@@ -1,5 +1,7 @@
 package ujsu.entities;
 
+import java.util.List;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 
@@ -17,6 +19,9 @@ public class StudentProfile implements UserProfile {
 
 	private Byte courseNum;
 	private Integer studyType;
+	
+	@Transient
+	private List<VacancyResponse> responses;
     
 	@Transient
 	private University university;

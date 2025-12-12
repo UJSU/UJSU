@@ -21,6 +21,7 @@ import ujsu.entities.User;
 import ujsu.enums.Role;
 import ujsu.exceptions.AuthException;
 import ujsu.services.ProfileService;
+import ujsu.services.UniversityService;
 import ujsu.services.UserService;
 
 @Controller
@@ -30,6 +31,7 @@ public class HomeController {
 
 	private final UserService userService;
 	private final ProfileService profileService;
+	private final UniversityService universityService;
 
 	@GetMapping("/")
 	public String showMainPage() {
@@ -70,6 +72,22 @@ public class HomeController {
 			model.addAttribute(role);
 		} catch (IllegalArgumentException e) {}
 		return "_fragments :: profile-fields";
+	}
+	
+	@GetMapping(path = "/fragments/get-universities-by-input", headers = "hx-request=true")
+	public String getUniversitiesByInput(Model model, String input) {
+		if (input.isBlank())
+			return "fragments/university-suggestions :: start-typing";
+		model.addAttribute("universities", universityService.findByNameMatch(input.trim(), 1));
+		return "fragments/university-suggestions :: suggestions";
+	}
+
+	@GetMapping(path = "/fragments/get-specialities-by-input", headers = "hx-request=true")
+	public String getSpecialitiesByInput(Model model, String input, String universityName) {
+		if (input.isBlank()) 
+			return "fragments/speciality-suggestions :: start-typing";
+		model.addAttribute("specialities", universityService.findSpecialitiesByNameOrCodeMatch(input.trim(), universityName, 1));
+		return "fragments/speciality-suggestions :: suggestions";
 	}
 	
 	@GetMapping(path = "/error", headers = "hx-request=true")

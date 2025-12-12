@@ -18,6 +18,7 @@ import ujsu.repositories.OrganisationRepository;
 import ujsu.repositories.SpecialityRepository;
 import ujsu.repositories.StudentProfileRepository;
 import ujsu.repositories.UniversityRepository;
+import ujsu.repositories.VacancyResponseRepository;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +29,7 @@ public class ProfileService {
 	private final UniversityRepository universityRepo;
 	private final SpecialityRepository specialityRepo;
 	private final OrganisationRepository organisationRepo;
+	private final VacancyResponseRepository vacancyResponseRepo;
 	
 	private final UserProfileMapper profileMapper;
 
@@ -37,6 +39,7 @@ public class ProfileService {
 			StudentProfile profile = studentProfileRepo.findByUserId(userId);
 			profile.setUniversity(universityRepo.findById(profile.getUniversityId()).get());
 			profile.setSpeciality(specialityRepo.findById(profile.getSpecialityId()).get());
+			profile.setResponses(vacancyResponseRepo.findByStudentId(userId));
 			yield profile;
 		}
 		case ADMIN -> {
