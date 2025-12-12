@@ -60,7 +60,7 @@ public class HomeController {
 			model.addAttribute("errorMessage", e.getMessage());
 			return "sign-up";
 		}
-		return "redirect:/vacancy";
+		return "redirect:/vacancies";
 	}
 
 	@GetMapping(path = "/fragments/profile-fields", headers = "hx-request=true")

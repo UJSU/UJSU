@@ -2,11 +2,13 @@ package ujsu.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-@Controller("/profile")
+@Controller
+@RequestMapping("/profile")
 public class ProfileController {
 
-	@GetMapping
+	@GetMapping("/")
 	public String showProfile() {
 		return "profile";
 	}
