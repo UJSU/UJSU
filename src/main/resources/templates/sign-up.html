@@ -595,17 +595,8 @@
     
     // ИНИЦИАЛИЗАЦИЯ
     document.addEventListener('DOMContentLoaded', function() {
-        console.log('🎨 Инициализация красивой формы проверки пароля');
-        
-        
-        // 1. Настройка поля пароля
         const passwordInput = document.getElementById('password');
         if (!passwordInput) return;
-
-        
-
-        
-        
         passwordInput.addEventListener('input', handlePasswordInput);
         
         // 2. Проверка совпадения паролей

@@ -1056,19 +1056,22 @@ footer::before {
         }
 
         .vacancies-list {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
+    display: flex;
+    flex-direction: column; /* Добавить эту строку */
+    gap: 20px;
+    width: 100%; /* Добавить эту строку */
+}
 
-        .vacancy-card {
-            background: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            padding: 25px;
-            transition: var(--transition);
-            border-left: 4px solid var(--primary);
-        }
+.vacancy-card {
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 25px;
+    transition: var(--transition);
+    border-left: 4px solid var(--primary);
+    width: 100%; /* Добавить эту строку */
+    box-sizing: border-box; /* Добавить эту строку - важно! */
+}
 
         .vacancy-card:hover {
             transform: translateY(-5px);
@@ -1102,6 +1105,7 @@ footer::before {
             background: rgba(76, 201, 240, 0.1);
             padding: 5px 10px;
             border-radius: 4px;
+            color: #221ff5;
         }
 
         .vacancy-info {
@@ -1160,11 +1164,56 @@ footer::before {
             color: white;
             border: none;
             border-radius: var(--border-radius);
-            font-size: 14px;
+            font-size: 16px;
             font-weight: 500;
             cursor: pointer;
             transition: var(--transition);
+            margin-left: auto;
         }
+        .no-vacancies {
+    position: relative;
+    text-align: center;
+    padding: 70px 40px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 20px;
+    color: white;
+    margin: 50px 0;
+    overflow: hidden;
+    box-shadow: 0 15px 35px rgba(102, 126, 234, 0.2);
+}
+
+.no-vacancies::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+    opacity: 0.3;
+    z-index: 0;
+}
+
+.no-vacancies p {
+    font-size: 22px;
+    margin: 0;
+    font-weight: 400;
+    line-height: 1.5;
+    position: relative;
+    z-index: 1;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.no-vacancies .icon {
+    font-size: 60px;
+    margin-bottom: 25px;
+    display: block;
+    position: relative;
+    z-index: 1;
+    opacity: 0.9;
+}
+
 
         .apply-button:hover {
             background: linear-gradient(to right, var(--primary-dark), var(--primary));
@@ -1624,4 +1673,33 @@ footer::before {
 .indicator-dot.strong,
 .indicator-value.strong {
     background: #2ed573;
+}
+	.password-toggle1 {
+    position: absolute;
+    right: 12px;
+    bottom: 3px;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #666;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.password-toggle1:hover {
+    color: #221ff5;
+    background-color: #e6e6ff;
+    border-radius: 50%;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.password-toggle1:active {
+    color: #1a17d1;
+    background-color: #d6d6ff;
+    transform: translateY(-50%) scale(0.95);
+
 }

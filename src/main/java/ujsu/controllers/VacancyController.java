@@ -35,7 +35,9 @@ public class VacancyController {
 					vacancies.add(v);
 				}
 			}
+			model.addAttribute("university", university);
 			model.addAttribute("vacancies", vacancies);
+
 			return "vacancy";
 		}
 		else if (role == Role.ADMIN) {
