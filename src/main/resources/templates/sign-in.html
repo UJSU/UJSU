@@ -45,7 +45,7 @@
 					<label for="password">Пароль</label>
 					<input type="password" name="password" id="password" placeholder="Введите ваш пароль" required>
 					<i class="fas fa-lock"></i>
-					<button type="button" class="password-toggle" data-target="password">
+					<button type="button" class="password-toggle1" data-target="password">
 							<i class="fas fa-eye"></i>
 						</button>
 				</div>
@@ -132,26 +132,31 @@ function togglePasswordVisibility(button) {
     const passwordField = document.getElementById(targetId);
     const icon = button.querySelector('i');
     
-    if (passwordField) {
+    if (passwordField && icon) {
         if (passwordField.type === 'password') {
+            // Показываем пароль
             passwordField.type = 'text';
-            icon.classList.add('fa-eye-slash');
             icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
         } else {
+            // Скрываем пароль
             passwordField.type = 'password';
-            icon.classList.add('fa-eye-slash');
-            icon.classList.remove('fa-eye');
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
         }
     }
 }
+
 function initPasswordToggles() {
-    const toggleButtons = document.querySelectorAll('.password-toggle');
+    const toggleButtons = document.querySelectorAll('.password-toggle1');
     toggleButtons.forEach(button => {
         button.addEventListener('click', function() {
             togglePasswordVisibility(this);
         });
     });
 }
+
+// Инициализация при загрузке документа
 document.addEventListener('DOMContentLoaded', function() {
     initPasswordToggles();
 });

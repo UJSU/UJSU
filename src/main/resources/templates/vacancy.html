@@ -1,58 +1,54 @@
 <!DOCTYPE html>
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
-
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Студворк - Регистрация</title>
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-	<link rel="stylesheet" th:href="@{css/style.css}" href="../static/css/style.css">
-	<script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Студворк - Вакансии</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
 </head>
 <body>
-	<header>
-		<div class="container">
-			<div class="header-top">
-				<div class="logo">
-					<a th:href="@{/sign-in}" href="/" class="logo-link">
-						<div class="logo-wrapper">
-							<img th:src="@{/images/studwork.png}" src="../static/images/studwork.png" alt="СтудВорк"
-								class="logo-image">
-						</div>
-						<span>Студворк</span>
-					</a>
-				</div>
-			</div>
-		</div>
-	</header>
-    
+    <header>
+        <div class="container">
+            <div class="header-top">
+                <div class="logo">
+                    <a th:href="@{/sign-in}" class="logo-link">
+                        <div class="logo-wrapper">
+                            <img th:src="@{/images/studwork.png}" alt="СтудВорк" class="logo-image">
+                        </div>
+                        <span>Студворк</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
 
     <main class="main-content">
         <div class="container">
             <div class="university-banner">
-    <div class="container">
-        <div class="university-content">
-            <div class="university-left">
-                <div class="university-logo">
-                    <img th:src="@{/images/stankin-logo.png}" src="../static/images/stankin-logo.png" alt="МГТУ Станкин">
-    
-                </div>
-                <div class="university-text-content">
-                    <div class="university-main-text">Ваш университет</div>
-                    <div class="university-subtext">МГТУ "Станкин"</div>
+                <div class="container">
+                    <div class="university-content">
+                        <div class="university-left">
+                            <div class="university-logo">
+                                <img th:src="@{/images/stankin-logo.png}" alt="МГТУ Станкин">
+                            </div>
+                            <div class="university-text-content">
+                                <div class="university-subtext" th:text="${university.name}"></div>
+                            </div>
+                        </div>
+                        <div class="university-search">
+                            <div class="search-input">
+                                <input type="text" placeholder="Должность, компания или ключевые слова">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <button class="search-button">Найти</button>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="university-search">
-                <div class="search-input">
-                    <input type="text" placeholder="Должность, компания или ключевые слова">
-                    <i class="fas fa-search"></i>
-                </div>
-                <button class="search-button">Найти</button>
-            </div>
-        </div>
-    </div>
-</div>
+            
             <div class="vacancies-container">
                 <aside class="filters-section">
                     <h2 class="filters-title">Фильтры</h2>
@@ -112,135 +108,56 @@
                             <span>руб.</span>
                         </div>
                     </div>
-                </aside>    
-                    <div class="vacancies-list">
-                        <div class="vacancy-card">
-                            <div class="vacancy-header">
-                                <div>
-                                    <h3 class="vacancy-title">Frontend разработчик</h3>
-                                    <div class="vacancy-company">Яндекс</div>
-                                </div>
-                                <div class="vacancy-salary">от 120 000 руб.</div>
+                </aside>
+                
+                <div class="vacancies-list">
+                    <div class="vacancy-card" th:each="vacancy : ${vacancies}">
+                        <div class="vacancy-header">
+                            <div>
+                                <h3 class="vacancy-title" th:text="${vacancy.position}"></h3>
+                                <div class="vacancy-company" th:text="${vacancy.organisation?.name}"></div>
                             </div>
-                            
-                            <div class="vacancy-info">
-                                <div class="vacancy-meta">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    <span>Москва</span>
-                                </div>
-                                <div class="vacancy-meta">
-                                    <i class="fas fa-briefcase"></i>
-                                    <span>Полный день</span>
-                                </div>
-                                <div class="vacancy-meta">
-                                    <i class="fas fa-clock"></i>
-                                    <span>Опыт от 1 года</span>
-                                </div>
-                            </div>
-                            
-                            <div class="vacancy-description">
-                                Ищем frontend-разработчика для работы над пользовательскими интерфейсами наших продуктов. Требуется опыт работы с React, TypeScript, знания современных подходов к разработке.
-                            </div>
-                            
-                            <div class="vacancy-tags">
-                                <span class="tag">JavaScript</span>
-                                <span class="tag">React</span>
-                                <span class="tag">TypeScript</span>
-                                <span class="tag">HTML/CSS</span>
-                            </div>
-                            
-                            <div class="vacancy-actions">
-                                <div class="vacancy-date">Опубликовано 2 дня назад</div>
-                                <button class="apply-button">Откликнуться</button>
+                            <div class="vacancy-salary">
+                                <span th:if="${vacancy.minSalary != null and vacancy.maxSalary == null}">
+                                    от <span th:text="${#numbers.formatInteger(vacancy.minSalary, 0, 'COMMA')}"></span> руб.
+                                </span>
+                                <span th:if="${vacancy.minSalary == null and vacancy.maxSalary != null}">
+                                    до <span th:text="${#numbers.formatInteger(vacancy.maxSalary, 0, 'COMMA')}"></span> руб.
+                                </span>
+                                <span th:if="${vacancy.minSalary != null and vacancy.maxSalary != null}">
+                                    <span th:text="${#numbers.formatInteger(vacancy.minSalary, 0, 'COMMA')}"></span> - 
+                                    <span th:text="${#numbers.formatInteger(vacancy.maxSalary, 0, 'COMMA')}"></span> руб.
+                                </span>
+                                <span th:if="${vacancy.minSalary == null and vacancy.maxSalary == null}">
+                                    Зарплата не указана
+                                </span>
                             </div>
                         </div>
                         
-                        <div class="vacancy-card">
-                            <div class="vacancy-header">
-                                <div>
-                                    <h3 class="vacancy-title">Java разработчик</h3>
-                                    <div class="vacancy-company">Сбер</div>
-                                </div>
-                                <div class="vacancy-salary">от 150 000 руб.</div>
-                            </div>
-                            
-                            <div class="vacancy-info">
-                                <div class="vacancy-meta">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    <span>Москва</span>
-                                </div>
-                                <div class="vacancy-meta">
-                                    <i class="fas fa-briefcase"></i>
-                                    <span>Полный день</span>
-                                </div>
-                                <div class="vacancy-meta">
-                                    <i class="fas fa-clock"></i>
-                                    <span>Опыт от 2 лет</span>
-                                </div>
-                            </div>
-                            
-                            <div class="vacancy-description">
-                                Приглашаем Java-разработчика в команду разработки финансовых сервисов. Работа с микросервисной архитектурой, Spring Framework, участие в проектировании и реализации сложных систем.
-                            </div>
-                            
-                            <div class="vacancy-tags">
-                                <span class="tag">Java</span>
-                                <span class="tag">Spring</span>
-                                <span class="tag">SQL</span>
-                                <span class="tag">Docker</span>
-                            </div>
-                            
-                            <div class="vacancy-actions">
-                                <div class="vacancy-date">Опубликовано 5 дней назад</div>
-                                <button class="apply-button">Откликнуться</button>
+                        <div class="vacancy-info">
+                            <div class="vacancy-meta">
+                                <i class="fas fa-briefcase"></i>
+                                <span th:text="${vacancy.shedule}"></span>
                             </div>
                         </div>
                         
-                        <div class="vacancy-card">
-                            <div class="vacancy-header">
-                                <div>
-                                    <h3 class="vacancy-title">Стажер-программист Python</h3>
-                                    <div class="vacancy-company">Тинькофф</div>
-                                </div>
-                                <div class="vacancy-salary">от 70 000 руб.</div>
-                            </div>
-                            
-                            <div class="vacancy-info">
-                                <div class="vacancy-meta">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    <span>Москва</span>
-                                </div>
-                                <div class="vacancy-meta">
-                                    <i class="fas fa-briefcase"></i>
-                                    <span>Полный день</span>
-                                </div>
-                                <div class="vacancy-meta">
-                                    <i class="fas fa-clock"></i>
-                                    <span>Без опыта</span>
-                                </div>
-                            </div>
-                            
-                            <div class="vacancy-description">
-                                Программа стажировки для студентов технических вузов. Обучение Python, участие в реальных проектах под руководством опытных наставников. Отличный старт для карьеры в IT.
-                            </div>
-                            
-                            <div class="vacancy-tags">
-                                <span class="tag">Python</span>
-                                <span class="tag">Django</span>
-                                <span class="tag">SQL</span>
-                                <span class="tag">Стажировка</span>
-                            </div>
-                            
-                            <div class="vacancy-actions">
-                                <div class="vacancy-date">Опубликовано 1 неделю назад</div>
-                                <button class="apply-button">Откликнуться</button>
-                            </div>
+                        <div class="vacancy-description" th:text="${vacancy.description}"></div>
+                        
+                        <div class="vacancy-actions">
+                
+                            <button class="apply-button">Откликнуться</button>
                         </div>
                     </div>
-                </section>
+                    
+                    <div th:if="${#lists.isEmpty(vacancies)}" class="no-vacancies">
+                        <span class="icon">📭</span>
+                        <p>На данный момент нет доступных вакансий для вашего университета.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
+    
     <footer>
         <div class="container">
             <div class="footer-content">

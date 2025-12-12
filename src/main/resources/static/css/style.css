@@ -836,8 +836,7 @@ footer::before {
     color: #1a17d1;
     background-color: #d6d6ff;
     transform: translateY(-50%) scale(0.95);
-<<<<<<< HEAD
-=======
+
 }
 /* выаыфвыфвфы */
 /* Стили для индикатора сложности пароля */
@@ -926,7 +925,7 @@ footer::before {
 .prob-strong { background: rgba(40,167,69,0.1); color: #155724; }
 
 .password-match-indicator {
-    margin-top: 5px;
+    margin-top: 10px;
     font-size: 13px;
 }
 
@@ -1057,19 +1056,22 @@ footer::before {
         }
 
         .vacancies-list {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
+    display: flex;
+    flex-direction: column; /* Добавить эту строку */
+    gap: 20px;
+    width: 100%; /* Добавить эту строку */
+}
 
-        .vacancy-card {
-            background: white;
-            border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            padding: 25px;
-            transition: var(--transition);
-            border-left: 4px solid var(--primary);
-        }
+.vacancy-card {
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 25px;
+    transition: var(--transition);
+    border-left: 4px solid var(--primary);
+    width: 100%; /* Добавить эту строку */
+    box-sizing: border-box; /* Добавить эту строку - важно! */
+}
 
         .vacancy-card:hover {
             transform: translateY(-5px);
@@ -1103,6 +1105,7 @@ footer::before {
             background: rgba(76, 201, 240, 0.1);
             padding: 5px 10px;
             border-radius: 4px;
+            color: #221ff5;
         }
 
         .vacancy-info {
@@ -1161,11 +1164,56 @@ footer::before {
             color: white;
             border: none;
             border-radius: var(--border-radius);
-            font-size: 14px;
+            font-size: 16px;
             font-weight: 500;
             cursor: pointer;
             transition: var(--transition);
+            margin-left: auto;
         }
+        .no-vacancies {
+    position: relative;
+    text-align: center;
+    padding: 70px 40px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 20px;
+    color: white;
+    margin: 50px 0;
+    overflow: hidden;
+    box-shadow: 0 15px 35px rgba(102, 126, 234, 0.2);
+}
+
+.no-vacancies::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+    opacity: 0.3;
+    z-index: 0;
+}
+
+.no-vacancies p {
+    font-size: 22px;
+    margin: 0;
+    font-weight: 400;
+    line-height: 1.5;
+    position: relative;
+    z-index: 1;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.no-vacancies .icon {
+    font-size: 60px;
+    margin-bottom: 25px;
+    display: block;
+    position: relative;
+    z-index: 1;
+    opacity: 0.9;
+}
+
 
         .apply-button:hover {
             background: linear-gradient(to right, var(--primary-dark), var(--primary));
@@ -1307,5 +1355,351 @@ footer::before {
     .university-subtext {
         font-size: 16px;
     }
->>>>>>> 431dab60b2341583fd61cfde7dbb0132213cf995
+}
+
+.password-input:focus {
+    outline: none;
+    border-color: #4dabf7;
+    box-shadow: 0 0 0 3px rgba(77, 171, 247, 0.1);
+}
+
+/* Контейнер для результата проверки */
+.password-strength-container {
+    margin-top: 10px;
+    min-height: 50px;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.3s, transform 0.3s;
+}
+
+.password-strength-container.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Индикатор загрузки */
+.password-loading {
+    display: none;
+    align-items: center;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+}
+
+.password-loading.visible {
+    display: flex;
+}
+
+.loading-spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #e0e0e0;
+    border-top: 2px solid #4dabf7;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: 10px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+    color: #666;
+    font-size: 14px;
+}
+
+/* Результат проверки */
+.password-strength-result {
+    display: none;
+    background: white;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e9ecef;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.password-strength-result.visible {
+    display: block;
+}
+
+.strength-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.strength-header h4 {
+    margin: 0;
+    font-size: 16px;
+    color: #333;
+    font-weight: 600;
+}
+
+.strength-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+
+.strength-badge.weak {
+    background: #ffeaea;
+    color: #ff4757;
+}
+
+.strength-badge.medium {
+    background: #fff4e6;
+    color: #ffa502;
+}
+
+.strength-badge.strong {
+    background: #e8f7ef;
+    color: #2ed573;
+}
+
+/* Прогресс-бар */
+.strength-meter {
+    margin: 20px 0;
+}
+
+.strength-bar {
+    height: 6px;
+    background: #f0f0f0;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.strength-progress {
+    height: 100%;
+    width: 0%;
+    border-radius: 3px;
+    transition: width 0.5s ease, background-color 0.5s ease;
+}
+
+.strength-progress.weak { background: #ff4757; }
+.strength-progress.medium { background: #ffa502; }
+.strength-progress.strong { background: #2ed573; }
+
+.strength-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #888;
+}
+
+/* Рекомендации */
+.strength-recommendations {
+    margin: 15px 0;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.strength-recommendations h5 {
+    margin: 0 0 10px 0;
+    font-size: 14px;
+    color: #333;
+    font-weight: 600;
+}
+
+#recommendations-list {
+    margin: 0;
+    padding-left: 20px;
+}
+
+#recommendations-list li {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 5px;
+    line-height: 1.4;
+}
+
+/* Детали от ML модели */
+.strength-details {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.detail-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.detail-label {
+    font-size: 13px;
+    color: #666;
+}
+
+.detail-value {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+}
+
+.probability-bars {
+    margin-top: 10px;
+}
+
+.probability-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 12px;
+}
+
+.probability-label {
+    width: 60px;
+    color: #666;
+}
+
+.probability-bar {
+    flex: 1;
+    height: 8px;
+    background: #f0f0f0;
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 0 10px;
+}
+
+.probability-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 4px;
+    transition: width 0.8s ease;
+}
+
+.probability-item:nth-child(1) .probability-fill {
+    background: #ff4757;
+}
+
+.probability-item:nth-child(2) .probability-fill {
+    background: #ffa502;
+}
+
+.probability-item:nth-child(3) .probability-fill {
+    background: #2ed573;
+}
+
+.probability-value {
+    width: 40px;
+    text-align: right;
+    font-weight: 500;
+}
+.password-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.password-wrapper input {
+    width: 100%;
+    padding: 14px 45px 14px 45px; /* право 40px для кнопки, лево 40px для иконки */
+    
+    box-sizing: border-box;
+}
+
+.password-wrapper .fa-lock {
+    position: absolute;
+    left: 18px;
+    top: 45%;
+    transform: translateY(-50%);
+}
+
+.password-toggle {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #666;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+/* Добавьте эти стили в секцию прогресс-бара */
+
+/* ПРОСТОЙ ИНДИКАТОР - ТОЧКА С ЦИФРОЙ */
+.strength-indicator {
+    position: absolute;
+    top: 0px;
+    left: 0;
+    transform: translateX(-50%);
+    z-index: 10;
+    transition: left 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.indicator-dot {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+/* Цвета как у бейджа */
+.indicator-dot.weak,
+.indicator-value.weak {
+    background: #ff4757;
+}
+
+.indicator-dot.medium,
+.indicator-value.medium {
+    background: #ffa502;
+}
+
+.indicator-dot.strong,
+.indicator-value.strong {
+    background: #2ed573;
+}
+	.password-toggle1 {
+    position: absolute;
+    right: 12px;
+    bottom: 3px;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #666;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.password-toggle1:hover {
+    color: #221ff5;
+    background-color: #e6e6ff;
+    border-radius: 50%;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.password-toggle1:active {
+    color: #1a17d1;
+    background-color: #d6d6ff;
+    transform: translateY(-50%) scale(0.95);
+
 }
