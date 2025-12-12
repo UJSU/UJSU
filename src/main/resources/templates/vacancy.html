@@ -9,7 +9,7 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
 </head>
-<body>
+<body th:with="user=${#authentication.principal}">
     <header>
         <div class="container">
             <div class="header-top">
@@ -18,7 +18,7 @@
                         <div class="logo-wrapper">
                             <img th:src="@{/images/studwork.png}" alt="СтудВорк" class="logo-image">
                         </div>
-                        <span>Студворк</span>
+                        <span th:text="${auth}">Студворк</span>
                     </a>
                 </div>
             </div>
@@ -35,7 +35,7 @@
                                 <img th:src="@{/images/stankin-logo.png}" alt="МГТУ Станкин">
                             </div>
                             <div class="university-text-content">
-                                <div class="university-subtext" th:text="${university.name}"></div>
+                                <div class="university-subtext" th:text="${user.profile.university.shortName}"></div>
                             </div>
                         </div>
                         <div class="university-search">

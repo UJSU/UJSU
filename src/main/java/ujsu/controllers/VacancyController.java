@@ -21,7 +21,7 @@ import ujsu.enums.Role;
 public class VacancyController {
 
 	@GetMapping("/vacancy")
-	public String showVacancyPage(Model model, Authentication auth) {
+	public String showVacanciesPage(Model model, Authentication auth) {
 		User user = (User) auth.getPrincipal();
 		Role role = user.getRole();
 		if (role == Role.STUDENT) {
@@ -35,9 +35,7 @@ public class VacancyController {
 					vacancies.add(v);
 				}
 			}
-			model.addAttribute("university", university);
 			model.addAttribute("vacancies", vacancies);
-
 			return "vacancy";
 		}
 		else if (role == Role.ADMIN) {
