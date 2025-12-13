@@ -5,10 +5,12 @@ import java.util.List;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import ujsu.enums.StudyType;
 
 @Data
+@AllArgsConstructor
 public class StudentProfile implements UserProfile {
 
 	@Id

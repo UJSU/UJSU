@@ -37,7 +37,9 @@ public class ProfileService {
 		return switch (role) {
 		case STUDENT -> {
 			StudentProfile profile = studentProfileRepo.findByUserId(userId);
-			profile.setUniversity(universityRepo.findById(profile.getUniversityId()).get());
+			
+			profile.setUniversity(universityRepo.findById(profile.getUniversityId()).get()
+					.withOrganisations(organisationRepo.findByUniversityId(profile.getUniversityId())));
 			profile.setSpeciality(specialityRepo.findById(profile.getSpecialityId()).get());
 			profile.setResponses(vacancyResponseRepo.findByStudentId(userId));
 			yield profile;

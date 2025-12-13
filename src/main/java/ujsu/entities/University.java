@@ -3,13 +3,18 @@ package ujsu.entities;
 import java.util.Set;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.MappedCollection;
+import org.springframework.data.annotation.Transient;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.With;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class University {
 	
 	@Id
@@ -21,8 +26,9 @@ public class University {
 	
 	private boolean isState;
 	
+	@With
 	@ToString.Exclude
 	@EqualsAndHashCode.Exclude
-	@MappedCollection(idColumn="university_id")
+	@Transient
 	private Set<Organisation> organisations;
 }

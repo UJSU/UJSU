@@ -17,6 +17,10 @@ public class VacancyResponse {
 	
 	private int studentId;
 	private int vacancyId;
+	
+	private Boolean employerVerdict;
+	private String employerComment;
+	
 	@ToString.Exclude
 	@EqualsAndHashCode.Exclude
 	@Transient

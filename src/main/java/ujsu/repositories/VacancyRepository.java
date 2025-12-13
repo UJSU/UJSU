@@ -10,8 +10,9 @@ import ujsu.entities.Vacancy;
 
 @Repository
 public interface VacancyRepository extends CrudRepository<Vacancy, Integer> {
+	
 	@Query("""
-			SELECT v.*, COUNT(vr.id) AS response_count
+			SELECT v.*, COUNT(vr.id) response_count
 			FROM vacancy v
 			LEFT JOIN vacancy_response vr ON v.id = vr.vacancy_id
 			WHERE v.organisation_id = :organisationId
@@ -19,5 +20,10 @@ public interface VacancyRepository extends CrudRepository<Vacancy, Integer> {
 			""")
 	List<Vacancy> findByOrganisationIdWithResponseCount(int organisationId);
 	
-	boolean existsByIdAndOrganisationId(int id, int universityId);
+	@Query("""
+			SELECT 1 FROM vacancy v 
+			JOIN organisation o ON v.organisation_id = o.id 
+			WHERE v.id = :id AND o.university_id = :university_id
+			""")
+	boolean existsByIdAndUniversityId(int id, int universityId);
 }
