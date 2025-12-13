@@ -1,16 +1,16 @@
 package ujsu.entities;
 
-import java.util.List;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
-import org.springframework.data.relational.core.mapping.MappedCollection;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import lombok.With;
 
 @Data
+@AllArgsConstructor
 public class Vacancy {
 	
 	@Id
@@ -18,16 +18,16 @@ public class Vacancy {
 	
 	private String position;
 	
-	private Integer organisation_id;
+	private Integer organisationId;
 	private Integer minSalary;
 	private Integer maxSalary;
 	
 	private String shedule;
 	private String description;
 	
-	@MappedCollection(idColumn="vacancy_id")
-	private List<VacancyResponse> responses;
+	private int responseCount;
 	
+	@With
 	@ToString.Exclude
 	@EqualsAndHashCode.Exclude
 	@Transient
