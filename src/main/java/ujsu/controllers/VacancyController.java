@@ -86,7 +86,15 @@ public class VacancyController {
 		return "create-vacancy";
 	}
 	
-	
+	@PostMapping("/create")
+	public String createVacancy(Model model, Authentication auth) throws AccessDeniedException {
+		User user = (User) auth.getPrincipal();
+		if (user.getRole() != Role.ADMIN)
+			throw new AccessDeniedException("Доступ запрещён.");
+		model.addAttribute("emptyVacancy", new Vacancy());
+		return "create-vacancy";
+	}
+
 	@GetMapping("/{id}")
 	public String showVacancyPage(Model model, Authentication auth, int id) throws ResponseStatusException {
 		model.addAttribute(

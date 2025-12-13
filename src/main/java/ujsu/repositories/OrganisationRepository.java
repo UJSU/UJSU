@@ -15,7 +15,7 @@ public interface OrganisationRepository extends CrudRepository<Organisation, Int
 	
 	@Query("""
 			SELECT DISTINCT o.* FROM organisation o 
-			LEFT JOIN partner p 
+			LEFT JOIN university_partner p 
 			ON o.id = p.organisation_id
 			WHERE o.university_id = :universityId OR p.university_id = :universityId
 			""")

@@ -7,9 +7,11 @@ import org.springframework.data.annotation.Transient;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import ujsu.enums.StudyType;
 
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
 public class StudentProfile implements UserProfile {
 
