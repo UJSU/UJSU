@@ -1071,6 +1071,7 @@ footer::before {
     border-left: 4px solid var(--primary);
     width: 100%; /* Добавить эту строку */
     box-sizing: border-box; /* Добавить эту строку - важно! */
+    margin-bottom: 20px;
 }
 
         .vacancy-card:hover {
@@ -1174,9 +1175,9 @@ footer::before {
     position: relative;
     text-align: center;
     padding: 70px 40px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: white;
     border-radius: 20px;
-    color: white;
+    color: #221ff5;
     margin: 50px 0;
     overflow: hidden;
     box-shadow: 0 15px 35px rgba(102, 126, 234, 0.2);
@@ -1312,7 +1313,7 @@ footer::before {
 }
 
 .search-button {
-    padding: 0 25px;
+    padding: 12px 25px; /* Явно задайте padding-top/bottom */
     background: linear-gradient(to right, var(--primary), var(--primary-dark));
     color: white;
     border: none;
@@ -1702,4 +1703,46 @@ footer::before {
     background-color: #d6d6ff;
     transform: translateY(-50%) scale(0.95);
 
+}
+.clear-filters-btn {
+    padding: 12px 25px; /* Явно задайте padding-top/bottom */
+    background: linear-gradient(to right, var(--primary), var(--primary-dark));
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    white-space: nowrap;
+}
+
+.clear-filters-btn:hover {
+    background: linear-gradient(to right, var(--primary-dark), var(--primary));
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(44, 62, 80, 0.3);
+}
+.small-search-input {
+    white-space: nowrap;
+    flex: 0 0 auto;
+    position: relative;
+    width: 110px; /* фиксированная ширина */
+}
+
+.small-search-input input {
+    width: 100%;
+    padding: 10px 12px 10px 10px; 
+    border: 2px solid var(--light-gray);
+    border-radius: var(--border-radius);
+    font-size: 14px; 
+    height: 40px; 
+    box-sizing: border-box;
+    transition: var(--transition);
+}
+
+.small-search-input input:focus {
+    border-color: var(--primary);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(34, 31, 245, 0.1);
+    width: 110px;
 }

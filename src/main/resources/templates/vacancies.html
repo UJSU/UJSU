@@ -14,11 +14,11 @@
         <div class="container">
             <div class="header-top">
                 <div class="logo">
-                    <a th:href="@{/sign-in}" class="logo-link">
+                    <a th:href="@{/vacancies}" href="/" class="logo-link">
                         <div class="logo-wrapper">
-                            <img th:src="@{/images/studwork.png}" alt="СтудВорк" class="logo-image">
+                            <img th:src="@{/images/studwork.png}" src="../images/studwork.png" alt="СтудВорк" class="logo-image">
                         </div>
-                        <span th:text="${auth}">Студворк</span>
+                        <span>Студворк</span>
                     </a>
                 </div>
             </div>
@@ -38,12 +38,22 @@
                                 <div class="university-subtext" th:text="${user.profile.university.shortName}"></div>
                             </div>
                         </div>
+                        
+                        <!-- ПОИСК -->
                         <div class="university-search">
                             <div class="search-input">
-                                <input type="text" placeholder="Должность, компания или ключевые слова">
+                                <input type="text" 
+                                       id="searchInput"
+                                       placeholder="Должность, компания или ключевые слова"
+                                       th:value="${param.search}"
+                                       name="search">
                                 <i class="fas fa-search"></i>
                             </div>
-                            <button class="search-button">Найти</button>
+                            <button type="button" 
+                                    class="search-button" 
+                                    onclick="sendHtmxRequest()">
+                                Найти
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -53,112 +63,114 @@
                 <aside class="filters-section">
                     <h2 class="filters-title">Фильтры</h2>
                     
-                    <div class="filter-group">
-                        <h3>Сфера деятельности</h3>
-                        <div class="filter-option">
-                            <input type="checkbox" id="it" checked>
-                            <label for="it">IT, программирование</label>
+                    <!-- Форма для фильтров -->
+                    <div id="filtersForm">
+                        <!-- Организации -->
+                        <div class="filter-group">
+                            <h3>Организации</h3>
+                            <div th:each="org : ${organisations}" class="filter-option">
+                                <input type="checkbox" 
+                                       class="org-checkbox"
+                                       th:id="'org_' + ${org.id}"
+                                       th:data-org-id="${org.id}"
+                                       th:checked="${selectedOrgIds != null and selectedOrgIds.contains(org.id)}">
+                                <label th:for="'org_' + ${org.id}" th:text="${org.name}"></label>
+                            </div>
                         </div>
-                        <div class="filter-option">
-                            <input type="checkbox" id="design">
-                            <label for="design">Дизайн</label>
+                        
+                        <!-- График работы -->
+                        <div class="filter-group">
+                            <h3>Тип занятости</h3>
+                            <div class="filter-option">
+                                <input type="checkbox" 
+                                       class="schedule-checkbox"
+                                       id="full-time" 
+                                       data-schedule="full-time"
+                                       th:checked="${selectedSchedules != null and selectedSchedules.contains('full-time')}">
+                                <label for="full-time">Полная занятость</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" 
+                                       class="schedule-checkbox"
+                                       id="part-time" 
+                                       data-schedule="part-time"
+                                       th:checked="${selectedSchedules != null and selectedSchedules.contains('part-time')}">
+                                <label for="part-time">Частичная занятость</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" 
+                                       class="schedule-checkbox"
+                                       id="internship" 
+                                       data-schedule="internship"
+                                       th:checked="${selectedSchedules != null and selectedSchedules.contains('internship')}">
+                                <label for="internship">Стажировка</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" 
+                                       class="schedule-checkbox"
+                                       id="remote" 
+                                       data-schedule="remote"
+                                       th:checked="${selectedSchedules != null and selectedSchedules.contains('remote')}">
+                                <label for="remote">Удаленная работа</label>
+                            </div>
                         </div>
-                        <div class="filter-option">
-                            <input type="checkbox" id="marketing">
-                            <label for="marketing">Маркетинг</label>
-                        </div>
-                        <div class="filter-option">
-                            <input type="checkbox" id="engineering">
-                            <label for="engineering">Инженерия</label>
-                        </div>
-                        <div class="filter-option">
-                            <input type="checkbox" id="finance">
-                            <label for="finance">Финансы</label>
+                        
+                        <!-- Зарплата -->
+                        <div class="filter-group">
+                            <h3>Уровень дохода</h3>
+                            <div class="small-search-input">
+                                <input type="number" 
+                                       placeholder="от" 
+                                       id="minSalaryInput"
+                                       th:value="${param.minSalary}">
+                                <span>руб.</span>
+                            </div>
+                            <div class="small-search-input">
+                                <input type="number" 
+                                       placeholder="до" 
+                                       id="maxSalaryInput"
+                                       th:value="${param.maxSalary}">
+                                <span>руб.</span>
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="filter-group">
-                        <h3>Тип занятости</h3>
-                        <div class="filter-option">
-                            <input type="checkbox" id="full-time" checked>
-                            <label for="full-time">Полная занятость</label>
-                        </div>
-                        <div class="filter-option">
-                            <input type="checkbox" id="part-time">
-                            <label for="part-time">Частичная занятость</label>
-                        </div>
-                        <div class="filter-option">
-                            <input type="checkbox" id="internship">
-                            <label for="internship">Стажировка</label>
-                        </div>
-                        <div class="filter-option">
-                            <input type="checkbox" id="remote">
-                            <label for="remote">Удаленная работа</label>
-                        </div>
-                    </div>
-                    
-                    <div class="filter-group">
-                        <h3>Уровень дохода</h3>
-                        <div class="salary-input">
-                            <input type="text" placeholder="от">
-                            <span>руб.</span>
-                        </div>
-                        <div class="salary-input">
-                            <input type="text" placeholder="до">
-                            <span>руб.</span>
-                        </div>
-                    </div>
+                    <button onclick="clearFilters()" class="clear-filters-btn">
+                        </i> Сбросить фильтры
+                    </button>
                 </aside>
-                
                 <div class="vacancies-list">
-                    <div class="vacancy-card" th:each="vacancy : ${vacancies}">
-                        <div class="vacancy-header">
-                            <div>
-                                <h3 class="vacancy-title" th:text="${vacancy.position}"></h3>
-                                <div class="vacancy-company" th:text="${vacancy.organisation?.name}"></div>
-                            </div>
-                            <div class="vacancy-salary">
-                                <span th:if="${vacancy.minSalary != null and vacancy.maxSalary == null}">
-                                    от <span th:text="${#numbers.formatInteger(vacancy.minSalary, 0, 'COMMA')}"></span> руб.
-                                </span>
-                                <span th:if="${vacancy.minSalary == null and vacancy.maxSalary != null}">
-                                    до <span th:text="${#numbers.formatInteger(vacancy.maxSalary, 0, 'COMMA')}"></span> руб.
-                                </span>
-                                <span th:if="${vacancy.minSalary != null and vacancy.maxSalary != null}">
-                                    <span th:text="${#numbers.formatInteger(vacancy.minSalary, 0, 'COMMA')}"></span> - 
-                                    <span th:text="${#numbers.formatInteger(vacancy.maxSalary, 0, 'COMMA')}"></span> руб.
-                                </span>
-                                <span th:if="${vacancy.minSalary == null and vacancy.maxSalary == null}">
-                                    Зарплата не указана
-                                </span>
-                            </div>
-                        </div>
-                        
-                        <div class="vacancy-info">
-                            <div class="vacancy-meta">
-                                <i class="fas fa-briefcase"></i>
-                                <span th:text="${vacancy.shedule}"></span>
-                            </div>
-                        </div>
-                        
-                        <div class="vacancy-description" th:text="${vacancy.description}"></div>
-                        
-                        <div class="vacancy-actions">
-                
-                            <button class="apply-button">Откликнуться</button>
-                        </div>
+                    <div class="filter-info" 
+                         th:if="${param.search != null or param.minSalary != null or param.maxSalary != null 
+                                 or (param.orgIds != null and not param.orgIds.isEmpty()) 
+                                 or (param.schedules != null and not param.schedules.isEmpty())}">
+                        <strong>Примененные фильтры:</strong>
+                        <span th:if="${param.search}"> Поиск: "<span th:text="${param.search}"></span>"</span>
+                        <span th:if="${param.minSalary}"> | Мин. зарплата: <span th:text="${param.minSalary}"></span> руб.</span>
+                        <span th:if="${param.maxSalary}"> | Макс. зарплата: <span th:text="${param.maxSalary}"></span> руб.</span>
+                        <span th:if="${param.orgIds != null and not param.orgIds.isEmpty()}">
+                            | Организации: 
+                            <span th:each="orgId : ${param.orgIds}" th:text="${orgId}"></span>
+                        </span>
+                        <span th:if="${param.schedules != null and not param.schedules.isEmpty()}">
+                            | График: 
+                            <span th:each="schedule : ${param.schedules}">
+                                <span th:if="${schedule == 'full-time'}">Полная занятость</span>
+                                <span th:if="${schedule == 'part-time'}">Частичная занятость</span>
+                                <span th:if="${schedule == 'internship'}">Стажировка</span>
+                                <span th:if="${schedule == 'remote'}">Удаленная работа</span>
+                            </span>
+                        </span>
                     </div>
-                    
-                    <div th:if="${#lists.isEmpty(vacancies)}" class="no-vacancies">
-                        <span class="icon">📭</span>
-                        <p>На данный момент нет доступных вакансий для вашего университета.</p>
+                    <div id="vacanciesList">
+                         <div th:insert="fragments :: vacancies"></div>
                     </div>
                 </div>
             </div>
         </div>
     </main>
     
-    <footer>
+     <footer>
         <div class="container">
             <div class="footer-content">
                 <div class="footer-column">
@@ -205,5 +217,99 @@
             </div>
         </div>
     </footer>
+
+    <script>
+function sendHtmxRequest() {
+    console.log('sendHtmxRequest вызван');
+    
+    const params = new URLSearchParams();
+    const search = document.getElementById('searchInput').value;
+    if (search) params.append('search', search);
+    const minSalary = document.getElementById('minSalaryInput').value;
+    if (minSalary) params.append('minSalary', minSalary);
+    
+    const maxSalary = document.getElementById('maxSalaryInput').value;
+    if (maxSalary) params.append('maxSalary', maxSalary);
+    const orgCheckboxes = document.querySelectorAll('.org-checkbox:checked');
+    const orgIds = Array.from(orgCheckboxes).map(cb => cb.getAttribute('data-org-id'));
+    if (orgIds.length > 0) {
+        params.append('orgIds', orgIds.join(','));
+    }
+    const scheduleCheckboxes = document.querySelectorAll('.schedule-checkbox:checked');
+    const schedules = Array.from(scheduleCheckboxes).map(cb => cb.getAttribute('data-schedule'));
+    if (schedules.length > 0) {
+        params.append('schedules', schedules.join(','));
+    }
+    
+    const url = '/vacancies/filter' + (params.toString() ? '?' + params.toString() : '');
+    
+    htmx.ajax('GET', url, '#vacanciesList');
+}
+let searchTimeout;
+function debouncedSearch() {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(sendHtmxRequest, 500);
+}
+function handleScheduleCheckboxChange(changedCheckbox) {
+    if (changedCheckbox.checked) {
+        document.querySelectorAll('.schedule-checkbox').forEach(checkbox => {
+            if (checkbox !== changedCheckbox) {
+                checkbox.checked = false;
+            }
+        });
+    }
+    sendHtmxRequest();
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.org-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            console.log('Организация изменена:', this.id);
+            sendHtmxRequest();
+        });
+    });
+    document.querySelectorAll('.schedule-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            console.log('Тип занятости изменен:', this.id);
+            handleScheduleCheckboxChange(this);
+        });
+    });
+    
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        searchInput.addEventListener('input', debouncedSearch);
+    }
+    
+    const minSalaryInput = document.getElementById('minSalaryInput');
+    const maxSalaryInput = document.getElementById('maxSalaryInput');
+    if (minSalaryInput) {
+        minSalaryInput.addEventListener('input', debouncedSearch);
+    }
+    if (maxSalaryInput) {
+        maxSalaryInput.addEventListener('input', debouncedSearch);
+    }
+    
+    const searchButton = document.querySelector('.search-button');
+    if (searchButton) {
+        searchButton.addEventListener('click', sendHtmxRequest);
+    }
+    const clearButton = document.querySelector('.clear-filters-btn');
+    if (clearButton) {
+        clearButton.addEventListener('click', function() {
+            console.log('Сброс фильтров');
+            document.querySelectorAll('.org-checkbox').forEach(cb => {
+                cb.checked = false;
+            });
+            document.querySelectorAll('.schedule-checkbox').forEach(cb => {
+                cb.checked = false;
+            });
+            if (searchInput) searchInput.value = '';
+            if (minSalaryInput) minSalaryInput.value = '';
+            if (maxSalaryInput) maxSalaryInput.value = '';
+            htmx.ajax('GET', '/vacancies/filter', '#vacanciesList');
+        });
+    }
+});
+</script>
 </body>
 </html>
