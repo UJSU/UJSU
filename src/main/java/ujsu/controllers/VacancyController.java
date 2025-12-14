@@ -14,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -39,24 +40,24 @@ public class VacancyController {
 
 	private final VacancyRepository vacancyRepo;
 	private final VacancyResponseRepository vacancyResponseRepo;
-
-@GetMapping
-public String showVacanciesPage(Model model, Authentication auth) throws UnspecifiedRoleException {
-    User user = (User) auth.getPrincipal();
-    return switch (user.getRole()) {
-    case STUDENT -> {
-        University university = ((StudentProfile) user.getProfile()).getUniversity();
-        model.addAttribute("organisations", university.getOrganisations());
-        List<Vacancy> vacancies = loadUniversityVacancies(university);
-        model.addAttribute("vacancies", vacancies);
-        yield "vacancies";
+    @GetMapping
+    public String showVacanciesPage(Model model, Authentication auth) throws UnspecifiedRoleException {
+        User user = (User) auth.getPrincipal();
+        return switch (user.getRole()) {
+            case STUDENT -> {
+                University university = ((StudentProfile) user.getProfile()).getUniversity();
+                model.addAttribute("organisations", university.getOrganisations());
+                List<Vacancy> vacancies = loadUniversityVacancies(university);
+                model.addAttribute("vacancies", vacancies);
+                model.addAttribute("studentId", user.getId());
+                yield "vacancies";
+            }
+            case ADMIN -> {
+                yield "vacancies";
+            }
+            default -> throw new UnspecifiedRoleException();
+        };
     }
-    case ADMIN -> {
-        yield "vacancies";
-    }
-    default -> throw new UnspecifiedRoleException();
-    };
-}
 @GetMapping(value = "/filter", headers = "HX-Request=true")
 public String showSortedAndFilteredVacanciesFragment(Model model, Authentication auth,
         @RequestParam(required = false) String search, 
@@ -172,18 +173,24 @@ public String showSortedAndFilteredVacanciesFragment(Model model, Authentication
 	}
 
 	@GetMapping(path = "/{id}/response", headers = "hx-request=true")
-	public String responseVacancy(Model model, Authentication auth, int id) throws AccessDeniedException {
-		User user = (User) auth.getPrincipal();
-		if (user.getRole() != Role.STUDENT)
-			throw new AccessDeniedException("Отправлять отклики могут только студенты.");
-		if (!vacancyRepo.existsByIdAndUniversityId(id, ((StudentProfile) user.getProfile()).getUniversityId()))
-			throw new AccessDeniedException("Этой вакансии не существует или доступна студентам другого ВУЗа.");
-		VacancyResponse response = new VacancyResponse();
-		response.setStudentId(user.getId());
-		response.setVacancyId(id);
-		vacancyResponseRepo.save(response);
-		return "fragments :: btn-sent";
-	}
+    public String responseVacancy(Model model, Authentication auth, @PathVariable int id) throws AccessDeniedException {
+        User user = (User) auth.getPrincipal();
+        if (user.getRole() != Role.STUDENT)
+            throw new AccessDeniedException("Отправлять отклики могут только студенты.");
+        model.addAttribute("studentId", user.getId());
+        model.addAttribute("vacancyId", id);
+        boolean hasResponse = vacancyResponseRepo.existsByStudentIdAndVacancyId(user.getId(), id);
+        if (hasResponse) {
+            vacancyResponseRepo.deleteByStudentIdAndVacancyId(user.getId(), id);
+            return "fragments :: btn-apply";
+        } else {
+            VacancyResponse response = new VacancyResponse();
+            response.setStudentId(user.getId());
+            response.setVacancyId(id);
+            vacancyResponseRepo.save(response);
+            return "fragments :: btn-sent";
+        }
+    }
 
 	private List<Vacancy> loadUniversityVacancies(University university) {
 		List<Vacancy> result = new ArrayList<>();

@@ -13,4 +13,6 @@ public interface VacancyResponseRepository extends CrudRepository<VacancyRespons
 	List<VacancyResponse> findByStudentId(int studentId);
 	
 	List<VacancyResponse> findByVacancyId(int vacancyId);
+	boolean existsByStudentIdAndVacancyId(int studentId, int vacancyId);
+	void deleteByStudentIdAndVacancyId(int studentId, int vacancyId);
 }

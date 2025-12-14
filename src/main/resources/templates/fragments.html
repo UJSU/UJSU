@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
-<div th:fragment="vacancies" xmlns:th="http://www.thymeleaf.org">
+
+<!-- ФРАГМЕНТ С ВАКАНСИЯМИ -->
+<div th:fragment="vacancies">
     <div th:if="${not #lists.isEmpty(vacancies)}">
         <div class="vacancy-card" th:each="vacancy : ${vacancies}">
             <div class="vacancy-header">
@@ -36,10 +38,16 @@
             <div class="vacancy-description" th:text="${vacancy.description}"></div>
             
             <div class="vacancy-actions">
-                <button class="apply-button">Откликнуться</button>
+                <button class="apply-button" 
+                        th:attr="data-vacancy-id=${vacancy.id}, hx-get=${'/vacancies/' + vacancy.id + '/response'}"
+                        hx-target="this"
+                        hx-swap="outerHTML">
+                    Откликнуться
+                </button>
             </div>
         </div>
     </div>
+    
     <div th:if="${#lists.isEmpty(vacancies)}" class="no-vacancies">
         <p th:if="${param.search != null or param.minSalary != null or param.maxSalary != null 
                    or (param.orgIds != null and not param.orgIds.isEmpty()) 
@@ -53,5 +61,22 @@
         </p>
     </div>
 </div>
+<div th:fragment="btn-sent">
+    <button class="apply-button" 
+            th:attr="data-vacancy-id=${vacancyId}, hx-get=${'/vacancies/' + vacancyId + '/response'}"
+            hx-target="this"
+            hx-swap="outerHTML">
+        <i class="fas fa-check"></i> Отклик отправлен
+    </button>
+</div>
+<div th:fragment="btn-apply">
+    <button class="apply-button" 
+            th:attr="data-vacancy-id=${vacancyId}, hx-get=${'/vacancies/' + vacancyId + '/response'}"
+            hx-target="this"
+            hx-swap="outerHTML">
+        Откликнуться
+    </button>
+</div>
+
 </body>
 </html>
