@@ -92,10 +92,10 @@ public class HomeController {
 		return "fragments/speciality-suggestions :: suggestions";
 	}
 	
-	@GetMapping(path = "/fragments/get-universities-by-input", headers = "hx-request=true")
+	@GetMapping(path = "/fragments/get-organisations-by-input", headers = "hx-request=true")
 	public String getOrganisationsByInput(Model model, String input) {
 		if (input.isBlank())
-			return "fragments/university-suggestions :: start-typing";
+			return "fragments/organisation-suggestions :: start-typing";
 		model.addAttribute("organisations", organisationService.findByNameMatch(input.trim(), 1));
 		return "fragments/organisation-suggestions :: suggestions";
 	}

@@ -42,7 +42,7 @@ public class VacancyController {
 	private final VacancyRepository vacancyRepo;
 	private final VacancyResponseRepository vacancyResponseRepo;
 
-	@GetMapping("/")
+	@GetMapping
 	public String showVacanciesPage(Model model, Authentication auth) throws UnspecifiedRoleException {
 		User user = (User) auth.getPrincipal();
 		return switch (user.getRole()) {
@@ -54,6 +54,7 @@ public class VacancyController {
 			yield "vacancies";
 		}
 		case ADMIN -> {
+
 			yield "vacancies";
 		}
 		default -> throw new UnspecifiedRoleException();
@@ -97,18 +98,6 @@ public class VacancyController {
 		vacancy.setOrganisation(((AdminProfile) user.getProfile()).getOrganisation());
 		vacancyRepo.save(vacancy);
 		return "vacancies";
-	}
-
-	@GetMapping("/{id}")
-	public String showVacancyPage(Model model, @PathVariable int id) {
-	    Vacancy vacancy = vacancyRepo.findById(id)
-	        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-	    Organisation organisation = organisationRepo.findById(vacancy.getOrganisationId())
-	        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-	    vacancy.setOrganisation(organisation);
-
-	    model.addAttribute("vacancy", vacancy);
-	    return "vacancy";
 	}
 
 	@GetMapping(path = "/{id}/response", headers = "hx-request=true")
