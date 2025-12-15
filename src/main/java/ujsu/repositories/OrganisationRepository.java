@@ -14,7 +14,7 @@ public interface OrganisationRepository extends CrudRepository<Organisation, Int
 	
 	@Query("SELECT o.* FROM Organisation o WHERE "
 			+ "REGEXP_LIKE(o.name, CONCAT('.*\\\\b', :input)) "
-			+ "OR REGEXP_LIKE(o.short_name, CONCAT('.*\\\\b', :input))"
+			+ "OR REGEXP_LIKE(o.name, CONCAT('.*\\\\b', :input))"
 			+ "ORDER BY o.name LIMIT :offset, :pageLength")
 	List<Organisation> findByNameMatch(String input, int offset, int pageLength);
 	

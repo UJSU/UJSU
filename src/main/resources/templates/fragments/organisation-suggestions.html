@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+	<div th:fragment="suggestions">
+		<div class="suggestions-list" th:if="${not #lists.isEmpty(organisations)}">
+			<button 
+				th:each="organisation : ${organisations}" 
+				th:text="${organisation.name}" 
+				class="suggestion-item"
+				onclick="selectSuggestion(this, 'organisationInput')" 
+				type="button"
+			></button>
+		</div>
+		<div class="suggestions-list" th:if="${#lists.isEmpty(organisations)}">
+			<div class="no-suggestions">Ваша организация не найдена</div>
+		</div>
+	</div>
+	<div th:fragment="start-typing">
+		<div class="no-suggestions">Начните печатать...</div>
+	</div>
+</body>
+</html>

@@ -271,7 +271,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.schedule-checkbox').forEach(checkbox => {
         checkbox.addEventListener('change', function() {
             console.log('Тип занятости изменен:', this.id);
-            handleScheduleCheckboxChange(this);
+            handleScheduleCheckboxChange(this); 
         });
     });
     

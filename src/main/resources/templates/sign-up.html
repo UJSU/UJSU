@@ -691,20 +691,10 @@
             showLoading(false);
         });
     }
-    
-    // ОБНОВЛЕНИЕ ИНТЕРФЕЙСА
-    // ОБНОВЛЕНИЕ ИНТЕРФЕЙСА
 function updatePasswordStrengthUI(data, password) {
-    // Бейдж силы
     updateStrengthBadge(data);
-    
-    // Прогресс бар
     updateProgressBar(data);
-    
-    // Обновляем индикатор
     updateStrengthIndicator(data);
-    
-    // Показываем результат
     showResult();
 }
 
@@ -1008,6 +998,8 @@ function updateStrengthIndicator(data) {
 				inputId = 'specialityInput';
 			} else if (container && container.id === 'university-suggestions') {
 				inputId = 'universityInput';
+            } else if (container.id === 'organisation-suggestions') {
+                inputId = 'organisationInput';
 			} else {
 				inputId = 'universityInput';
 			}
