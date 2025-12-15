@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Создать вакансию - Студворк</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body th:with="user=${#authentication.principal}">
+    <header>
+        <div class="container">
+            <div class="header-top">
+                <div class="logo">
+                    <a th:href="@{/vacancies}" href="/" class="logo-link">
+                        <div class="logo-wrapper">
+                            <img th:src="@{/images/studwork.png}" src="../images/studwork.png" alt="СтудВорк" class="logo-image">
+                        </div>
+                        <span>Студворк</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+    <main class="main-content">
+        <div class="container">
+            
+            
+            <div class="create-vacancy-form">
+                
+                <form th:action="@{/vacancies/create}" th:object="${emptyVacancy}" method="post" class="vacancy-form">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                    <div class="vacancy-createe">
+                                    Создание новой вакансии для компании:<span th:text="${adminOrg.name}"></span></div>
+                    <div class="form-row">
+                        
+                        <div class="form-group">
+    <label for="position">Должность *</label>
+    <div class="input-with-icon center-input">
+        <input type="text" 
+               id="position"
+               th:field="*{position}"
+               placeholder="Например: Frontend-разработчик"
+               required
+               maxlength="255">
+        <i class="fas fa-briefcase"></i>
+    </div>
+</div>
+                    </div>
+                    
+                    <!-- Зарплата -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="minSalary">Минимальная зарплата</label>
+                            <div class="input-with-icon">
+                                <input type="number" 
+                                       id="minSalary"
+                                       th:field="*{minSalary}"
+                                       placeholder="50000"
+                                       min="0">
+                                <i class="fas fa-money-bill-wave"></i>
+                            </div>
+                            <small class="form-hint">В рублях, оставьте пустым если не указано</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="maxSalary">Максимальная зарплата</label>
+                            <div class="input-with-icon">
+                                <input type="number" 
+                                       id="maxSalary"
+                                       th:field="*{maxSalary}"
+                                       placeholder="150000"
+                                       min="0">
+                                <i class="fas fa-money-bill-wave"></i>
+                            </div>
+                            <small class="form-hint">В рублях, оставьте пустым если не указано</small>
+                        </div>
+                    </div>
+                    
+                    <!-- График работы -->
+                    <div class="form-group">
+                        <label for="shedule">График работы *</label>
+                        <div class="input-with-icon">
+                            <select id="shedule" th:field="*{shedule}" required>
+                                <option value="" disabled selected>Выберите график работы</option>
+                                <option value="Полная занятость">Полная занятость</option>
+                                <option value="Частичная занятость">Частичная занятость</option>
+                                <option value="Стажировка">Стажировка</option>
+                                <option value="Удаленная работа">Удаленная работа</option>
+                                <option value="Гибкий график">Гибкий график</option>
+                            </select>
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- Описание -->
+                    <div class="form-group">
+                        <label for="description">Описание вакансии *</label>
+                        <div class="textarea-with-icon">
+                            <textarea id="description"
+                                      th:field="*{description}"
+                                      placeholder="Опишите вакансию: обязанности, требования, условия работы..."
+                                      required
+                                      rows="8"></textarea>
+                        </div>
+                        <small class="form-hint">Подробно опишите вакансию, чтобы привлечь подходящих кандидатов</small>
+                    </div>
+                    
+                    <!-- Кнопки -->
+                    <div class="form-actions">
+                        <a th:href="@{/vacancies}" class="btn-cancel">
+                            <i class="fas fa-times"></i> Отмена
+                        </a>
+                        <button type="submit" class="btn-submit">
+                            <i class="fas fa-plus"></i> Создать вакансию
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Соискателям</h3>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-briefcase"></i> Вакансии</a></li>
+                        <li><a href="#"><i class="fas fa-graduation-cap"></i> Стажировки</a></li>
+                        <li><a href="#"><i class="fas fa-file-alt"></i> Как составить резюме</a></li>
+                        <li><a href="#"><i class="fas fa-comments"></i> Подготовка к собеседованию</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h3>Работодателям</h3>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-plus-circle"></i> Размещение вакансий</a></li>
+                        <li><a href="#"><i class="fas fa-calendar-alt"></i> Ярмарки вакансий</a></li>
+                        <li><a href="#"><i class="fas fa-handshake"></i> Сотрудничество с вузом</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h3>О проекте</h3>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-info-circle"></i> О Студворк</a></li>
+                        <li><a href="#"><i class="fas fa-phone"></i> Контакты</a></li>
+                        <li><a href="#"><i class="fas fa-life-ring"></i> Помощь</a></li>
+                        <li><a href="#"><i class="fas fa-question-circle"></i> Вопросы и ответы</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h3>Мы в соцсетях</h3>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-vk"></i></a>
+                        <a href="#"><i class="fab fa-telegram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="copyright">
+                © 2025 СтудВорк - Карьерный центр. Все права защищены.
+            </div>
+        </div>
+    </footer>
+
+    <style>
+        /* Стили для формы создания вакансии */
+        .page-header {
+            background: linear-gradient(135deg, #4a6cf7 0%, #3a5ce5 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .page-header h1 {
+            margin: 0 0 10px 0;
+            font-size: 32px;
+        }
+        
+        .page-header p {
+            margin: 0;
+            opacity: 0.9;
+            font-size: 16px;
+        }
+        
+        .create-vacancy-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 50px;
+    width: 100%;
+}
+        
+        @media (max-width: 992px) {
+            .create-vacancy-form {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .vacancy-form {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .form-tips {
+            background: #f8f9ff;
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 4px solid #4a6cf7;
+        }
+        
+        .form-tips h3 {
+            margin-top: 0;
+            color: #4a6cf7;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-tips ul {
+            padding-left: 20px;
+        }
+        
+        .form-tips li {
+            margin-bottom: 10px;
+            color: #555;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+       
+        
+        .input-with-icon,
+        .textarea-with-icon {
+            position: relative;
+        }
+        
+        
+        .input-with-icon input,
+        .input-with-icon select,
+        .textarea-with-icon textarea {
+            width: 100%;
+            padding: 12px 16px 12px 45px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+            box-sizing: border-box;
+        }
+        
+        .textarea-with-icon textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+        
+        .input-with-icon i,
+        .textarea-with-icon i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+            font-size: 18px;
+             margin-top: -25px;
+        }
+        
+        .textarea-with-icon i {
+            top: 20px;
+            transform: none;
+        }
+        
+        .input-with-icon input:focus,
+        .input-with-icon select:focus,
+        .textarea-with-icon textarea:focus {
+            outline: none;
+            border-color: #4a6cf7;
+            box-shadow: 0 0 0 3px rgba(74, 108, 247, 0.1);
+        }
+        
+        .form-hint {
+            display: block;
+            margin-top: 5px;
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        .btn-cancel,
+        .btn-submit {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+        }
+        
+        .btn-cancel {
+            background: #f5f5f5;
+            color: #333;
+        }
+        
+        .btn-cancel:hover {
+            background: #e9e9e9;
+            transform: translateY(-2px);
+        }
+        
+        .btn-submit {
+            background: linear-gradient(135deg, #4a6cf7 0%, #3a5ce5 100%);
+            color: white;
+        }
+        
+        .btn-submit:hover {
+            background: linear-gradient(135deg, #3a5ce5 0%, #2a4cd3 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(74, 108, 247, 0.3);
+        }
+    </style>
+</body>
+</html>

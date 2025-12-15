@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Студворк - Вакансии</title>
+    <title>Студворк - Управление вакансиями</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" th:href="@{/css/style.css}">
@@ -35,11 +35,9 @@
                                 <img th:src="@{/images/stankin-logo.png}" alt="МГТУ Станкин">
                             </div>
                             <div class="university-text-content">
-                                <div class="university-subtext" th:text="${user.profile.university.shortName}"></div>
+                                <div class="university-subtext" th:text="${adminOrg.name}"></div>
                             </div>
                         </div>
-                        
-                        <!-- ПОИСК -->
                         <div class="university-search">
                             <div class="search-input">
                                 <input type="text" 
@@ -61,9 +59,15 @@
             
             <div class="vacancies-container">
                 <aside class="filters-section">
-                    <h2 class="filters-title">Фильтры</h2>
+                    <div class="filter-group">
+                        <h3>Управление</h3>
+                        <a th:href="@{/vacancies/create}" class="filter-link">
+                            <i class="fas fa-plus"></i> Создать вакансию
+                        </a>
+                    </div>
                     
-                    <!-- Форма для фильтров -->
+                    <h2 class="filters-title-admin">Фильтры для ваших вакансий</h2>
+                    
                     <div id="filtersForm">
                         
                         <!-- График работы -->
@@ -124,9 +128,10 @@
                     </div>
                     
                     <button onclick="clearFilters()" class="clear-filters-btn">
-                        </i> Сбросить фильтры
+                        <i class="fas fa-times"></i> Сбросить фильтры
                     </button>
                 </aside>
+                
                 <div class="vacancies-list">
                     <div class="filter-info" 
                          th:if="${param.search != null or param.minSalary != null or param.maxSalary != null 
@@ -150,15 +155,73 @@
                             </span>
                         </span>
                     </div>
+                    
                     <div id="vacanciesList">
-                         <div th:insert="~{_fragments :: vacancies}"></div>
+                        <div th:if="${not #lists.isEmpty(vacancies)}">
+                            
+                            
+                            <!-- Список вакансий -->
+                            <div class="vacancy-card" th:each="vacancy : ${vacancies}">
+                                <div class="vacancy-header">
+                                    <div>
+                                        <h3 class="vacancy-title" th:text="${vacancy.position}"></h3>
+                                        <div class="vacancy-company" th:text="${vacancy.organisation?.name}"></div>
+                                    </div>
+                                    <div class="vacancy-salary">
+                                        <span th:if="${vacancy.minSalary != null and vacancy.maxSalary != null}">
+                                            <span th:text="${#numbers.formatInteger(vacancy.minSalary, 0, 'COMMA')}"></span> -
+                                            <span th:text="${#numbers.formatInteger(vacancy.maxSalary, 0, 'COMMA')}"></span> руб.
+                                        </span>
+                                        <span th:if="${vacancy.minSalary != null and vacancy.maxSalary == null}">
+                                            от <span th:text="${#numbers.formatInteger(vacancy.minSalary, 0, 'COMMA')}"></span> руб.
+                                        </span>
+                                        <span th:if="${vacancy.minSalary == null and vacancy.maxSalary != null}">
+                                            до <span th:text="${#numbers.formatInteger(vacancy.maxSalary, 0, 'COMMA')}"></span> руб.
+                                        </span>
+                                        <span th:if="${vacancy.minSalary == null and vacancy.maxSalary == null}">
+                                            Зарплата не указана
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="vacancy-info">
+                                    <div class="vacancy-meta">
+                                        <i class="fas fa-briefcase"></i>
+                                        <span th:text="${vacancy.shedule}"></span>
+                                    </div>
+                                </div>
+
+                                <div class="vacancy-description" th:text="${vacancy.description}"></div>
+
+                                <div class="vacancy-actions-admin">
+                                    
+                                    <button class="search-button">
+                                        <i class="fas fa-edit"></i> Редактировать
+                                    </button>
+                                    <button class="search-button">
+                                        <i class="fas fa-trash"></i> Удалить
+                                    </button>
+                                    <button class="search-button">
+                                        <i class="fas fa-eye"></i> Просмотреть отклики
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div th:if="${#lists.isEmpty(vacancies)}" class="no-vacancies">
+                            <div class="empty-state">
+                                <i class="fas fa-briefcase fa-3x"></i>
+                                <h3>У вас пока нет вакансий</h3>
+                                <p>Создайте первую вакансию, чтобы начать</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </main>
     
-     <footer>
+    <footer>
         <div class="container">
             <div class="footer-content">
                 <div class="footer-column">
@@ -207,97 +270,102 @@
     </footer>
 
     <script>
-function sendHtmxRequest() {
-    console.log('sendHtmxRequest вызван');
-    
-    const params = new URLSearchParams();
-    const search = document.getElementById('searchInput').value;
-    if (search) params.append('search', search);
-    const minSalary = document.getElementById('minSalaryInput').value;
-    if (minSalary) params.append('minSalary', minSalary);
-    
-    const maxSalary = document.getElementById('maxSalaryInput').value;
-    if (maxSalary) params.append('maxSalary', maxSalary);
-    const orgCheckboxes = document.querySelectorAll('.org-checkbox:checked');
-    const orgIds = Array.from(orgCheckboxes).map(cb => cb.getAttribute('data-org-id'));
-    if (orgIds.length > 0) {
-        params.append('orgIds', orgIds.join(','));
-    }
-    const scheduleCheckboxes = document.querySelectorAll('.schedule-checkbox:checked');
-    const schedules = Array.from(scheduleCheckboxes).map(cb => cb.getAttribute('data-schedule'));
-    if (schedules.length > 0) {
-        params.append('schedules', schedules.join(','));
-    }
-    
-    const url = '/vacancies/filter' + (params.toString() ? '?' + params.toString() : '');
-    
-    htmx.ajax('GET', url, '#vacanciesList');
-}
-let searchTimeout;
-function debouncedSearch() {
-    clearTimeout(searchTimeout);
-    searchTimeout = setTimeout(sendHtmxRequest, 500);
-}
-function handleScheduleCheckboxChange(changedCheckbox) {
-    if (changedCheckbox.checked) {
-        document.querySelectorAll('.schedule-checkbox').forEach(checkbox => {
-            if (checkbox !== changedCheckbox) {
-                checkbox.checked = false;
+        // Если нужны те же функции что и в vacancies.html
+        function sendHtmxRequest() {
+            console.log('sendHtmxRequest вызван');
+            
+            const params = new URLSearchParams();
+            const search = document.getElementById('searchInput').value;
+            if (search) params.append('search', search);
+            const minSalary = document.getElementById('minSalaryInput').value;
+            if (minSalary) params.append('minSalary', minSalary);
+            
+            const maxSalary = document.getElementById('maxSalaryInput').value;
+            if (maxSalary) params.append('maxSalary', maxSalary);
+            const orgCheckboxes = document.querySelectorAll('.org-checkbox:checked');
+            const orgIds = Array.from(orgCheckboxes).map(cb => cb.getAttribute('data-org-id'));
+            if (orgIds.length > 0) {
+                params.append('orgIds', orgIds.join(','));
+            }
+            const scheduleCheckboxes = document.querySelectorAll('.schedule-checkbox:checked');
+            const schedules = Array.from(scheduleCheckboxes).map(cb => cb.getAttribute('data-schedule'));
+            if (schedules.length > 0) {
+                params.append('schedules', schedules.join(','));
+            }
+            
+            const url = '/vacancies/filter' + (params.toString() ? '?' + params.toString() : '');
+            
+            htmx.ajax('GET', url, '#vacanciesList');
+        }
+        
+        let searchTimeout;
+        function debouncedSearch() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(sendHtmxRequest, 500);
+        }
+        
+        function handleScheduleCheckboxChange(changedCheckbox) {
+            if (changedCheckbox.checked) {
+                document.querySelectorAll('.schedule-checkbox').forEach(checkbox => {
+                    if (checkbox !== changedCheckbox) {
+                        checkbox.checked = false;
+                    }
+                });
+            }
+            sendHtmxRequest();
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.org-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    console.log('Организация изменена:', this.id);
+                    sendHtmxRequest();
+                });
+            });
+            
+            document.querySelectorAll('.schedule-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    console.log('Тип занятости изменен:', this.id);
+                    handleScheduleCheckboxChange(this); 
+                });
+            });
+            
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', debouncedSearch);
+            }
+            
+            const minSalaryInput = document.getElementById('minSalaryInput');
+            const maxSalaryInput = document.getElementById('maxSalaryInput');
+            if (minSalaryInput) {
+                minSalaryInput.addEventListener('input', debouncedSearch);
+            }
+            if (maxSalaryInput) {
+                maxSalaryInput.addEventListener('input', debouncedSearch);
+            }
+            
+            const searchButton = document.querySelector('.search-button');
+            if (searchButton) {
+                searchButton.addEventListener('click', sendHtmxRequest);
+            }
+            
+            const clearButton = document.querySelector('.clear-filters-btn');
+            if (clearButton) {
+                clearButton.addEventListener('click', function() {
+                    console.log('Сброс фильтров');
+                    document.querySelectorAll('.org-checkbox').forEach(cb => {
+                        cb.checked = false;
+                    });
+                    document.querySelectorAll('.schedule-checkbox').forEach(cb => {
+                        cb.checked = false;
+                    });
+                    if (searchInput) searchInput.value = '';
+                    if (minSalaryInput) minSalaryInput.value = '';
+                    if (maxSalaryInput) maxSalaryInput.value = '';
+                    htmx.ajax('GET', '/vacancies/filter', '#vacanciesList');
+                });
             }
         });
-    }
-    sendHtmxRequest();
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('.org-checkbox').forEach(checkbox => {
-        checkbox.addEventListener('change', function() {
-            console.log('Организация изменена:', this.id);
-            sendHtmxRequest();
-        });
-    });
-    document.querySelectorAll('.schedule-checkbox').forEach(checkbox => {
-        checkbox.addEventListener('change', function() {
-            console.log('Тип занятости изменен:', this.id);
-            handleScheduleCheckboxChange(this); 
-        });
-    });
-    
-    const searchInput = document.getElementById('searchInput');
-    if (searchInput) {
-        searchInput.addEventListener('input', debouncedSearch);
-    }
-    
-    const minSalaryInput = document.getElementById('minSalaryInput');
-    const maxSalaryInput = document.getElementById('maxSalaryInput');
-    if (minSalaryInput) {
-        minSalaryInput.addEventListener('input', debouncedSearch);
-    }
-    if (maxSalaryInput) {
-        maxSalaryInput.addEventListener('input', debouncedSearch);
-    }
-    
-    const searchButton = document.querySelector('.search-button');
-    if (searchButton) {
-        searchButton.addEventListener('click', sendHtmxRequest);
-    }
-    const clearButton = document.querySelector('.clear-filters-btn');
-    if (clearButton) {
-        clearButton.addEventListener('click', function() {
-            console.log('Сброс фильтров');
-            document.querySelectorAll('.org-checkbox').forEach(cb => {
-                cb.checked = false;
-            });
-            document.querySelectorAll('.schedule-checkbox').forEach(cb => {
-                cb.checked = false;
-            });
-            if (searchInput) searchInput.value = '';
-            if (minSalaryInput) minSalaryInput.value = '';
-            if (maxSalaryInput) maxSalaryInput.value = '';
-            htmx.ajax('GET', '/vacancies/filter', '#vacanciesList');
-        });
-    }
-});
-</script>
+    </script>
 </body>
 </html>

@@ -1,6 +1,7 @@
 package ujsu.controllers;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -52,7 +53,12 @@ public class VacancyController {
 			yield "vacancies";
 		}
 		case ADMIN -> {
-			yield "vacancies";
+			Organisation adminOrg = ((AdminProfile) user.getProfile()).getOrganisation();
+			List<Vacancy> vacancies = loadOrganisationVacancies(adminOrg);
+			model.addAttribute("vacancies", vacancies);
+			model.addAttribute("adminOrg", adminOrg); 
+			model.addAttribute("organisations", Collections.singleton(adminOrg));
+			yield "vacancies_hr";
 		}
 		default -> throw new UnspecifiedRoleException();
 		};
@@ -146,7 +152,9 @@ public class VacancyController {
 		User user = (User) auth.getPrincipal();
 		if (user.getRole() != Role.ADMIN)
 			throw new AccessDeniedException("Доступ запрещён.");
+		Organisation adminOrg = ((AdminProfile) user.getProfile()).getOrganisation();
 		model.addAttribute("emptyVacancy", new Vacancy());
+		model.addAttribute("adminOrg", adminOrg); 
 		return "create-vacancy";
 	}
 
@@ -156,7 +164,7 @@ public class VacancyController {
 		User user = (User) auth.getPrincipal();
 		vacancy.setOrganisation(((AdminProfile) user.getProfile()).getOrganisation());
 		vacancyRepo.save(vacancy);
-		return "vacancies";
+		return "redirect:/vacancies";
 	}
 
 	@GetMapping(path = "/{id}/response", headers = "hx-request=true")
