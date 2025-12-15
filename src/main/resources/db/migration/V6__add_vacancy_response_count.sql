@@ -1,0 +1,1 @@
+ALTER TABLE vacancy ADD COLUMN response_count INT NOT NULL DEFAULT 0;
