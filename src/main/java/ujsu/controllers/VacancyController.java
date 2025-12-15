@@ -44,9 +44,10 @@ public class VacancyController {
 		return switch (user.getRole()) {
 		case STUDENT -> {
 			University university = ((StudentProfile) user.getProfile()).getUniversity();
-			model.addAttribute("organisations", university.getOrganisations());
 			List<Vacancy> vacancies = loadUniversityVacancies(university);
 			model.addAttribute("vacancies", vacancies);
+			model.addAttribute("organisations", (HashSet<Organisation>) vacancies.stream().map(v -> v.getOrganisation())
+					.collect(Collectors.toSet()));
 			model.addAttribute("studentId", user.getId());
 			yield "vacancies";
 		}
@@ -137,7 +138,7 @@ public class VacancyController {
 		model.addAttribute("vacancies", vacancyList);
 		model.addAttribute("selectedSchedules", schedulesSet);
 		model.addAttribute("selectedOrgIds", orgIdsSet);
-		return "fragments :: vacancies";
+		return "_fragments :: vacancies";
 	}
 
 	@GetMapping("/create")
@@ -163,19 +164,18 @@ public class VacancyController {
 		User user = (User) auth.getPrincipal();
 		if (user.getRole() != Role.STUDENT)
 			throw new AccessDeniedException("Отправлять отклики могут только студенты.");
-		model.addAttribute("studentId", user.getId());
-		model.addAttribute("vacancyId", id);
-		boolean hasResponse = vacancyResponseRepo.existsByStudentIdAndVacancyId(user.getId(), id);
-		if (hasResponse) {
+		boolean hasCurrentStudentResponse = vacancyResponseRepo.existsByStudentIdAndVacancyId(user.getId(), id);
+		if (hasCurrentStudentResponse) {
 			vacancyResponseRepo.deleteByStudentIdAndVacancyId(user.getId(), id);
-			return "fragments :: btn-apply";
+			hasCurrentStudentResponse = false;
 		} else {
 			VacancyResponse response = new VacancyResponse();
 			response.setStudentId(user.getId());
 			response.setVacancyId(id);
 			vacancyResponseRepo.save(response);
-			return "fragments :: btn-sent";
+			hasCurrentStudentResponse = true;
 		}
+		return "_fragments :: btn-apply(vacancyId=" + id + ",hasCurrentStudentResponse=" + hasCurrentStudentResponse + ")";
 	}
 
 	private List<Vacancy> loadUniversityVacancies(University university) {

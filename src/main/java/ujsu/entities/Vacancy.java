@@ -35,6 +35,10 @@ public class Vacancy {
 	@Transient
 	private Organisation organisation;
 	
+	@With
+	@Transient
+	private boolean hasCurrentStudentResponse;
+	
 	public void setOrganisation(Organisation organisation) {
 		this.organisation = organisation;
 		this.organisationId = organisation.getId();

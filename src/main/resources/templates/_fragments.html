@@ -1,97 +1,139 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <body>
-    <div th:fragment="profile-fields">
-        <script>
-            htmx.config.historyEnabled = false;
-        </script>
-        
-        <div th:fragment="profile-fields(role)">
-            <!-- Студент -->
-            <div th:if="${role==Role.STUDENT}" class="student-profile-section">
-                <div class="form-group" style="position: relative;">
-                    <label for="universityInput">Университет</label>
-                    <input 
-                        type="text" 
-                        id="universityInput"
-                        name="profileDto.universityName"
-                        class="form-control"
-                        hx-get="/fragments/get-universities-by-input"
-                        hx-trigger="keyup changed delay:100ms"
-                        hx-target="#university-suggestions"
-                        hx-vals="js:{input: document.getElementById('universityInput').value}"
-                        autocomplete="off"
-                        placeholder="Название вашего университета"
-                    />
-                    <i class="fas fa-university"></i>
-                </div>
-                <div id="university-suggestions" style="position: relative;"></div>
+	<div th:fragment="profile-fields">
+		<script>
+			htmx.config.historyEnabled = false;
+		</script>
 
-                <div class="form-group" style="position: relative;">
-                    <label for="specialityInput">Специальность</label>
-                    <input 
-                        type="text" 
-                        id="specialityInput"
-                        name="profileDto.specialityCodeAndName"
-                        class="form-control"
-                        hx-get="/fragments/get-specialities-by-input"
-                        hx-trigger="keyup changed delay:100ms"
-                        hx-target="#speciality-suggestions"
-                        hx-vals="js:{input: document.getElementById('specialityInput').value,
-                            universityName: document.getElementById('universityInput').value}"
-                        autocomplete="off"
-                        placeholder="Код (09.03.04) или название (Программная инженерия)"
-                    />
-                    <i class="fas fa-code"></i>
-                </div>
-                <div id="speciality-suggestions" style="position: relative;"></div>
-                <input type="hidden" id="specialityCode" name="specialityCode">
-                <input type="hidden" id="specialityName" name="specialityName">
+		<div th:fragment="profile-fields(role)">
+			<!-- Студент -->
+			<div th:if="${role==Role.STUDENT}" class="student-profile-section">
+				<div class="form-group" style="position: relative;">
+					<label for="universityInput">Университет</label>
+					<input type="text" id="universityInput" name="profileDto.universityName" class="form-control"
+						hx-get="/fragments/get-universities-by-input" hx-trigger="keyup changed delay:100ms"
+						hx-target="#university-suggestions"
+						hx-vals="js:{input: document.getElementById('universityInput').value}" autocomplete="off"
+						placeholder="Название вашего университета" />
+					<i class="fas fa-university"></i>
+				</div>
+				<div id="university-suggestions" style="position: relative;"></div>
 
-                <div class="form-group">
-                    <label for="courseNum">Курс</label>
-                    <select name="profileDto.courseNum" id="courseNum" required>
-                        <option value="">Выберите курс</option>
-                        <option value="1">1 курс</option>
-                        <option value="2">2 курс</option>
-                        <option value="3">3 курс</option>
-                        <option value="4">4 курс</option>
-                        <option value="5">5 курс</option>
-                        <option value="6">6 курс</option>
-                    </select>
-                    <i class="fas fa-graduation-cap"></i>
-                </div>
+				<div class="form-group" style="position: relative;">
+					<label for="specialityInput">Специальность</label>
+					<input type="text" id="specialityInput" name="profileDto.specialityCodeAndName" class="form-control"
+						hx-get="/fragments/get-specialities-by-input" hx-trigger="keyup changed delay:100ms"
+						hx-target="#speciality-suggestions" hx-vals="js:{input: document.getElementById('specialityInput').value,
+                            universityName: document.getElementById('universityInput').value}" autocomplete="off"
+						placeholder="Код (09.03.04) или название (Программная инженерия)" />
+					<i class="fas fa-code"></i>
+				</div>
+				<div id="speciality-suggestions" style="position: relative;"></div>
+				<input type="hidden" id="specialityCode" name="specialityCode">
+				<input type="hidden" id="specialityName" name="specialityName">
 
-                <div class="form-group">
-                    <label for="studyType">Форма обучения</label>
-                    <select name="profileDto.studyType" id="studyType" required>
-                        <option th:each="t : ${studyTypes}" th:value="${t}" th:text="${t.displayValue}"></option>
-                    </select>
-                    <i class="fas fa-book-open"></i>
-                </div>
-            </div>
-            
-            <!-- Админ -->
-            <div th:if="${role==Role.ADMIN}" class="admin-profile-section">
-                <div class="form-group" style="position: relative;">
-                    <label for="organisationInput">Организация</label>
-                    <input 
-                        type="text" 
-                        id="organisationInput"
-                        name="profileDto.organisationName"
-                        class="form-control"
-                        hx-get="/fragments/get-organisations-by-input"
-                        hx-trigger="keyup changed delay:100ms"
-                        hx-target="#organisation-suggestions"
-                        hx-vals="js:{input: document.getElementById('organisationInput').value}"
-                        autocomplete="off"
-                        placeholder="Название вашей организации"
-                    />
-                    <i class="fas fa-university"></i>
-                </div>
-                <div id="organisation-suggestions" style="position: relative;"></div>
-            </div>
-        </div>
-    </div>
+				<div class="form-group">
+					<label for="courseNum">Курс</label>
+					<select name="profileDto.courseNum" id="courseNum" required>
+						<option value="">Выберите курс</option>
+						<option value="1">1 курс</option>
+						<option value="2">2 курс</option>
+						<option value="3">3 курс</option>
+						<option value="4">4 курс</option>
+						<option value="5">5 курс</option>
+						<option value="6">6 курс</option>
+					</select>
+					<i class="fas fa-graduation-cap"></i>
+				</div>
+
+				<div class="form-group">
+					<label for="studyType">Форма обучения</label>
+					<select name="profileDto.studyType" id="studyType" required>
+						<option th:each="t : ${studyTypes}" th:value="${t}" th:text="${t.displayValue}"></option>
+					</select>
+					<i class="fas fa-book-open"></i>
+				</div>
+			</div>
+
+			<!-- Админ -->
+			<div th:if="${role==Role.ADMIN}" class="admin-profile-section">
+				<div class="form-group" style="position: relative;">
+					<label for="organisationInput">Организация</label>
+					<input type="text" id="organisationInput" name="profileDto.organisationName" class="form-control"
+						hx-get="/fragments/get-organisations-by-input" hx-trigger="keyup changed delay:100ms"
+						hx-target="#organisation-suggestions"
+						hx-vals="js:{input: document.getElementById('organisationInput').value}" autocomplete="off"
+						placeholder="Название вашей организации" />
+					<i class="fas fa-university"></i>
+				</div>
+				<div id="organisation-suggestions" style="position: relative;"></div>
+			</div>
+		</div>
+	</div>
+	<div th:fragment="vacancies">
+		<div th:if="${not #lists.isEmpty(vacancies)}">
+			<div class="vacancy-card" th:each="vacancy : ${vacancies}">
+				<div class="vacancy-header">
+					<div>
+						<h3 class="vacancy-title" th:text="${vacancy.position}"></h3>
+						<div class="vacancy-company" th:text="${vacancy.organisation?.name}"></div>
+					</div>
+					<div class="vacancy-salary">
+						<span th:if="${vacancy.minSalary != null and vacancy.maxSalary == null}">
+							от <span th:text="${#numbers.formatInteger(vacancy.minSalary, 0, 'COMMA')}"></span> руб.
+						</span>
+						<span th:if="${vacancy.minSalary == null and vacancy.maxSalary != null}">
+							до <span th:text="${#numbers.formatInteger(vacancy.maxSalary, 0, 'COMMA')}"></span> руб.
+						</span>
+						<span th:if="${vacancy.minSalary != null and vacancy.maxSalary != null}">
+							<span th:text="${#numbers.formatInteger(vacancy.minSalary, 0, 'COMMA')}"></span> -
+							<span th:text="${#numbers.formatInteger(vacancy.maxSalary, 0, 'COMMA')}"></span> руб.
+						</span>
+						<span th:if="${vacancy.minSalary == null and vacancy.maxSalary == null}">
+							Зарплата не указана
+						</span>
+					</div>
+				</div>
+
+				<div class="vacancy-info">
+					<div class="vacancy-meta">
+						<i class="fas fa-briefcase"></i>
+						<span th:text="${vacancy.shedule}"></span>
+					</div>
+				</div>
+
+				<div class="vacancy-description" th:text="${vacancy.description}"></div>
+
+				<div class="vacancy-actions" th:insert="~{_fragments :: btn-apply(${vacancy.id}, ${vacancy.hasCurrentStudentResponse})}"></div>
+			</div>
+		</div>
+
+		<div th:if="${#lists.isEmpty(vacancies)}" class="no-vacancies">
+			<p th:if="${param.search != null or param.minSalary != null or param.maxSalary != null 
+	                   or (param.orgIds != null and not param.orgIds.isEmpty()) 
+	                   or (param.schedules != null and not param.schedules.isEmpty())}">
+				По вашему запросу вакансий не найдено.
+			</p>
+			<p th:unless="${param.search != null or param.minSalary != null or param.maxSalary != null 
+	                     or (param.orgIds != null and not param.orgIds.isEmpty()) 
+	                     or (param.schedules != null and not param.schedules.isEmpty())}">
+				На данный момент нет доступных вакансий для вашего университета.
+			</p>
+		</div>
+	</div>
+	<div th:fragment="btn-apply(vacancyId, hasCurrentStudentResponse)">
+		<button class="apply-button"
+			th:attr="data-vacancy-id=${vacancyId}, hx-get=${'/vacancies/' + vacancyId + '/response'}" hx-target="this"
+			hx-swap="outerHTML">
+			<div th:if="${hasCurrentStudentResponse}">
+				<i class="fas fa-check"></i>
+				Отклик отправлен
+			</div>
+			<div th:unless="${hasCurrentStudentResponse}">Откликнуться</div>
+		</button>
+	</div>
 </body>
+
 </html>
