@@ -87,9 +87,14 @@
 						<span th:if="${vacancy.minSalary == null and vacancy.maxSalary != null}">
 							до <span th:text="${#numbers.formatInteger(vacancy.maxSalary, 0, 'COMMA')}"></span> руб.
 						</span>
-						<span th:if="${vacancy.minSalary != null and vacancy.maxSalary != null}">
+						<span th:if="${vacancy.minSalary != null and vacancy.maxSalary != null
+							 and vacancy.minSalary != vacancy.maxSalary}">
 							<span th:text="${#numbers.formatInteger(vacancy.minSalary, 0, 'COMMA')}"></span> -
 							<span th:text="${#numbers.formatInteger(vacancy.maxSalary, 0, 'COMMA')}"></span> руб.
+						</span>
+						<span th:if="${vacancy.minSalary != null and vacancy.maxSalary != null 
+							and vacancy.minSalary == vacancy.maxSalary}">
+							<span th:text="${#numbers.formatInteger(vacancy.minSalary, 0, 'COMMA')}"></span> руб.
 						</span>
 						<span th:if="${vacancy.minSalary == null and vacancy.maxSalary == null}">
 							Зарплата не указана
@@ -106,7 +111,8 @@
 
 				<div class="vacancy-description" th:text="${vacancy.description}"></div>
 
-				<div class="vacancy-actions" th:insert="~{_fragments :: btn-apply(${vacancy.id}, ${vacancy.hasCurrentStudentResponse})}"></div>
+				<div class="vacancy-actions"
+					th:insert="~{_fragments :: btn-apply(${vacancy.id}, ${vacancy.hasCurrentStudentResponse})}"></div>
 			</div>
 		</div>
 

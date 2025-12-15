@@ -64,7 +64,7 @@ public class VacancyController {
 			@RequestParam(required = false) String orgIds,
 			@RequestParam(required = false) Integer minSalary,
 			@RequestParam(required = false) Integer maxSalary,
-			@RequestParam(required = false) String schedules) {
+			@RequestParam(required = false) String schedules) throws UnspecifiedRoleException {
 		HashSet<Integer> orgIdsSet = new HashSet<>();
 		if (orgIds != null && !orgIds.trim().isEmpty()) {
 			try {
@@ -84,9 +84,18 @@ public class VacancyController {
 			}
 		}
 		User user = (User) auth.getPrincipal();
-		University university = ((StudentProfile) user.getProfile()).getUniversity();
-		model.addAttribute("organisations", university.getOrganisations());
-		Stream<Vacancy> vacancies = loadUniversityVacancies(university).stream();
+		Stream<Vacancy> vacancies;
+		switch (user.getRole()) {
+		case STUDENT -> {
+			University university = ((StudentProfile) user.getProfile()).getUniversity();
+			model.addAttribute("organisations", university.getOrganisations());
+			vacancies = loadUniversityVacancies(university).stream();
+		}
+		case ADMIN ->
+			vacancies = loadOrganisationVacancies(((AdminProfile) user.getProfile()).getOrganisation()).stream();
+		default -> throw new UnspecifiedRoleException();
+		}
+		
 		if (search != null && !search.trim().isBlank()) {
 			String lowCaseSearch = search.toLowerCase();
 			vacancies = vacancies.filter(v -> v.getPosition().toLowerCase().contains(lowCaseSearch)
