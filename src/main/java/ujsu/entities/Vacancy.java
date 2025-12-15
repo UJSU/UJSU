@@ -34,4 +34,9 @@ public class Vacancy {
 	@EqualsAndHashCode.Exclude
 	@Transient
 	private Organisation organisation;
+	
+	public void setOrganisation(Organisation organisation) {
+		this.organisation = organisation;
+		this.organisationId = organisation.getId();
+	}
 }

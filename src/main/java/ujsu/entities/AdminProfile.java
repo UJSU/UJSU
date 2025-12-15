@@ -22,6 +22,6 @@ public class AdminProfile implements UserProfile {
 	
 	public void setOrganisation(Organisation organisation) {
 		this.organisation = organisation;
-		this.organisationId = organisation != null ? organisation.getId() : null;
+		this.organisationId = organisation.getId();
 	}
 }

@@ -7,8 +7,10 @@ import ujsu.dto.AdminProfileDto;
 import ujsu.dto.StudentProfileDto;
 import ujsu.dto.UserProfileDto;
 import ujsu.entities.AdminProfile;
+import ujsu.entities.Organisation;
 import ujsu.entities.Speciality;
 import ujsu.entities.StudentProfile;
+import ujsu.entities.University;
 import ujsu.entities.UserProfile;
 import ujsu.enums.Role;
 import ujsu.exceptions.UnspecifiedRoleException;
@@ -37,16 +39,23 @@ public class ProfileService {
 		return switch (role) {
 		case STUDENT -> {
 			StudentProfile profile = studentProfileRepo.findByUserId(userId);
-			
-			profile.setUniversity(universityRepo.findById(profile.getUniversityId()).get()
-					.withOrganisations(organisationRepo.findByUniversityId(profile.getUniversityId())));
+			University university = universityRepo.findById(profile.getUniversityId()).get()
+					.withOrganisations(organisationRepo.findWithPartnersByUniversityId(profile.getUniversityId()));
+			profile.setUniversity(university);
+			university.getOrganisations().forEach(
+					o -> {
+						o.getVacancies().forEach(v -> v.setOrganisation(o));
+						o.setUniversity(university);
+					});
 			profile.setSpeciality(specialityRepo.findById(profile.getSpecialityId()).get());
 			profile.setResponses(vacancyResponseRepo.findByStudentId(userId));
 			yield profile;
 		}
 		case ADMIN -> {
 			AdminProfile profile = adminProfileRepo.findByUserId(userId);
-			profile.setOrganisation(organisationRepo.findById(profile.getOrganisationId()).get());
+			Organisation organisation = organisationRepo.findById(profile.getOrganisationId()).get();
+			organisation.setUniversity(universityRepo.findById(organisation.getId()).get());
+			profile.setOrganisation(organisation);
 			yield profile;
 		}
 		default -> throw new UnspecifiedRoleException();

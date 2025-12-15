@@ -20,6 +20,7 @@ import ujsu.dto.SignUpDto;
 import ujsu.entities.User;
 import ujsu.enums.Role;
 import ujsu.exceptions.AuthException;
+import ujsu.services.OrganisationService;
 import ujsu.services.ProfileService;
 import ujsu.services.UniversityService;
 import ujsu.services.UserService;
@@ -32,6 +33,7 @@ public class HomeController {
 	private final UserService userService;
 	private final ProfileService profileService;
 	private final UniversityService universityService;
+	private final OrganisationService organisationService;
 
 	@GetMapping("/")
 	public String showMainPage() {
@@ -88,6 +90,14 @@ public class HomeController {
 			return "fragments/speciality-suggestions :: start-typing";
 		model.addAttribute("specialities", universityService.findSpecialitiesByNameOrCodeMatch(input.trim(), universityName, 1));
 		return "fragments/speciality-suggestions :: suggestions";
+	}
+	
+	@GetMapping(path = "/fragments/get-universities-by-input", headers = "hx-request=true")
+	public String getOrganisationsByInput(Model model, String input) {
+		if (input.isBlank())
+			return "fragments/university-suggestions :: start-typing";
+		model.addAttribute("organisations", organisationService.findByNameMatch(input.trim(), 1));
+		return "fragments/organisation-suggestions :: suggestions";
 	}
 	
 	@GetMapping(path = "/error", headers = "hx-request=true")
