@@ -1,0 +1,1 @@
+ALTER TABLE db_changes_log ADD COLUMN processed TINYINT(1) NOT NULL DEFAULT 0;

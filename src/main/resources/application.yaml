@@ -10,21 +10,10 @@ spring:
       driver-class-name: com.mysql.cj.jdbc.Driver
   flyway:
     baseline-on-migrate: true
-    baseline-version: 6
+    baseline-version: 7
     user: ${UJSU_MYSQL_USERNAME:ujsu}
     password: ${UJSU_MYSQL_PASSWORD:ujsupass}
+  cache:
+    type: simple
 server:
    port: 8080
-logging:
-  level:
-     org:
-       springframework:
-         data:
-           convert: DEBUG
-           jdbc:
-             core:
-               convert:
-                 JdbcConverter: DEBUG
-         jdbc:
-           core: DEBUG
-         security: DEBUG

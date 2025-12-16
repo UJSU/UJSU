@@ -2,6 +2,7 @@ package ujsu.services;
 
 import java.util.List;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,12 @@ public class UniversityService {
 
 	private final int PAGE_LENGTH = 50;
 
+	@Cacheable(value = "universities", key = "#universityId")
+    public University findUniversityById(int universityId) {
+        return universityRepo.findById(universityId)
+            .orElseThrow(() -> new IllegalStateException("University not found"));
+    }
+	
 	public List<University> findByNameMatch(String input, int pageNum) {
 		return universityRepo.findByNameMatch(input, PAGE_LENGTH * (pageNum - 1), PAGE_LENGTH * pageNum);
 	}

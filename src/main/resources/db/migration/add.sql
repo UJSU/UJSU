@@ -1,1 +1,0 @@
-ALTER TABLE vacancy_response DROP COLUMNN verdit;

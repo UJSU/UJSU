@@ -24,9 +24,10 @@ public class Vacancy {
 	private Integer minSalary;
 	private Integer maxSalary;
 	
-	private String shedule;
+	private String schedule;
 	private String description;
 	
+	@EqualsAndHashCode.Exclude
 	private int responseCount;
 	
 	@With
@@ -37,6 +38,7 @@ public class Vacancy {
 	
 	@With
 	@Transient
+	@EqualsAndHashCode.Exclude
 	private boolean hasCurrentStudentResponse;
 	
 	public void setOrganisation(Organisation organisation) {

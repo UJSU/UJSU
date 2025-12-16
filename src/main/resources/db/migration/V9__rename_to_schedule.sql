@@ -1,0 +1,1 @@
+ALTER TABLE vacancy RENAME COLUMN shedule TO schedule;

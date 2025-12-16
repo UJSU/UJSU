@@ -43,13 +43,14 @@ public class ProfileService {
 		return switch (role) {
 		case STUDENT -> {
 			StudentProfile profile = studentProfileRepo.findByUserId(userId);
-			University university = universityRepo.findById(profile.getUniversityId()).get()
+			profile.setUniversity(universityRepo.findById(profile.getUniversityId()).get());
+			/*University university = universityRepo.findById(profile.getUniversityId()).get()
 					.withOrganisations(organisationRepo.findWithPartnersByUniversityId(profile.getUniversityId()));
 			profile.setUniversity(university);
 			university.getOrganisations().forEach(o -> {
 				o.setVacancies(enrichVacancies(o, userId));
 				o.setUniversity(university);
-			});
+			});*/
 			profile.setSpeciality(specialityRepo.findById(profile.getSpecialityId()).get());
 			profile.setResponses(vacancyResponseRepo.findByStudentId(userId));
 			yield profile;
@@ -58,7 +59,7 @@ public class ProfileService {
 			AdminProfile profile = adminProfileRepo.findByUserId(userId);
 			Organisation organisation = organisationRepo.findById(profile.getOrganisationId()).get();
 			organisation.setUniversity(universityRepo.findById(organisation.getId()).orElse(null));
-			organisation.setVacancies(enrichVacancies(organisation, userId));
+			// organisation.setVacancies(enrichVacancies(organisation, userId));
 			profile.setOrganisation(organisation);
 			yield profile;
 		}

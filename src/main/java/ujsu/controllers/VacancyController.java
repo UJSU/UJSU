@@ -1,6 +1,5 @@
 package ujsu.controllers;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,24 +26,38 @@ import ujsu.entities.Vacancy;
 import ujsu.entities.VacancyResponse;
 import ujsu.enums.Role;
 import ujsu.exceptions.UnspecifiedRoleException;
+import ujsu.repositories.UniversityRepository;
 import ujsu.repositories.VacancyRepository;
 import ujsu.repositories.VacancyResponseRepository;
+import ujsu.services.OrganisationVacancyService;
+import ujsu.services.UniversityVacancyService;
+import ujsu.services.VacancyService;
 
 @Controller
 @RequestMapping("/vacancies")
 @RequiredArgsConstructor
 public class VacancyController {
 
+	private final UniversityRepository universityRepo;
 	private final VacancyRepository vacancyRepo;
 	private final VacancyResponseRepository vacancyResponseRepo;
+	
+	private final UniversityVacancyService universityVacancyService;
+	private final OrganisationVacancyService organisationVacancyService;
+	private final VacancyService vacancyService;
 
 	@GetMapping
 	public String showVacanciesPage(Model model, Authentication auth) throws UnspecifiedRoleException {
 		User user = (User) auth.getPrincipal();
 		return switch (user.getRole()) {
 		case STUDENT -> {
-			University university = ((StudentProfile) user.getProfile()).getUniversity();
-			List<Vacancy> vacancies = loadUniversityVacancies(university);
+			StudentProfile profile = ((StudentProfile) user.getProfile());
+			int universityId = profile.getUniversityId();
+	        University university = universityRepo.findById(universityId)
+	            .orElseThrow(() -> new IllegalStateException("University not found"));
+			List<Vacancy> vacancies = vacancyService.enrichWithCurrentStudentResponse(
+					universityVacancyService.loadUniversityVacancies(university), user.getId());
+
 			model.addAttribute("vacancies", vacancies);
 			model.addAttribute("organisations", (HashSet<Organisation>) vacancies.stream().map(v -> v.getOrganisation())
 					.collect(Collectors.toSet()));
@@ -52,6 +65,9 @@ public class VacancyController {
 			yield "vacancies";
 		}
 		case ADMIN -> {
+			List<Vacancy> vacancies = organisationVacancyService
+					.loadOrganisationVacancies(((AdminProfile) user.getProfile()).getOrganisation());
+			model.addAttribute("vacancies", vacancies);
 			yield "vacancies";
 		}
 		default -> throw new UnspecifiedRoleException();
@@ -87,12 +103,17 @@ public class VacancyController {
 		Stream<Vacancy> vacancies;
 		switch (user.getRole()) {
 		case STUDENT -> {
-			University university = ((StudentProfile) user.getProfile()).getUniversity();
-			model.addAttribute("organisations", university.getOrganisations());
-			vacancies = loadUniversityVacancies(university).stream();
+			StudentProfile profile = ((StudentProfile) user.getProfile());
+			int universityId = profile.getUniversityId();
+	        University university = universityRepo.findById(universityId)
+	            .orElseThrow(() -> new IllegalStateException("University not found"));
+			vacancies = vacancyService.enrichWithCurrentStudentResponse(
+					universityVacancyService.loadUniversityVacancies(university), user.getId()).stream();
 		}
-		case ADMIN ->
-			vacancies = loadOrganisationVacancies(((AdminProfile) user.getProfile()).getOrganisation()).stream();
+		case ADMIN -> {
+			vacancies = organisationVacancyService
+					.loadOrganisationVacancies(((AdminProfile) user.getProfile()).getOrganisation()).stream();
+		}
 		default -> throw new UnspecifiedRoleException();
 		}
 		
@@ -116,9 +137,9 @@ public class VacancyController {
 		}
 		if (!schedulesSet.isEmpty()) {
 			vacancies = vacancies.filter(v -> {
-				if (v.getShedule() == null)
+				if (v.getSchedule() == null)
 					return false;
-				String schedule = v.getShedule().toLowerCase();
+				String schedule = v.getSchedule().toLowerCase();
 
 				for (String selectedSchedule : schedulesSet) {
 					switch (selectedSchedule) {
@@ -185,17 +206,5 @@ public class VacancyController {
 			hasCurrentStudentResponse = true;
 		}
 		return "_fragments :: btn-apply(vacancyId=" + id + ",hasCurrentStudentResponse=" + hasCurrentStudentResponse + ")";
-	}
-
-	private List<Vacancy> loadUniversityVacancies(University university) {
-		List<Vacancy> result = new ArrayList<>();
-		university.getOrganisations().forEach(o -> result.addAll(loadOrganisationVacancies(o)));
-		return result;
-	}
-
-	private List<Vacancy> loadOrganisationVacancies(Organisation organisation) {
-		List<Vacancy> result = new ArrayList<>();
-		organisation.getVacancies().forEach(v -> result.add(v));
-		return result;
 	}
 }
