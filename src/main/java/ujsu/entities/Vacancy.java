@@ -30,7 +30,6 @@ public class Vacancy {
 	@EqualsAndHashCode.Exclude
 	private int responseCount;
 	
-	@With
 	@ToString.Exclude
 	@EqualsAndHashCode.Exclude
 	@Transient

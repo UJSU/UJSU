@@ -93,8 +93,11 @@ public class ProfileService {
 
 	private List<Vacancy> enrichVacancies(Organisation organisation, int userId) {
 		List<Vacancy> result = new ArrayList<>(organisation.getVacancies().size());
-		organisation.getVacancies().forEach(v -> result.add(v.withOrganisation(organisation)
-				.withHasCurrentStudentResponse(vacancyResponseRepo.existsByStudentIdAndVacancyId(userId, v.getId()))));
+		organisation.getVacancies().forEach(v -> {
+			v.setOrganisation(organisation);
+			result.add(v
+				.withHasCurrentStudentResponse(vacancyResponseRepo.existsByStudentIdAndVacancyId(userId, v.getId())));
+		});
 		return result;
 	}
 }

@@ -16,12 +16,14 @@ import ujsu.repositories.VacancyRepository;
 public class OrganisationVacancyService {
 
 	private final VacancyRepository vacancyRepo;
-	
-    @Cacheable(value = "organisation-vacancies", key = "#organisation.id")
-    public List<Vacancy> loadOrganisationVacancies(Organisation organisation) {
-        List<Vacancy> result = new ArrayList<>();
-        vacancyRepo.findByOrganisationIdWithResponseCount(organisation.getId())
-                .forEach(v -> result.add(v.withOrganisation(organisation)));
-        return result;
-    }
+
+	@Cacheable(value = "organisation-vacancies", key = "#organisation.id")
+	public List<Vacancy> loadOrganisationVacancies(Organisation organisation) {
+		List<Vacancy> result = new ArrayList<>();
+		vacancyRepo.findByOrganisationIdWithResponseCount(organisation.getId()).forEach(v -> {
+			v.setOrganisation(organisation);
+			result.add(v);
+		});
+		return result;
+	}
 }

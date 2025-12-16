@@ -1,5 +1,6 @@
 package ujsu.controllers;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -65,10 +66,13 @@ public class VacancyController {
 			yield "vacancies";
 		}
 		case ADMIN -> {
+			Organisation adminOrg = ((AdminProfile) user.getProfile()).getOrganisation();
 			List<Vacancy> vacancies = organisationVacancyService
-					.loadOrganisationVacancies(((AdminProfile) user.getProfile()).getOrganisation());
+					.loadOrganisationVacancies(adminOrg);
 			model.addAttribute("vacancies", vacancies);
-			yield "vacancies";
+			model.addAttribute("adminOrg", adminOrg); 
+			model.addAttribute("organisations", Collections.singleton(adminOrg));
+			yield "vacancies_hr";
 		}
 		default -> throw new UnspecifiedRoleException();
 		};
@@ -176,7 +180,9 @@ public class VacancyController {
 		User user = (User) auth.getPrincipal();
 		if (user.getRole() != Role.ADMIN)
 			throw new AccessDeniedException("Доступ запрещён.");
+		Organisation adminOrg = ((AdminProfile) user.getProfile()).getOrganisation();
 		model.addAttribute("emptyVacancy", new Vacancy());
+		model.addAttribute("adminOrg", adminOrg);
 		return "create-vacancy";
 	}
 
@@ -184,9 +190,43 @@ public class VacancyController {
 	public String createVacancy(Model model, Authentication auth, @ModelAttribute Vacancy vacancy)
 			throws AccessDeniedException {
 		User user = (User) auth.getPrincipal();
+		if (user.getRole() != Role.ADMIN)
+			throw new AccessDeniedException("Доступ запрещён.");
 		vacancy.setOrganisation(((AdminProfile) user.getProfile()).getOrganisation());
 		vacancyRepo.save(vacancy);
-		return "vacancies";
+		return "redirect:/vacancies";
+	}
+	
+	@GetMapping("/{id}/edit")
+	public String showEditionPage(Model model, Authentication auth, @PathVariable int id) throws AccessDeniedException {
+		User user = (User) auth.getPrincipal();
+		if (user.getRole() != Role.ADMIN)
+			throw new AccessDeniedException("Доступ запрещён.");
+		Organisation adminOrg = ((AdminProfile) user.getProfile()).getOrganisation();
+		model.addAttribute("emptyVacancy", vacancyRepo.findById(id).orElseThrow());
+		model.addAttribute("adminOrg", adminOrg);
+		return "create-vacancy";
+	}
+
+	@PostMapping("/{id}/edit")
+	public String editVacancy(Model model, Authentication auth, @ModelAttribute Vacancy vacancy)
+			throws AccessDeniedException {
+		User user = (User) auth.getPrincipal();
+		if (user.getRole() != Role.ADMIN)
+			throw new AccessDeniedException("Доступ запрещён.");
+		vacancy.setOrganisation(((AdminProfile) user.getProfile()).getOrganisation());
+		vacancyRepo.save(vacancy);
+		return "redirect:/vacancies";
+	}
+	
+	@PostMapping("/{id}/delete")
+	public String deleteVacancy(Model model, Authentication auth, @PathVariable int id)
+			throws AccessDeniedException {
+		User user = (User) auth.getPrincipal();
+		if (user.getRole() != Role.ADMIN)
+			throw new AccessDeniedException("Доступ запрещён.");
+		vacancyRepo.deleteById(id);
+		return "redirect:/vacancies";
 	}
 
 	@GetMapping(path = "/{id}/response", headers = "hx-request=true")
