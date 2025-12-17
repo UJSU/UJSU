@@ -192,17 +192,18 @@
                                 </div>
 
                                 <div class="vacancy-description" th:text="${vacancy.description}"></div>
-
                                 <div class="vacancy-actions-admin">
-                                    
-                                    <button class="search-button">
+                                    <a th:href="@{/vacancies/{id}/edit(id=${vacancy.id})}" class="search-button">
                                         <i class="fas fa-edit"></i> Редактировать
-                                    </button>
+                                    </a>
+                                    <form th:action="@{/vacancies/{id}/delete(id=${vacancy.id})}" method="post">
+                                         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                                         <button type="submit" class="search-button">
+                                            <i class="fas fa-trash"></i> Удалить
+                                        </button>
+                                    </form>
                                     <button class="search-button">
-                                        <i class="fas fa-trash"></i> Удалить
-                                    </button>
-                                    <button class="search-button">
-                                        <i class="fas fa-eye"></i> Просмотреть отклики
+                                        <i class="fas fa-eye"></i> Посмотреть отклики
                                     </button>
                                 </div>
                             </div>
