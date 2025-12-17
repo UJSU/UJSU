@@ -1,5 +1,119 @@
-<div th:text="${vacancy}"></div>
-<div th:each="dto: ${studentWithResponseDtoList}">
-	<div th:text="${dto.student}"></div>
-	<div th:text="${dto.response}"></div>
-</div>
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Отклики на вакансию | Студворк</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-top">
+                <div class="logo">
+                    <a th:href="@{/vacancies}" class="logo-link">
+                        <div class="logo-wrapper">
+                            <img th:src="@{/images/studwork.png}" alt="СтудВорк" class="logo-image">
+                        </div>
+                        <span>Студворк</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="main-content-wrapper">
+                <div class="responses-section">
+                    <h2 style="margin-bottom: 20px; color: #2c3e50;">
+                        <i class="fas fa-users" style="margin-right: 10px;"></i>
+                        Отклики на вакансию
+                        <span class="badge" style="background: #3498db; color: white; padding: 3px 8px; border-radius: 12px; font-size: 14px; margin-left: 10px;"
+                              th:text="${studentWithResponseDtoList.size()}"></span>
+                    </h2>
+                    <div th:if="${studentWithResponseDtoList.isEmpty()}" class="empty-state">
+                        <i class="fas fa-inbox" style="font-size: 48px; color: #bdc3c7; margin-bottom: 20px;"></i>
+                        <h3 style="color: #7f8c8d;">Нет откликов на эту вакансию</h3>
+                        <p>Студенты еще не откликались на эту вакансию.</p>
+                    </div>
+                    <div th:each="dto : ${studentWithResponseDtoList}" th:if="${!studentWithResponseDtoList.isEmpty()}" class="response-card">
+                        <div class="response-header">
+                            <div class="student-info">
+                                <div class="student-avatar">
+                                    <i class="fas fa-user-graduate" style="font-size: 24px; color: #3498db;"></i>
+                                </div>
+                                <div class="student-details">
+                                    <h3 th:text="${dto.student.surname} + ' ' + ${dto.student.name} + ' ' + ${dto.student.lastName}"></h3>
+                                    <div class="student-meta">
+                                        <span th:if="${dto.student.profile.courseNum != null}" 
+                                              th:text="${dto.student.profile.courseNum + ' курс ' + dto.student.profile.studyType}"></span>
+                                        <span th:if="${dto.student.profile.university != null}" 
+                                              th:text="${dto.student.profile.university.shortName}"></span>
+                                        <span th:if="${dto.student.profile.speciality != null}" 
+                                              th:text="${dto.student.profile.speciality.name}"></span>
+                                    </div>
+                                    <div class="student-contact" style="margin-top: 10px; display: flex; align-items: center;">
+                                        <i class="fas fa-envelope" style="margin-right: 8px; color: #7f8c8d;"></i>
+                                        <span th:text="${dto.student.email}"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Соискателям</h3>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-briefcase"></i> Вакансии</a></li>
+                        <li><a href="#"><i class="fas fa-graduation-cap"></i> Стажировки</a></li>
+                        <li><a href="#"><i class="fas fa-file-alt"></i> Как составить резюме</a></li>
+                        <li><a href="#"><i class="fas fa-comments"></i> Подготовка к собеседованию</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h3>Работодателям</h3>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-plus-circle"></i> Размещение вакансий</a></li>
+                        <li><a href="#"><i class="fas fa-calendar-alt"></i> Ярмарки вакансий</a></li>
+                        <li><a href="#"><i class="fas fa-handshake"></i> Сотрудничество с вузом</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h3>О проекте</h3>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-info-circle"></i> О Студворк</a></li>
+                        <li><a href="#"><i class="fas fa-phone"></i> Контакты</a></li>
+                        <li><a href="#"><i class="fas fa-life-ring"></i> Помощь</a></li>
+                        <li><a href="#"><i class="fas fa-question-circle"></i> Вопросы и ответы</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h3>Мы в соцсетях</h3>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-vk"></i></a>
+                        <a href="#"><i class="fab fa-telegram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="copyright">
+                © 2025 СтудВорк - Карьерный центр. Все права защищены.
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

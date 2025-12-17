@@ -202,9 +202,9 @@
                                             <i class="fas fa-trash"></i> Удалить
                                         </button>
                                     </form>
-                                    <button class="search-button">
+                                    <a th:href="@{/vacancies/{id}/responses(id=${vacancy.id})}" class="search-button">
                                         <i class="fas fa-eye"></i> Посмотреть отклики
-                                    </button>
+                                    </a>
                                 </div>
                             </div>
                         </div>
