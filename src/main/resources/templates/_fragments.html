@@ -140,6 +140,80 @@
 			<div th:unless="${hasCurrentStudentResponse}">Откликнуться</div>
 		</button>
 	</div>
+	<div th:fragment="vacancy-form-fields(vacancy)">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="position">Должность *</label>
+                <div class="input-with-icon center-input">
+                    <input type="text" 
+                           id="position"
+                           th:field="*{position}"
+                           placeholder="Например: Frontend-разработчик"
+                           required
+                           maxlength="255">
+                    <i class="fas fa-briefcase"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Зарплата -->
+        <div class="form-row">
+            <div class="form-group">
+                <label for="minSalary">Минимальная зарплата</label>
+                <div class="input-with-icon">
+                    <input type="number" 
+                           id="minSalary"
+                           th:field="*{minSalary}"
+                           placeholder="50000"
+                           min="0">
+                    <i class="fas fa-money-bill-wave"></i>
+                </div>
+                <small class="form-hint">В рублях, оставьте пустым если не указано</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="maxSalary">Максимальная зарплата</label>
+                <div class="input-with-icon">
+                    <input type="number" 
+                           id="maxSalary"
+                           th:field="*{maxSalary}"
+                           placeholder="150000"
+                           min="0">
+                    <i class="fas fa-money-bill-wave"></i>
+                </div>
+                <small class="form-hint">В рублях, оставьте пустым если не указано</small>
+            </div>
+        </div>
+        
+        <!-- График работы -->
+        <div class="form-group">
+            <label for="schedule">График работы *</label>
+            <div class="input-with-icon">
+                <select id="schedule" th:field="*{schedule}" required>
+                    <option value="" disabled>Выберите график работы</option>
+                    <option value="Полная занятость">Полная занятость</option>
+                    <option value="Частичная занятость">Частичная занятость</option>
+                    <option value="Стажировка">Стажировка</option>
+                    <option value="Удаленная работа">Удаленная работа</option>
+                    <option value="Гибкий график">Гибкий график</option>
+                </select>
+                <i class="fas fa-calendar-alt"></i>
+            </div>
+        </div>
+        
+        <!-- Описание -->
+        <div class="form-group">
+            <label for="description">Описание вакансии *</label>
+            <div class="textarea-with-icon">
+                <textarea id="description"
+                          th:field="*{description}"
+                          placeholder="Опишите вакансию: обязанности, требования, условия работы..."
+                          required
+                          rows="8"></textarea>
+            </div>
+            <small class="form-hint">Подробно опишите вакансию, чтобы привлечь подходящих кандидатов</small>
+        </div>
+    </div>
 </body>
 
 </html>

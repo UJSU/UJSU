@@ -205,7 +205,7 @@ public class VacancyController {
 		Organisation adminOrg = ((AdminProfile) user.getProfile()).getOrganisation();
 		model.addAttribute("emptyVacancy", vacancyRepo.findById(id).orElseThrow());
 		model.addAttribute("adminOrg", adminOrg);
-		return "create-vacancy";
+		return "edit-vacancy";
 	}
 
 	@PostMapping("/{id}/edit")
