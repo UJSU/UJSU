@@ -1,0 +1,5 @@
+<div th:text="${vacancy}"></div>
+<div th:each="dto: ${studentWithResponseDtoList}">
+	<div th:text="${dto.student}"></div>
+	<div th:text="${dto.response}"></div>
+</div>

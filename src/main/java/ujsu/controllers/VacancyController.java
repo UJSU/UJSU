@@ -1,8 +1,10 @@
 package ujsu.controllers;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import lombok.RequiredArgsConstructor;
+import ujsu.dto.StudentWithResponseDto;
 import ujsu.entities.AdminProfile;
 import ujsu.entities.Organisation;
 import ujsu.entities.StudentProfile;
@@ -32,6 +35,7 @@ import ujsu.repositories.VacancyRepository;
 import ujsu.repositories.VacancyResponseRepository;
 import ujsu.services.OrganisationVacancyService;
 import ujsu.services.UniversityVacancyService;
+import ujsu.services.UserService;
 import ujsu.services.VacancyService;
 
 @Controller
@@ -43,6 +47,7 @@ public class VacancyController {
 	private final VacancyRepository vacancyRepo;
 	private final VacancyResponseRepository vacancyResponseRepo;
 	
+	private final UserService userService;
 	private final UniversityVacancyService universityVacancyService;
 	private final OrganisationVacancyService organisationVacancyService;
 	private final VacancyService vacancyService;
@@ -246,5 +251,19 @@ public class VacancyController {
 			hasCurrentStudentResponse = true;
 		}
 		return "_fragments :: btn-apply(vacancyId=" + id + ",hasCurrentStudentResponse=" + hasCurrentStudentResponse + ")";
+	}
+	
+	@GetMapping(path = "/{id}/responses")
+	public String showResponses(Model model, Authentication auth, @PathVariable int id)
+			throws AccessDeniedException, NoSuchElementException {
+		User user = (User) auth.getPrincipal();
+		if (user.getRole() != Role.ADMIN)
+			throw new AccessDeniedException("Доступ запрещён.");
+		Vacancy vacancy = vacancyRepo.findById(id).orElseThrow();
+		model.addAttribute(vacancy);
+		List<StudentWithResponseDto> studentWithResponseDtoList = new ArrayList<>();
+		vacancyResponseRepo.findByVacancyId(id).forEach(r -> studentWithResponseDtoList.add(new StudentWithResponseDto(userService.loadUserWithProfileById(r.getStudentId()), r)));
+		model.addAttribute("studentWithResponseDtoList", studentWithResponseDtoList);
+		return "vacancy-responses";
 	}
 }

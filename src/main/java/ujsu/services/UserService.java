@@ -49,4 +49,10 @@ public class UserService implements UserDetailsService {
 		user.setProfile(profileService.findProfile(user.getId(), user.getRole()));
 		return user;
 	}
+	
+	public User loadUserWithProfileById(int id) {
+		User user = userRepo.findById(id).orElseThrow();
+		user.setProfile(profileService.findProfile(id, user.getRole()));
+		return user;
+	}
 }
