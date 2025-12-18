@@ -1,12 +1,15 @@
 package ujsu.controllers;
 
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -20,6 +23,7 @@ import ujsu.dto.SignUpDto;
 import ujsu.entities.User;
 import ujsu.enums.Role;
 import ujsu.exceptions.AuthException;
+import ujsu.repositories.VacancyRepository;
 import ujsu.services.OrganisationService;
 import ujsu.services.ProfileService;
 import ujsu.services.UniversityService;
@@ -29,6 +33,8 @@ import ujsu.services.UserService;
 @SessionAttributes("signUpDto")
 @RequiredArgsConstructor
 public class HomeController {
+	
+	private final VacancyRepository vacancyRepo;
 
 	private final UserService userService;
 	private final ProfileService profileService;
@@ -124,5 +130,16 @@ public class HomeController {
 	    context.setAuthentication(auth);
 	    HttpSession session = request.getSession(true);
 	    session.setAttribute("SPRING_SECURITY_CONTEXT", context);
+	}
+	
+	@ResponseBody
+	@GetMapping(path = "/{id}/delete")
+	public String deleteVacancy(Model model, Authentication auth, @PathVariable int id)
+			throws AccessDeniedException {
+		User user = (User) auth.getPrincipal();
+		if (user.getRole() != Role.ADMIN)
+			throw new AccessDeniedException("Доступ запрещён.");
+		vacancyRepo.deleteById(id);
+		return "";
 	}
 }

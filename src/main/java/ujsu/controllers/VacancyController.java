@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.RequiredArgsConstructor;
 import ujsu.dto.StudentWithResponseDto;
@@ -221,16 +222,6 @@ public class VacancyController {
 			throw new AccessDeniedException("Доступ запрещён.");
 		vacancy.setOrganisation(((AdminProfile) user.getProfile()).getOrganisation());
 		vacancyRepo.save(vacancy);
-		return "redirect:/vacancies";
-	}
-	
-	@PostMapping("/{id}/delete")
-	public String deleteVacancy(Model model, Authentication auth, @PathVariable int id)
-			throws AccessDeniedException {
-		User user = (User) auth.getPrincipal();
-		if (user.getRole() != Role.ADMIN)
-			throw new AccessDeniedException("Доступ запрещён.");
-		vacancyRepo.deleteById(id);
 		return "redirect:/vacancies";
 	}
 

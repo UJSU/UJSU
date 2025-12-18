@@ -20,48 +20,40 @@ public class DatabaseChangeMonitorService {
 
 	@Scheduled(fixedDelay = 5000)
 	public void pollDbChanges() {
-		String sql = """
-				SELECT id, table_name, operation, record_id
-				FROM db_changes_log
-				WHERE processed = FALSE
-				ORDER BY id
-				LIMIT 100
-				""";
-		for (Map<String, Object> row : jdbcTemplate.queryForList(sql)) {
-			String tableName = (String) row.get("table_name");
-			String operation = (String) row.get("operation");
-			Integer recordId = (Integer) row.get("record_id");
+	    String sql = """
+	        SELECT id, table_name, operation, record_id, related_id
+	        FROM db_changes_log
+	        WHERE processed = FALSE
+	        ORDER BY id
+	        LIMIT 100
+	        """;
 
-			handleDbChange(tableName, operation, recordId);
+	    for (Map<String, Object> row : jdbcTemplate.queryForList(sql)) {
+	        String tableName = (String) row.get("table_name");
+	        String operation = (String) row.get("operation");
+	        Integer recordId = (Integer) row.get("record_id");
+	        Integer relatedId = (Integer) row.get("related_id"); // ← новое поле
 
-			jdbcTemplate.update("UPDATE db_changes_log SET processed = TRUE WHERE id = ?", row.get("id"));
-		}
+	        handleDbChange(tableName, operation, recordId, relatedId);
+
+	        jdbcTemplate.update("UPDATE db_changes_log SET processed = TRUE WHERE id = ?", row.get("id"));
+	    }
 	}
 
-	private void handleDbChange(String tableName, String operation, Integer recordId) {
+	private void handleDbChange(String tableName, String operation, Integer recordId, Integer relatedId) {
 	    switch (tableName) {
 	        case "vacancy" -> {
-	            Integer orgId = jdbcTemplate.queryForObject(
-	                "SELECT organisation_id FROM vacancy WHERE id = ?",
-	                Integer.class, 
-	                recordId
-	            );
-	            if (orgId != null) {
-	                evictOrganisationVacancies(orgId);
-	                evictUniversityVacanciesForOrganisation(orgId);
-	                evictPartnerUniversitiesForOrganisation(orgId);
+	            if (relatedId != null) {
+	                evictOrganisationVacancies(relatedId);
+	                evictUniversityVacanciesForOrganisation(relatedId);
+	                evictPartnerUniversitiesForOrganisation(relatedId);
 	            }
 	        }
 	        case "organisation" -> {
 	            evictUniversityVacanciesForOrganisation(recordId);
 	            evictPartnerUniversitiesForOrganisation(recordId);
-	            Integer universityId = jdbcTemplate.queryForObject(
-	                    "SELECT university_id FROM organisation WHERE id = ?",
-	                    Integer.class,
-	                    recordId
-	                );
-	                if (universityId != null)
-	                    Objects.requireNonNull(cacheManager.getCache("universities")).evict(universityId);
+	            if (relatedId != null)
+	                Objects.requireNonNull(cacheManager.getCache("universities")).evict(relatedId);
 	        }
 	    }
 	}

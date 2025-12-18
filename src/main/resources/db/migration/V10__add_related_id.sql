@@ -1,0 +1,1 @@
+ALTER TABLE db_changes_log ADD COLUMN related_id INT;

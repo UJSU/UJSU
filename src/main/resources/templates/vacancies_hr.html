@@ -196,12 +196,9 @@
                                     <a th:href="@{/vacancies/{id}/edit(id=${vacancy.id})}" class="search-button">
                                         <i class="fas fa-edit"></i> Редактировать
                                     </a>
-                                    <form th:action="@{/vacancies/{id}/delete(id=${vacancy.id})}" method="post">
-                                         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-                                         <button type="submit" class="search-button">
-                                            <i class="fas fa-trash"></i> Удалить
-                                        </button>
-                                    </form>
+									<button th:hx-get="|/${vacancy.id}/delete|" hx-swap="outerHTML" hx-target="closest .vacancy-card" class="search-button">
+										<i class="fas fa-trash"></i> Удалить
+									</button>
                                     <a th:href="@{/vacancies/{id}/responses(id=${vacancy.id})}" class="search-button">
                                         <i class="fas fa-eye"></i> Посмотреть отклики
                                     </a>

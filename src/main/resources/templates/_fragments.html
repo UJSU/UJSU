@@ -72,7 +72,7 @@
 			</div>
 		</div>
 	</div>
-	<div th:fragment="vacancies">
+	<div th:fragment="vacancies" hx-get="/vacancies/filter" hx-trigger="every 2s" hx-swap="outerHTML">
 		<div th:if="${not #lists.isEmpty(vacancies)}">
 			<div class="vacancy-card" th:each="vacancy : ${vacancies}">
 				<div class="vacancy-header">
