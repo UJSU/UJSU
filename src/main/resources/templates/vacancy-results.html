@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ответы на отклики | Студворк</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-top">
+                <div class="logo">
+                    <a th:href="@{/vacancies}" class="logo-link">
+                        <div class="logo-wrapper">
+                            <img th:src="@{/images/studwork.png}" alt="СтудВорк" class="logo-image">
+                        </div>
+                        <span>Студворк</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="main-content-wrapper">
+                <div class="responses-section" th:insert="~{_fragments :: result-list}"></div>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Соискателям</h3>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-briefcase"></i> Вакансии</a></li>
+                        <li><a href="#"><i class="fas fa-graduation-cap"></i> Стажировки</a></li>
+                        <li><a href="#"><i class="fas fa-file-alt"></i> Как составить резюме</a></li>
+                        <li><a href="#"><i class="fas fa-comments"></i> Подготовка к собеседованию</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h3>Работодателям</h3>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-plus-circle"></i> Размещение вакансий</a></li>
+                        <li><a href="#"><i class="fas fa-calendar-alt"></i> Ярмарки вакансий</a></li>
+                        <li><a href="#"><i class="fas fa-handshake"></i> Сотрудничество с вузом</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h3>О проекте</h3>
+                    <ul>
+                        <li><a href="#"><i class="fas fa-info-circle"></i> О Студворк</a></li>
+                        <li><a href="#"><i class="fas fa-phone"></i> Контакты</a></li>
+                        <li><a href="#"><i class="fas fa-life-ring"></i> Помощь</a></li>
+                        <li><a href="#"><i class="fas fa-question-circle"></i> Вопросы и ответы</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h3>Мы в соцсетях</h3>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-vk"></i></a>
+                        <a href="#"><i class="fab fa-telegram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="copyright">
+                © 2025 СтудВорк - Карьерный центр. Все права защищены.
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

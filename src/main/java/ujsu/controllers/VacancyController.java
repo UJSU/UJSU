@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.RequiredArgsConstructor;
 import ujsu.dto.StudentWithResponseDto;
@@ -178,7 +177,7 @@ public class VacancyController {
 		model.addAttribute("vacancies", vacancyList);
 		model.addAttribute("selectedSchedules", schedulesSet);
 		model.addAttribute("selectedOrgIds", orgIdsSet);
-		return "_fragments :: vacancies";
+		return user.getRole() == Role.STUDENT ? "_fragments :: vacancies" : "_fragments :: vacancies-hr";
 	}
 
 	@GetMapping("/create")

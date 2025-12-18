@@ -1,0 +1,1 @@
+ALTER TABLE vacancy_response ADD CONSTRAINT fk_vacancy_id FOREIGN KEY (vacancy_id) REFERENCES vacancy(id) ON DELETE CASCADE;
