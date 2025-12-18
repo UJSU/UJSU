@@ -326,8 +326,6 @@
 				</div>
 	
 				<div class="vacancy-description" th:text="${response.vacancy?.description}"></div>
-	
-				<!-- Вердикт работодателя -->
 				<div class="verdict-section">
 					<div class="verdict-status"
 						th:classappend="${response.employerVerdict == null ? 'pending' : (response.employerVerdict == true ? 'accepted' : 'rejected')}">
@@ -336,21 +334,6 @@
 						<span
 							th:text="${response.employerVerdict == null ? 'На рассмотрении' : (response.employerVerdict == true ? 'Приглашение' : 'Отказ')}"></span>
 					</div>
-				</div>
-	
-				<div th:if="${response.employerComment}" class="employer-comment">
-					<div class="comment-label">
-						<i class="fas fa-comment-dots"></i>
-						Комментарий работодателя:
-					</div>
-					<div class="comment-text" th:text="${response.employerComment}">
-						Текст комментария...
-					</div>
-				</div>
-	
-				<div th:unless="${response.employerComment}" class="no-comment">
-					<i class="fas fa-comment-slash"></i>
-					Комментарий от работодателя отсутствует
 				</div>
 			</div>
 		</div>
@@ -365,7 +348,7 @@
 			</a>
 		</div>
 	</div>
-	</div>
+</div>
 </body>
 
 </html>

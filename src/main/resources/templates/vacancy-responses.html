@@ -61,6 +61,59 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="response-actions">
+    
+    <!-- Состояние: Нет решения -->
+    <div th:if="${dto.response.employerVerdict == null}">
+        <form th:action="@{'/vacancies/responses/' + ${dto.response.id} + '/accept'}" 
+              method="post" style="display: inline;">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            <button type="submit" class="search-button-final">
+                <i class="fas fa-check"></i> Принять
+            </button>
+        </form>
+        
+        <form th:action="@{'/vacancies/responses/' + ${dto.response.id} + '/reject'}" 
+              method="post" style="display: inline;">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            <button type="submit" class="search-button-final">
+                <i class="fas fa-times"></i> Отклонить
+            </button>
+        </form>
+    </div>
+    
+    <!-- Состояние: Принят -->
+    <div th:if="${dto.response.employerVerdict == true}">
+        <span style="color: green; font-weight: bold; margin-right: 10px;">
+            <i class="fas fa-check-circle"></i> Принят
+        </span>
+        
+        <form th:action="@{'/vacancies/responses/' + ${dto.response.id} + '/reject'}" 
+              method="post" style="display: inline;">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            <button type="submit" class="search-button-final">
+                <i class="fas fa-undo"></i> Поменять решение
+            </button>
+        </form>
+    </div>
+    
+    <!-- Состояние: Отклонен -->
+    <div th:if="${dto.response.employerVerdict == false}">
+        <span style="color: red; font-weight: bold; margin-right: 10px;">
+            <i class="fas fa-times-circle"></i> Отклонен
+        </span>
+        
+        <form th:action="@{'/vacancies/responses/' + ${dto.response.id} + '/accept'}" 
+              method="post" style="display: inline;">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            <button type="submit" class="search-button-final">
+                <i class="fas fa-undo"></i> Поменять решение
+            </button>
+        </form>
+    </div>
+</div>
+                            
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -115,5 +168,8 @@
             </div>
         </div>
     </footer>
+    
+    <!-- Подключение HTMX -->
+    <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
 </body>
 </html>

@@ -251,7 +251,7 @@ public class VacancyController {
 		if (user.getRole() != Role.ADMIN)
 			throw new AccessDeniedException("Доступ запрещён.");
 		Vacancy vacancy = vacancyRepo.findById(id).orElseThrow();
-		model.addAttribute(vacancy);
+		model.addAttribute("vacancy", vacancy); 
 		List<StudentWithResponseDto> studentWithResponseDtoList = new ArrayList<>();
 		vacancyResponseRepo.findByVacancyId(id).forEach(r -> studentWithResponseDtoList.add(new StudentWithResponseDto(userService.loadUserWithProfileById(r.getStudentId()), r)));
 		model.addAttribute("studentWithResponseDtoList", studentWithResponseDtoList);
@@ -286,33 +286,28 @@ public class VacancyController {
 		model.addAttribute("responses", responses);
 		return "_fragments :: result-list";
 	}
-	
-	
-	@ResponseBody
-	@PostMapping(path = "/{responseId}/accept", headers = "hx-request=true")
+	@PostMapping("/responses/{responseId}/accept")
 	public String acceptResponse(@PathVariable int responseId) {
 		VacancyResponse response = vacancyResponseRepo.findById(responseId).orElseThrow();
-		if (response.getEmployerVerdict() != true) {
+		if (response.getEmployerVerdict() == null || response.getEmployerVerdict() == false) {
 			response.setEmployerVerdict(true);
-			vacancyResponseRepo.save(response);
-			return "_fragments :: cancel-verdict";
+		} 
+		else {
+			response.setEmployerVerdict(null);
 		}
-		response.setEmployerVerdict(null);
 		vacancyResponseRepo.save(response);
-		return "_fragments :: accept";
+		return "redirect:/vacancies/" + response.getVacancyId() + "/responses";
 	}
-	
-	@ResponseBody
-	@PostMapping(path = "/{responseId}/reject", headers = "hx-request=true")
+	@PostMapping("/responses/{responseId}/reject")
 	public String rejectResponse(@PathVariable int responseId) {
 		VacancyResponse response = vacancyResponseRepo.findById(responseId).orElseThrow();
-		if (response.getEmployerVerdict() != true) {
-			response.setEmployerVerdict(true);
-			vacancyResponseRepo.save(response);
-			return "_fragments :: cancel-verdict";
+		if (response.getEmployerVerdict() == null || response.getEmployerVerdict() == true) {
+			response.setEmployerVerdict(false);
+		} 
+		else {
+			response.setEmployerVerdict(null);
 		}
-		response.setEmployerVerdict(null);
 		vacancyResponseRepo.save(response);
-		return "_fragments :: reject";
+		return "redirect:/vacancies/" + response.getVacancyId() + "/responses";
 	}
 }

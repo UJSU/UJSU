@@ -2339,4 +2339,79 @@ footer::before {
         .section-title {
     text-align: center;
 }
+/* Стили для кнопок откликов */
+.response-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-accept, .btn-reject, .btn-cancel {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.3s ease;
+}
+
+.btn-accept {
+    background-color: #27ae60;
+    color: white;
+}
+
+.btn-accept:hover {
+    background-color: #219653;
+}
+
+.btn-reject {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.btn-reject:hover {
+    background-color: #c0392b;
+}
+
+.btn-cancel {
+    background-color: #7f8c8d;
+    color: white;
+}
+
+.btn-cancel:hover {
+    background-color: #5d6d7e;
+}
+
+.response-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.student-info {
+    flex: 1;
+}
+.search-button-final {
+    padding: 8px 20px; /* Явно задайте padding-top/bottom */
+    background: linear-gradient(to right, var(--primary), var(--primary-dark));
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    white-space: nowrap;
+    text-decoration: none;
+    
+}
+.search-button-final:hover {
+    background: linear-gradient(to right, var(--primary-dark), var(--primary));
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(44, 62, 80, 0.3);
+}
         
