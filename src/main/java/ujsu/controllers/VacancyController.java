@@ -250,10 +250,77 @@ public class VacancyController {
 		if (user.getRole() != Role.ADMIN)
 			throw new AccessDeniedException("Доступ запрещён.");
 		Vacancy vacancy = vacancyRepo.findById(id).orElseThrow();
-		model.addAttribute(vacancy);
+		model.addAttribute("vacancy", vacancy); 
 		List<StudentWithResponseDto> studentWithResponseDtoList = new ArrayList<>();
 		vacancyResponseRepo.findByVacancyId(id).forEach(r -> studentWithResponseDtoList.add(new StudentWithResponseDto(userService.loadUserWithProfileById(r.getStudentId()), r)));
 		model.addAttribute("studentWithResponseDtoList", studentWithResponseDtoList);
 		return "vacancy-responses";
+	}
+	
+	@GetMapping(path = "/{id}/responses-list")
+	public String showResponsesDto(Model model, Authentication auth, @PathVariable int id)
+			throws AccessDeniedException, NoSuchElementException {
+		User user = (User) auth.getPrincipal();
+		if (user.getRole() != Role.ADMIN)
+			throw new AccessDeniedException("Доступ запрещён.");
+		Vacancy vacancy = vacancyRepo.findById(id).orElseThrow();
+		model.addAttribute("vacancy", vacancy); 
+		List<StudentWithResponseDto> studentWithResponseDtoList = new ArrayList<>();
+		vacancyResponseRepo.findByVacancyId(id).forEach(r -> studentWithResponseDtoList.add(new StudentWithResponseDto(userService.loadUserWithProfileById(r.getStudentId()), r)));
+		model.addAttribute("studentWithResponseDtoList", studentWithResponseDtoList);
+		return "_fragments :: vacancy-responses-list";
+	}
+	
+	@GetMapping("/result")
+	public String showMyResults(Model model, Authentication auth) 
+	throws AccessDeniedException {
+		User user = (User) auth.getPrincipal();
+		if (user.getRole() != Role.STUDENT) {
+			throw new AccessDeniedException("Доступ разрешён только студентам.");
+		}
+		List<VacancyResponse> responses = vacancyResponseRepo.findByStudentId(user.getId());
+		responses.forEach(response -> {
+			vacancyRepo.findById(response.getVacancyId()).ifPresent(response::setVacancy);
+		});
+		model.addAttribute("responses", responses);
+		return "vacancy-results";
+	}
+	
+	@GetMapping(path = "/result-list", headers = "hx-request=true")
+	public String showResultList(Model model, Authentication auth) throws AccessDeniedException {
+		User user = (User) auth.getPrincipal();
+		if (user.getRole() != Role.STUDENT) {
+			throw new AccessDeniedException("Доступ разрешён только студентам.");
+		}
+		List<VacancyResponse> responses = vacancyResponseRepo.findByStudentId(user.getId());
+		responses.forEach(response -> {
+			vacancyRepo.findById(response.getVacancyId()).ifPresent(response::setVacancy);
+		});
+		model.addAttribute("responses", responses);
+		return "_fragments :: result-list";
+	}
+	@PostMapping("/responses/{responseId}/accept")
+	public String acceptResponse(@PathVariable int responseId) {
+		VacancyResponse response = vacancyResponseRepo.findById(responseId).orElseThrow();
+		if (response.getEmployerVerdict() == null || response.getEmployerVerdict() == false) {
+			response.setEmployerVerdict(true);
+		} 
+		else {
+			response.setEmployerVerdict(null);
+		}
+		vacancyResponseRepo.save(response);
+		return "redirect:/vacancies/" + response.getVacancyId() + "/responses";
+	}
+	@PostMapping("/responses/{responseId}/reject")
+	public String rejectResponse(@PathVariable int responseId) {
+		VacancyResponse response = vacancyResponseRepo.findById(responseId).orElseThrow();
+		if (response.getEmployerVerdict() == null || response.getEmployerVerdict() == true) {
+			response.setEmployerVerdict(false);
+		} 
+		else {
+			response.setEmployerVerdict(null);
+		}
+		vacancyResponseRepo.save(response);
+		return "redirect:/vacancies/" + response.getVacancyId() + "/responses";
 	}
 }

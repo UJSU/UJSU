@@ -42,7 +42,7 @@
                         <a th:href="@{/vacancies}" class="btn-cancel">
                             <i class="fas fa-times"></i> Отмена
                         </a>
-                        <button type="submit" class="btn-submit">
+                        <button type="submit" class="search-button">
                             <i class="fas fa-plus"></i> Создать вакансию
                         </button>
                     </div>
@@ -120,7 +120,7 @@
         }
         
         .vacancy-createe {
-            font-size: 24px;
+            font-size: 20px;
             font-weight: 600;
             margin-bottom: 30px;
             color: #333;
@@ -185,8 +185,7 @@
         .textarea-with-icon i {
             position: absolute;
             left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
+            top: 10%;
             color: #666;
             font-size: 18px;
         }
@@ -255,6 +254,22 @@
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(74, 108, 247, 0.3);
         }
+        .vacancy-form .input-with-icon i {
+        top: 12px !important;
+    }
+    .vacancy-form .textarea-with-icon i {
+        top: 12px !important;
+        transform: none !important;
+    }
+    .form-group input ~ i {
+    position: absolute;
+    left: 16px;
+    top: 24px !important;
+    color: var(--gray);
+    font-size: 18px;
+    transition: var(--transition);
+}
+        
     </style>
 </body>
 </html>

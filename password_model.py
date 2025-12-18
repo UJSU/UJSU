@@ -10,26 +10,22 @@ import re
 
 class BalancedPasswordClassifier:
     def __init__(self):
-        # Упрощенная модель для скорости
         self.model = RandomForestClassifier(
-            n_estimators=50,  # Меньше деревьев
+            n_estimators=50, 
             max_depth=10,
             min_samples_split=20,
             min_samples_leaf=10,
             max_features=0.7,
             random_state=42,
-            n_jobs=-1  # Используем все ядра
+            n_jobs=-1  
         )
         self.scaler = StandardScaler()
         self.is_fitted = False
-        
-        # Черный список слабых паттернов
         self.weak_patterns = self.load_weak_patterns()
         self.common_weak_passwords = self.load_common_weak_passwords()
     
     def load_weak_patterns(self):
         """Загружает слабые паттерны"""
-        # Можно загрузить из файла, здесь дефолтные
         return [
             'password', 'qwerty', 'admin', 'welcome', 'letmein',
             'monkey', 'dragon', 'baseball', 'football', 'mustang',
@@ -59,9 +55,7 @@ class BalancedPasswordClassifier:
             password = str(password)
         
         length = len(password)
-        features = np.zeros(12, dtype=np.float32)  # Фиксированный размер
-        
-        # 1. Категория длины (быстро)
+        features = np.zeros(12, dtype=np.float32)
         if length <= 6:
             features[0] = 0
         elif length <= 10:
@@ -69,7 +63,6 @@ class BalancedPasswordClassifier:
         else:
             features[0] = 2
         
-        # 2. Быстрый подсчет символов
         digit_count = upper_count = lower_count = special_count = 0
         for char in password:
             if char.isdigit():
@@ -86,14 +79,12 @@ class BalancedPasswordClassifier:
         features[3] = lower_count
         features[4] = special_count
         
-        # 3. Быстрые пропорции
         total_chars = max(length, 1)
         features[5] = digit_count / total_chars
         features[6] = upper_count / total_chars
         features[7] = lower_count / total_chars
         features[8] = special_count / total_chars
         
-        # 4. Ключевые флаги (самое важное для скорости)
         features[9] = 1.0 if (upper_count > 0 and lower_count > 0) else 0.0
         features[10] = 1.0 if ((upper_count > 0 or lower_count > 0) and digit_count > 0) else 0.0
         features[11] = 1.0 if special_count > 0 else 0.0
@@ -112,20 +103,14 @@ class BalancedPasswordClassifier:
     def train_fast(self, X, y):
         """Быстрое обучение"""
         X_train, X_test, y_train, y_test = train_test_split(
-            X, y, test_size=0.2, random_state=42, stratify=y  # Меньше тестовых данных
+            X, y, test_size=0.2, random_state=42, stratify=y 
         )
         
         print(f"Обучаем на {len(X_train)} примерах...")
-        
-        # Масштабируем признаки
         X_train_scaled = self.scaler.fit_transform(X_train)
         X_test_scaled = self.scaler.transform(X_test)
-        
-        # Быстрое обучение
         self.model.fit(X_train_scaled, y_train)
         self.is_fitted = True
-        
-        # Быстрая валидация
         test_predictions = self.model.predict(X_test_scaled)
         test_accuracy = accuracy_score(y_test, test_predictions)
         
@@ -138,29 +123,25 @@ class BalancedPasswordClassifier:
         categories = 0
         
         if any(c.islower() for c in password):
-            categories += 1  # Строчные буквы
+            categories += 1  
         if any(c.isupper() for c in password):
-            categories += 1  # Заглавные буквы
+            categories += 1  
         if any(c.isdigit() for c in password):
-            categories += 1  # Цифры
+            categories += 1 
         if any(not c.isalnum() for c in password):
-            categories += 1  # Спецсимволы
+            categories += 1  
         
         return categories
     
     def is_in_blacklist(self, password):
         """Проверяет пароль по черному списку"""
         password_lower = password.lower()
-        
-        # Проверяем точное совпадение
         if password_lower in self.common_weak_passwords:
             return True
         
-        # Проверяем частичные совпадения
         for weak_pwd in self.common_weak_passwords:
             if (password_lower.startswith(weak_pwd) or 
                 password_lower.endswith(weak_pwd)):
-                # Если слабый пароль составляет значительную часть
                 if len(weak_pwd) >= len(password_lower) * 0.7:
                     return True
         
@@ -168,7 +149,6 @@ class BalancedPasswordClassifier:
     
     def is_leet_variant(self, password, word):
         """Проверяет, является ли пароль leet-вариантом слова"""
-        # Простая проверка: заменяем leet-символы обратно на буквы
         leet_to_normal = {
             '@': 'a', '$': 's', '1': 'i', '0': 'o', '3': 'e',
             '!': 'i', '7': 't', '8': 'b', '9': 'g', '4': 'a',
@@ -182,33 +162,28 @@ class BalancedPasswordClassifier:
         """Проверяет только явно слабые шаблоны"""
         password_lower = password.lower()
         
-        # 1. Проверяем слишком простые шаблоны только для коротких паролей
         if len(password) < 8:
-            # Для очень коротких паролей - строгие правила
             simple_patterns = [
-                r'^[a-zA-Z]+[0-9]{1,3}$',           # Password123
-                r'^[a-zA-Z]+[0-9]{1,3}[!@#$%^&*]?$',# Password123!
-                r'^[0-9]+[a-zA-Z]+$',              # 123Password
+                r'^[a-zA-Z]+[0-9]{1,3}$',          
+                r'^[a-zA-Z]+[0-9]{1,3}[!@#$%^&*]?$',
+                r'^[0-9]+[a-zA-Z]+$',             
             ]
             
             for pattern in simple_patterns:
                 if re.match(pattern, password):
                     return True
         
-        # 2. Проверяем leet-варианты только для коротких паролей
         if len(password) < 10:
             leet_words = ['password', 'admin', 'test', 'root', 'login']
             for word in leet_words:
                 if self.is_leet_variant(password, word):
                     return True
         
-        # 3. Проверяем словарные слова в значительной части пароля
         for pattern in self.weak_patterns:
             if pattern in password_lower:
                 word_len = len(pattern)
                 pwd_len = len(password_lower)
                 
-                # Если словарное слово составляет большую часть пароля
                 if word_len > pwd_len * 0.7:  # 70% или более
                     return True
         
@@ -218,36 +193,29 @@ class BalancedPasswordClassifier:
         """Классификация на основе ослабленных правил безопасности"""
         password_lower = password.lower()
         
-        # 1. Слишком короткие пароли
         if len(password) < 6:
             return 0  # weak
         
-        # 2. Проверка по черному списку (только точные совпадения)
         if self.is_in_blacklist(password):
             return 0  # weak
         
-        # 3. Проверка явно слабых шаблонов
         if self.follows_weak_pattern(password):
             return 0  # weak
         
-        # 4. Очень простые пароли
         if password.isdigit() and len(password) < 10:
             return 0  # weak
         
         if password.isalpha() and password_lower == password and len(password) < 8:
             return 0  # weak
         
-        # 5. Для всех остальных - используем ML
         return None
     
     def predict_single(self, password):
         """Умный классификатор паролей с ослабленными правилами"""
-        # Сначала проверяем по ослабленным правилам
         rule_based = self.rule_based_classification(password)
         if rule_based is not None:
             return rule_based
         
-        # Затем используем ML-модель
         if not self.is_fitted:
             raise ValueError("Модель не обучена!")
         
@@ -255,30 +223,25 @@ class BalancedPasswordClassifier:
         features_scaled = self.scaler.transform([features])
         ml_prediction = self.model.predict(features_scaled)[0]
         
-        # Корректируем только явно ошибочные предсказания
         if ml_prediction == 2:  # ML считает сильным
             categories = self.count_categories(password)
-            # Сильный пароль должен быть длинным И сложным
             if len(password) < 12 and categories < 4:
-                return 1  # Понижаем до среднего
+                return 1  
         
         return ml_prediction
     
     def predict_proba_single(self, password):
         """Вероятности классов (на основе ML или правил)"""
-        # Сначала проверяем по правилам
         rule_based = self.rule_based_classification(password)
         
         if rule_based is not None:
-            # Для паролей, определенных правилами, возвращаем уверенные вероятности
             if rule_based == 0:  # weak
-                return np.array([0.90, 0.08, 0.02])  # 90% уверенность в weak
+                return np.array([0.90, 0.08, 0.02])  
             elif rule_based == 1:  # medium
-                return np.array([0.05, 0.85, 0.10])  # 85% уверенность в medium
-            else:  # Это не должно происходить
+                return np.array([0.05, 0.85, 0.10])  
+            else:  
                 return np.array([0.33, 0.34, 0.33])
         
-        # Для остальных используем ML
         if not self.is_fitted:
             raise ValueError("Модель не обучена!")
         
@@ -291,19 +254,15 @@ class BalancedPasswordClassifier:
         if not self.is_fitted:
             raise ValueError("Модель не обучена!")
         
-        # Сначала обрабатываем по правилам
         predictions = np.zeros(len(passwords), dtype=int)
         
         for i, password in enumerate(passwords):
-            # Проверяем по правилам
             rule_based = self.rule_based_classification(password)
             if rule_based is not None:
                 predictions[i] = rule_based
             else:
-                # Помечаем для ML-обработки
                 predictions[i] = -1
         
-        # Для паролей, не определенных правилами, используем ML
         ml_indices = np.where(predictions == -1)[0]
         if len(ml_indices) > 0:
             ml_passwords = [passwords[i] for i in ml_indices]
@@ -311,12 +270,11 @@ class BalancedPasswordClassifier:
             features_scaled = self.scaler.transform(features)
             ml_predictions = self.model.predict(features_scaled)
             
-            # Корректируем только явно ошибочные предсказания
             for idx, ml_pred in zip(ml_indices, ml_predictions):
-                if ml_pred == 2:  # ML считает сильным
+                if ml_pred == 2:  
                     categories = self.count_categories(passwords[idx])
                     if len(passwords[idx]) < 12 and categories < 4:
-                        predictions[idx] = 1  # Понижаем до среднего
+                        predictions[idx] = 1 
                     else:
                         predictions[idx] = 2
                 else:
@@ -339,7 +297,6 @@ def load_data_fast(filename):
     print(f"Быстрая загрузка {filename}...")
     
     try:
-        # Пробуем загрузить с заголовком
         df = pd.read_csv(
             filename, 
             encoding='utf-8',
@@ -347,9 +304,7 @@ def load_data_fast(filename):
             dtype={'strength': 'int8'}
         )
         
-        # Проверяем, есть ли нужные колонки
         if 'strength' not in df.columns or 'password' not in df.columns:
-            # Если нет - пробуем без заголовка
             print("Колонки не найдены, пробуем без заголовка...")
             df = pd.read_csv(
                 filename,
@@ -363,8 +318,6 @@ def load_data_fast(filename):
     except Exception as e:
         print(f"Ошибка при загрузке: {e}")
         print("Пробуем альтернативный метод...")
-        
-        # Ручной парсинг
         passwords = []
         strengths = []
         
@@ -375,16 +328,11 @@ def load_data_fast(filename):
                     continue
                     
                 parts = line.split(',')
-                
-                # Пропускаем заголовок если есть
                 if line_num == 1 and ('password' in line.lower() or 'strength' in line.lower()):
                     continue
-                
-                # Нужно ровно 2 части
                 if len(parts) >= 2:
                     try:
                         password = parts[0].strip()
-                        # Ищем число (0,1,2) в оставшихся частях
                         strength = None
                         for part in parts[1:]:
                             part = part.strip()
@@ -402,8 +350,6 @@ def load_data_fast(filename):
             'password': passwords,
             'strength': strengths
         })
-    
-    # Фильтруем только правильные значения strength
     df = df[df['strength'].isin([0, 1, 2])].copy()
     
     print(f"Загружено {len(df)} строк")
@@ -422,12 +368,8 @@ def add_label_noise_fast(df, noise_fraction=0.10):
     
     n_noise = int(len(df) * noise_fraction)
     noise_indices = np.random.choice(len(df), n_noise, replace=False)
-    
-    # Векторизованная операция
     current_labels = noisy_df.iloc[noise_indices]['strength'].values
     new_labels = np.random.randint(0, 3, size=len(current_labels))
-    
-    # Избегаем совпадений с исходными метки
     mask = new_labels == current_labels
     new_labels[mask] = (new_labels[mask] + 1) % 3
     
@@ -443,7 +385,6 @@ def test_password_examples(classifier):
     print("="*60)
     
     test_cases = [
-        # (пароль, ожидаемый_класс, описание)
         ('password', 0, 'Слишком простое слово'),
         ('Password123', 0, 'Слово+цифры - слабый паттерн (короткий)'),
         ('P@ssw0rd!', 0, 'Leet вариация password (короткая)'),
@@ -489,8 +430,6 @@ def test_password_examples(classifier):
                 'expected': expected_label,
                 'status': '✗'
             })
-    
-    # Статистика
     correct = sum(1 for r in results if r['status'] == '✓')
     total = len(results)
     print(f"\nТочность на тестовых примерах: {correct}/{total} ({correct/total*100:.1f}%)")
@@ -499,20 +438,14 @@ def test_password_examples(classifier):
 def main_fast():
     print("=== УМНЫЙ КЛАССИФИКАТОР ПАРОЛЕЙ С ОСЛАБЛЕННЫМИ ПРАВИЛАМИ ===")
     
-    # Быстрая загрузка
     df = load_data_fast('data.csv')
     
     print("\nРаспределение меток:")
     for strength, count in df['strength'].value_counts().items():
         print(f"  {strength}: {count}")
-    
-    # Добавляем шум
     noisy_df = add_label_noise_fast(df, noise_fraction=0.10)
-    
-    # Инициализация быстрого классификатора
     classifier = BalancedPasswordClassifier()
     
-    # Быстрое извлечение признаков
     print("\nБыстрое извлечение признаков...")
     passwords_list = noisy_df['password'].tolist()
     X = classifier.extract_features_batch(passwords_list)
@@ -520,14 +453,11 @@ def main_fast():
     
     print(f"Признаки извлечены: {X.shape}")
     
-    # Быстрое обучение
     print("\nБыстрое обучение...")
     accuracy = classifier.train_fast(X, y)
     
-    # Тестирование на примерах
     test_password_examples(classifier)
     
-    # Сохранение модели
     with open('smart_password_classifier.pkl', 'wb') as f:
         pickle.dump(classifier, f)
     
@@ -548,8 +478,6 @@ def main_fast():
     
     import time
     start_time = time.time()
-    
-    # Пакетное предсказание
     predictions = classifier.predict_batch(test_passwords)
     
     end_time = time.time()
@@ -557,8 +485,6 @@ def main_fast():
     
     print(f"Время предсказания: {total_time:.3f} секунд")
     print(f"Скорость: {len(test_passwords)/total_time:.0f} паролей/сек")
-    
-    # Анализ результатов
     print(f"\nРаспределение предсказаний:")
     unique, counts = np.unique(predictions, return_counts=True)
     for pred, count in zip(unique, counts):

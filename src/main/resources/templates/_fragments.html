@@ -276,7 +276,8 @@
         </div>
     </div>
 	
-	<div th:fragment="result-list">
+
+	<div th:fragment="result-list" hx-get="/vacancies/result-list" hx-trigger="every 2s" hx-swap="outerHTML">
 		<h1 class="section-title">
 			Ответы на ваши отклики
 		</h1>
@@ -329,8 +330,6 @@
 				</div>
 	
 				<div class="vacancy-description" th:text="${response.vacancy?.description}"></div>
-	
-				<!-- Вердикт работодателя -->
 				<div class="verdict-section">
 					<div class="verdict-status"
 						th:classappend="${response.employerVerdict == null ? 'pending' : (response.employerVerdict == true ? 'accepted' : 'rejected')}">
@@ -358,7 +357,6 @@
 			</div>
 		</div>
 	</div>
-	
 	<div th:unless="${responses.empty}">
 		<div style="display: flex; justify-content: center; margin: 20px 0;">
 			<a th:href="@{/vacancies}" class="back-button">
@@ -367,6 +365,98 @@
 			</a>
 		</div>
 	</div>
+	<div th:fragment="vacancy-responses-list" class="responses-section" hx-get="responses-list" hx-trigger="every 2s" hx-swap="outerHTML">
+		<h2 style="margin-bottom: 20px; color: #2c3e50;">
+			<i class="fas fa-users" style="margin-right: 10px;"></i>
+			Отклики на вакансию
+			<span class="badge"
+				style="background: #3498db; color: white; padding: 3px 8px; border-radius: 12px; font-size: 14px; margin-left: 10px;"
+				th:text="${studentWithResponseDtoList.size()}"></span>
+		</h2>
+		<div th:if="${studentWithResponseDtoList.isEmpty()}" class="empty-state">
+			<i class="fas fa-inbox" style="font-size: 48px; color: #bdc3c7; margin-bottom: 20px;"></i>
+			<h3 style="color: #7f8c8d;">Нет откликов на эту вакансию</h3>
+			<p>Студенты еще не откликались на эту вакансию.</p>
+		</div>
+		<div th:each="dto : ${studentWithResponseDtoList}" th:if="${!studentWithResponseDtoList.isEmpty()}"
+			class="response-card">
+			<div class="response-header">
+				<div class="student-info">
+					<div class="student-avatar">
+						<i class="fas fa-user-graduate" style="font-size: 24px; color: #3498db;"></i>
+					</div>
+					<div class="student-details">
+						<h3 th:text="${dto.student.surname} + ' ' + ${dto.student.name} + ' ' + ${dto.student.lastName}">
+						</h3>
+						<div class="student-meta">
+							<span th:if="${dto.student.profile.courseNum != null}"
+								th:text="${dto.student.profile.courseNum + ' курс ' + dto.student.profile.studyType}"></span>
+							<span th:if="${dto.student.profile.university != null}"
+								th:text="${dto.student.profile.university.shortName}"></span>
+							<span th:if="${dto.student.profile.speciality != null}"
+								th:text="${dto.student.profile.speciality.name}"></span>
+						</div>
+						<div class="student-contact" style="margin-top: 10px; display: flex; align-items: center;">
+							<i class="fas fa-envelope" style="margin-right: 8px; color: #7f8c8d;"></i>
+							<span th:text="${dto.student.email}"></span>
+						</div>
+					</div>
+				</div>
+				<div class="response-actions">
+	
+					<!-- Состояние: Нет решения -->
+					<div th:if="${dto.response.employerVerdict == null}">
+						<form th:action="@{'/vacancies/responses/' + ${dto.response.id} + '/accept'}" method="post"
+							style="display: inline;">
+							<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+							<button type="submit" class="search-button-final">
+								<i class="fas fa-check"></i> Принять
+							</button>
+						</form>
+	
+						<form th:action="@{'/vacancies/responses/' + ${dto.response.id} + '/reject'}" method="post"
+							style="display: inline;">
+							<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+							<button type="submit" class="search-button-final">
+								<i class="fas fa-times"></i> Отклонить
+							</button>
+						</form>
+					</div>
+	
+					<!-- Состояние: Принят -->
+					<div th:if="${dto.response.employerVerdict == true}">
+						<span style="color: green; font-weight: bold; margin-right: 10px;">
+							<i class="fas fa-check-circle"></i> Принят
+						</span>
+	
+						<form th:action="@{'/vacancies/responses/' + ${dto.response.id} + '/reject'}" method="post"
+							style="display: inline;">
+							<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+							<button type="submit" class="search-button-final">
+								<i class="fas fa-undo"></i> Поменять решение
+							</button>
+						</form>
+					</div>
+	
+					<!-- Состояние: Отклонен -->
+					<div th:if="${dto.response.employerVerdict == false}">
+						<span style="color: red; font-weight: bold; margin-right: 10px;">
+							<i class="fas fa-times-circle"></i> Отклонен
+						</span>
+	
+						<form th:action="@{'/vacancies/responses/' + ${dto.response.id} + '/accept'}" method="post"
+							style="display: inline;">
+							<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+							<button type="submit" class="search-button-final">
+								<i class="fas fa-undo"></i> Поменять решение
+							</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 </body>
 
 </html>
