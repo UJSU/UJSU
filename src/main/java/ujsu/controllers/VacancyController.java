@@ -178,7 +178,7 @@ public class VacancyController {
 		model.addAttribute("vacancies", vacancyList);
 		model.addAttribute("selectedSchedules", schedulesSet);
 		model.addAttribute("selectedOrgIds", orgIdsSet);
-		return "_fragments :: vacancies";
+		return user.getRole() == Role.STUDENT ? "_fragments :: vacancies" : "_fragments :: vacancies_hr";
 	}
 
 	@GetMapping("/create")
@@ -257,6 +257,7 @@ public class VacancyController {
 		model.addAttribute("studentWithResponseDtoList", studentWithResponseDtoList);
 		return "vacancy-responses";
 	}
+	
 	@GetMapping("/result")
 	public String showMyResults(Model model, Authentication auth) 
 	throws AccessDeniedException {
@@ -270,5 +271,48 @@ public class VacancyController {
 		});
 		model.addAttribute("responses", responses);
 		return "vacancy-results";
+	}
+	
+	@GetMapping(path = "/result-list", headers = "hx-request=true")
+	public String showResultList(Model model, Authentication auth) throws AccessDeniedException {
+		User user = (User) auth.getPrincipal();
+		if (user.getRole() != Role.STUDENT) {
+			throw new AccessDeniedException("Доступ разрешён только студентам.");
+		}
+		List<VacancyResponse> responses = vacancyResponseRepo.findByStudentId(user.getId());
+		responses.forEach(response -> {
+			vacancyRepo.findById(response.getVacancyId()).ifPresent(response::setVacancy);
+		});
+		model.addAttribute("responses", responses);
+		return "_fragments :: result-list";
+	}
+	
+	
+	@ResponseBody
+	@PostMapping(path = "/{responseId}/accept", headers = "hx-request=true")
+	public String acceptResponse(@PathVariable int responseId) {
+		VacancyResponse response = vacancyResponseRepo.findById(responseId).orElseThrow();
+		if (response.getEmployerVerdict() != true) {
+			response.setEmployerVerdict(true);
+			vacancyResponseRepo.save(response);
+			return "_fragments :: cancel-verdict";
+		}
+		response.setEmployerVerdict(null);
+		vacancyResponseRepo.save(response);
+		return "_fragments :: accept";
+	}
+	
+	@ResponseBody
+	@PostMapping(path = "/{responseId}/reject", headers = "hx-request=true")
+	public String rejectResponse(@PathVariable int responseId) {
+		VacancyResponse response = vacancyResponseRepo.findById(responseId).orElseThrow();
+		if (response.getEmployerVerdict() != true) {
+			response.setEmployerVerdict(true);
+			vacancyResponseRepo.save(response);
+			return "_fragments :: cancel-verdict";
+		}
+		response.setEmployerVerdict(null);
+		vacancyResponseRepo.save(response);
+		return "_fragments :: reject";
 	}
 }
