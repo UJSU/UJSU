@@ -257,4 +257,18 @@ public class VacancyController {
 		model.addAttribute("studentWithResponseDtoList", studentWithResponseDtoList);
 		return "vacancy-responses";
 	}
+	@GetMapping("/result")
+	public String showMyResults(Model model, Authentication auth) 
+	throws AccessDeniedException {
+		User user = (User) auth.getPrincipal();
+		if (user.getRole() != Role.STUDENT) {
+			throw new AccessDeniedException("Доступ разрешён только студентам.");
+		}
+		List<VacancyResponse> responses = vacancyResponseRepo.findByStudentId(user.getId());
+		responses.forEach(response -> {
+			vacancyRepo.findById(response.getVacancyId()).ifPresent(response::setVacancy);
+		});
+		model.addAttribute("responses", responses);
+		return "vacancy-results";
+	}
 }

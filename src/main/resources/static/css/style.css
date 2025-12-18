@@ -1330,6 +1330,8 @@ footer::before {
     cursor: pointer;
     transition: var(--transition);
     white-space: nowrap;
+    text-decoration: none;
+    
 }
 
 .search-button:hover {
@@ -2184,3 +2186,157 @@ footer::before {
     width: 100%;
     max-width: 800px;
 }
+.back-button {
+    padding: 12px 25px; /* Явно задайте padding-top/bottom */
+    background: linear-gradient(to right, var(--primary), var(--primary-dark));
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    white-space: nowrap;
+    text-decoration: none;
+}
+.back-button:hover {
+    background: linear-gradient(to right, var(--primary-dark), var(--primary));
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(44, 62, 80, 0.3);
+}
+.badge {
+            background: #3498db;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            display: inline-block;
+            margin-left: 10px;
+        }
+        
+        .badge.pending { background: #f39c12; }
+        .badge.accepted { background: #27ae60; }
+        .badge.rejected { background: #e74c3c; }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #7f8c8d;
+        }
+        
+        .empty-state i {
+            font-size: 64px;
+            color: #bdc3c7;
+            margin-bottom: 20px;
+        }
+        
+        .empty-state h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #7f8c8d;
+        }
+        
+        .empty-state p {
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+        
+        /* Response Cards */
+        .response-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            background: white;
+            transition: all 0.3s ease;
+            border-left: 5px solid #3498db;
+        }
+        
+        .response-card:hover {
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        
+        .response-card.pending { border-left-color: #f39c12; }
+        .response-card.accepted { border-left-color: #27ae60; }
+        .response-card.rejected { border-left-color: #e74c3c; }
+        
+        .response-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+        
+        
+        /* Verdict Section */
+        .verdict-section {
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px solid #eee;
+        }
+        
+        .verdict-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        
+        .verdict-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .verdict-status.pending { color: #f39c12; }
+        .verdict-status.accepted { color: #27ae60; }
+        .verdict-status.rejected { color: #e74c3c; }
+        
+        .verdict-date {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        
+        .employer-comment {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 15px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .comment-label {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .comment-label i {
+            color: #3498db;
+        }
+        
+        .comment-text {
+            color: #555;
+            line-height: 1.6;
+        }
+        
+        .no-comment {
+            color: #95a5a6;
+            font-style: italic;
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        .section-title {
+    text-align: center;
+}
+        

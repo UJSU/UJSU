@@ -129,6 +129,67 @@
 			</p>
 		</div>
 	</div>
+	 <div th:fragment="vacancies-hr">
+        <div th:if="${not #lists.isEmpty(vacancies)}">
+            <div class="vacancy-card" th:each="vacancy : ${vacancies}">
+                <div class="vacancy-header">
+                    <div>
+                        <h3 class="vacancy-title" th:text="${vacancy.position}"></h3>
+                        <div class="vacancy-company" th:text="${vacancy.organisation?.name}"></div>
+                    </div>
+                    <div class="vacancy-salary">
+                        <span th:if="${vacancy.minSalary != null and vacancy.maxSalary == null}">
+                            от <span th:text="${#numbers.formatInteger(vacancy.minSalary, 0, 'COMMA')}"></span> руб.
+                        </span>
+                        <span th:if="${vacancy.minSalary == null and vacancy.maxSalary != null}">
+                            до <span th:text="${#numbers.formatInteger(vacancy.maxSalary, 0, 'COMMA')}"></span> руб.
+                        </span>
+                        <span th:if="${vacancy.minSalary != null and vacancy.maxSalary != null
+                             and vacancy.minSalary != vacancy.maxSalary}">
+                            <span th:text="${#numbers.formatInteger(vacancy.minSalary, 0, 'COMMA')}"></span> -
+                            <span th:text="${#numbers.formatInteger(vacancy.maxSalary, 0, 'COMMA')}"></span> руб.
+                        </span>
+                        <span th:if="${vacancy.minSalary != null and vacancy.maxSalary != null 
+                            and vacancy.minSalary == vacancy.maxSalary}">
+                            <span th:text="${#numbers.formatInteger(vacancy.minSalary, 0, 'COMMA')}"></span> руб.
+                        </span>
+                        <span th:if="${vacancy.minSalary == null and vacancy.maxSalary == null}">
+                            Зарплата не указана
+                        </span>
+                    </div>
+                </div>
+
+                <div class="vacancy-info">
+                    <div class="vacancy-meta">
+                        <i class="fas fa-briefcase"></i>
+                        <span th:text="${vacancy.schedule}"></span>
+                    </div>
+                </div>
+
+                <div class="vacancy-description" th:text="${vacancy.description}"></div>
+                
+                <div class="vacancy-actions-admin">
+                    <a th:href="@{/vacancies/{id}/edit(id=${vacancy.id})}" class="search-button">
+                        <i class="fas fa-edit"></i> Редактировать
+                    </a>
+                    <button th:hx-get="|/${vacancy.id}/delete|" hx-swap="outerHTML" hx-target="closest .vacancy-card" class="search-button">
+                        <i class="fas fa-trash"></i> Удалить
+                    </button>
+                    <a th:href="@{/vacancies/{id}/responses(id=${vacancy.id})}" class="search-button">
+                        <i class="fas fa-eye"></i> Посмотреть отклики
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${#lists.isEmpty(vacancies)}" class="no-vacancies">
+            <div class="empty-state">
+                <i class="fas fa-briefcase fa-3x"></i>
+                <h3>У вас пока нет вакансий</h3>
+                <p>Создайте первую вакансию, чтобы начать</p>
+            </div>
+        </div>
+    </div>
 	<div th:fragment="btn-apply(vacancyId, hasCurrentStudentResponse)">
 		<button class="apply-button"
 			th:attr="data-vacancy-id=${vacancyId}, hx-get=${'/vacancies/' + vacancyId + '/response'}" hx-target="this"
